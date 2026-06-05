@@ -3,6 +3,14 @@
 
 ## TODO
 
+* Ensure WebMIDI works with FF linux (snap or deb)
+* List and select midi ports, send and receive midi
+* Edit performance parameters
+* Edit current program params and name
+* Send/receive sysex.
+* Send individual programs.
+* Librarian features. Save and remix banks.
+* Cloud/share support.
 
 
 ## Template
