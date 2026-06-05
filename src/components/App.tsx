@@ -8,20 +8,20 @@ export default function App()
 {
   // App state
   const [midiInPortNames, setMidiInPortNames] = useState<string[]>([]);
-  // const [midiOutPortNames, setMidiOutPortNames] = useState<string[]>([]);
+  const [midiOutPortNames, setMidiOutPortNames] = useState<string[]>([]);
 
   const [midiIn, setMidiIn] = useState<string|null>(null);
-  // const [midiOut, setMidiOut] = useState<string|null>(null);
-  // const [controllerIn, setControllerIn] = useState<string|null>(null);
+  const [midiOut, setMidiOut] = useState<string|null>(null);
+  const [controllerIn, setControllerIn] = useState<string|null>(null);
 
   const midiRef = useRef<typeof midi | null>(null);
 
 
   useEffect(() => {
     console.log("App: useEffect()");
-
     if (midiRef.current === null)
     {
+      // need to initialize WebMIDI
       console.log("App: useEffect(): Initializing MIDI...");
       midi.initialize(() => {
         midiRef.current = midi;
@@ -31,33 +31,8 @@ export default function App()
         console.error("Failed to initialize MIDI: " + error);
       });
     }
-
-    // return () => {
-    //   console.log("App: useEffect(): cleanup.");
-    //   midi.shutdown();
-    //   midiRef.current = null;
-    // }
+    // no need for cleanup
   });
-
-
-
-  console.log("App called.");
-
-  // midi.initialize(() => {    
-  //   midi.listPorts();
-  //   //updateMidiPorts();
-  // });
-
-  // Initialize MIDI
-
-  // midi.initialize(() => {
-  //   console.log("MIDI initialized successfully.");
-  //   console.log("Available MIDI ports:");
-  //   midi.listPorts();
-  //   updateMidiPorts();
-  // }, (error: any) => {
-  //   console.error("Failed to initialize MIDI: " + error);
-  // });
 
 
   return (
@@ -71,7 +46,7 @@ export default function App()
         portNames={midiInPortNames}
         selectedPortName={midiIn}
         onPortChanged={handleMidiInChanged} />
-      {/* <MidiPortSelector 
+      <MidiPortSelector 
         title="DX7 MIDI Output:"
         portNames={midiOutPortNames}
         selectedPortName={midiOut}
@@ -80,7 +55,7 @@ export default function App()
         title="Controller Input (optional):"
         portNames={midiInPortNames}
         selectedPortName={controllerIn}
-        onPortChanged={handleControllerInChanged} /> */}
+        onPortChanged={handleControllerInChanged} />
     </div>
     </>
   );
@@ -89,34 +64,31 @@ export default function App()
   // Event handlers
 
   async function handleMidiInChanged(portName: string|null) {
-    console.log("Setting MIDI in: " + portName);
-    setMidiIn(portName);
-    if (midiRef.current !== null) {
-      midiRef.current.useMidiIn(portName);
-    }
-    
+    console.log("App: handleMidiInChanged(): " + portName);
+    midiRef.current?.useMidiIn(portName);
+    setMidiIn(portName);   
   }
 
-  // async function handleMidiOutChanged() {
-  //   //console.log("Setting MIDI out: " + midiOut);
-  //   // setMidiOut(midiOut);
-  //   // midi.useMidiIn(midiOut);
-  // }
+  async function handleMidiOutChanged(portName: string|null) {
+    console.log("App: handleMidiOutChanged(): " + portName);
+    midiRef.current?.useMidiOut(portName);
+    setMidiOut(portName);
+  }
 
-  // async function handleControllerInChanged() {
-  //   //console.log("Setting MIDI controller in: " + controllerIn);
-  //   // setControllerIn(controllerIn);
-  //   // midi.useControllerIn(controllerIn);
-  // }
+  async function handleControllerInChanged(portName: string|null) {
+    console.log("App: handleControllerInChanged(): " + portName);
+    midiRef.current?.useControllerIn(portName);
+    setControllerIn(portName);
+  }
 
 
-  // helpers
+  // Helpers
 
   function updateMidiPorts()
   {
     console.log("App: updateMidiPorts()");
     setMidiInPortNames(midi.getInNames());
-    //setMidiOutPortNames(midi.getOutNames());
+    setMidiOutPortNames(midi.getOutNames());
   }
 }
 

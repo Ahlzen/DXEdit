@@ -16,12 +16,9 @@ let midi = (function() {
 	var midiInPorts = [];
 	var midiOutPorts = [];
 
-	// MIDI settings
-	var channel = 0;
-	var midiEcho = false;
-
-	// Sysex event handler
-	my.onSysex = null;
+	// MIDI input event handlers
+	my.onMidiIn = null;
+	my.onControllerIn = null;
 
 
 	///// Initialization
@@ -58,8 +55,19 @@ let midi = (function() {
 		var port = my.getInPort(portName);
 		if (port) {
 			midiIn = port;
-			midiIn.onmidimessage = message => onMessage(this, message);
+			midiIn.onmidimessage = message => handleMidiIn(this, message);
 			console.log("Using MIDI in: " + portName);
+		}
+		else console.log("MIDI port not available");
+	};
+
+	my.useControllerIn = function(portName) {
+		closeControllerIn();
+		var port = my.getInPort(portName);
+		if (port) {
+			controllerIn = port;
+			controllerIn.onmidimessage = message => handleControllerIn(this, message);
+			console.log("Using MIDI controller in: " + portName);
 		}
 		else console.log("MIDI port not available");
 	};
@@ -74,16 +82,6 @@ let midi = (function() {
 		else console.log("MIDI port not available");
 	};
 
-	my.useControllerIn = function(portName) {
-		closeControllerIn();
-		var port = my.getInPort(portName);
-		if (port) {
-			controllerIn = port;
-			controllerIn.onmidimessage = message => onMessage(this, message);
-			console.log("Using MIDI controller in: " + portName);
-		}
-		else console.log("MIDI port not available");
-	};
 
 
 	///// Cleanup
@@ -152,49 +150,22 @@ let midi = (function() {
 		midiOut.send(bytes);
 	};
 
-	// my.sendProgramChange = function(program) {
-	// 	my.sendMessage([0xc0+channel, program]);
-	// };
 
-	// my.sendBankChange = function(bankMsb, bankLsb) {
-	// 	my.sendMessage([0xb0+channel, 0x00, bankMsb]);
-	// 	my.sendMessage([0xb0+channel, 0x20, bankLsb]);
-	// };
+	///// MIDI input handlers
 
-	// my.sendProgramBankChange = function(program, bankMsb, bankLsb) {
-	// 	// Special case: For banks with more than 128 programs,
-	// 	// increment the bank LSB and subtract 128 from program #:
-	// 	if (program > 127) {
-	// 		program -= 127;
-	// 		bankLsb++;
-	// 	}
-	// 	my.sendProgramChange(program);
-	// 	my.sendBankChange(bankMsb, bankLsb);
-	// };
-
-	// my.sendAllNotesOff = function() {
-	// 	for (var chan = 0; chan < 16; chan++) {
-	// 		my.sendMessage([0xb0+chan, 123, 0]);
-	// 	}
-	// };
-
-
-	///// MIDI input handler
-
-	function onMessage(midi, event) {
-		console.log('Received: [' + toHexStrings(event.data) + ']');
-		if (event.data[0] == 0xf0) {
-			if (my.onSysex) {
-				my.onSysex(event.data);
-			}
-		}
-		// TODO: Echo only MIDI events from controller input
-		else if (midiOut) {
-			// Echo message
-			my.sendMessage(event.data);
+	function handleMidiIn(midi, event) {
+		console.log('In: [' + toHexStrings(event.data) + ']');
+		if (my.onMidiIn) {
+			my.onMidiIn(event.data);
 		}
 	}
 
+	function handleControllerIn(midi, event) {
+		console.log('C.In: [' + toHexStrings(event.data) + ']');
+		if (my.onControllerIn) {
+			my.onControllerIn(event.data);
+		}
+	}
 
 	return my;
 })();
