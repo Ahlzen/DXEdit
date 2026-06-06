@@ -64,9 +64,18 @@ export default function App()
         Send Note On / Note Off
       </button>
       <br/> 
-      <button onClick={handleUpdatePatchName}>
+      <label>Patch name:
+        <input type="text"
+          maxLength={10}
+          placeholder="max 10 chars"
+          onChange={(e) => {
+            const patchName = e.target.value;
+            handleUpdatePatchName(patchName);
+          }} />
+      </label>
+      {/* <button onClick={handleUpdatePatchName}>
         Update patch name
-      </button>
+      </button> */}
     </fieldset>
 
     </>
@@ -105,11 +114,10 @@ export default function App()
     }
   }
 
-  function handleUpdatePatchName() {
+  function handleUpdatePatchName(patchName: string) {
     console.log("App: handleUpdatePatchName()");
     if (midiRef.current) {
-      // Example: Send a SysEx message to update the patch name
-      const patchName = "TEST";
+      patchName = patchName.toUpperCase(); // TODO: Verify valid chars for DX7
       const patchNameBytes = Array
         .from(patchName)
         .map(char => char.charCodeAt(0));
