@@ -63,6 +63,10 @@ export default function App()
       <button onClick={handleSendNoteOnOff}>
         Send Note On / Note Off
       </button>
+      <br/> 
+      <button onClick={handleUpdatePatchName}>
+        Update patch name
+      </button>
     </fieldset>
 
     </>
@@ -96,8 +100,32 @@ export default function App()
       midiRef.current?.sendMessage([0x90, 60, 70]);
       setTimeout(() => {
         console.log("Sending Note Off...");
-        midiRef.current?.sendMessage([0x80, 0, 0]);
+        midiRef.current?.sendMessage([0x80, 60, 0]);
       }, 1000); // Send Note Off after 1 second
+    }
+  }
+
+  function handleUpdatePatchName() {
+    console.log("App: handleUpdatePatchName()");
+    if (midiRef.current) {
+      // Example: Send a SysEx message to update the patch name
+      const patchName = "TEST";
+      const patchNameBytes = Array
+        .from(patchName)
+        .map(char => char.charCodeAt(0));
+      for (let i = 0; i < 10; i++) {
+        let ascii = patchNameBytes[i] || 32;
+        // DX7 Parameter Change sysex
+        // Parameter # 145-154 are Voice Name Char 1-10
+        const sysexMessage = [0xF0, 
+          0x43, // Yamaha ID
+          0x10, // Sub-status 1, Channel 1
+          0x01, // Parameter group 0 = voice, 1 = parameter bit 8
+          17+i, // parameter low 7 bits: 145-128=17
+          ascii, // ASCII char
+          0xF7];
+        midiRef.current?.sendMessage(sysexMessage);
+      }      
     }
   }
 
