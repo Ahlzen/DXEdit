@@ -1,0 +1,64 @@
+
+  Model  DX7      MIDI implementation chart       Version:  1.6
+
++-----------------------------------------------------------------------:
+:                   :                :                 :                :
+:      Function...  : Transmitted    :  Recognized     : Remarks        :
+:-------------------+----------------+-----------------+----------------:
+:Basic    Default   :  1             :  1 - 16 *       : * memorized    :
+:Channel  Changed   :  x             :  1 - 16 *       :                :
+:-------------------+----------------+-----------------+----------------: 
+:         Default   :  3             :  3, 4, *        :                :
+:Mode     Messages  :  x             :  POLY,MONO (M=1):                :
+:         Altered   :  ************* :  x              :                :
+:-------------------+----------------+-----------------+----------------:
+:Note               :  36 - 96       :  1 - 127        :                :
+:Number:  True Voice:  ************* :  1 - 127        :                :
+:-------------------+----------------+-----------------+----------------:
+:Velocity Note ON   :  o 90H,v=1-127 :  o v=1-127      :                :
+:         Note OFF  :  o 90H,v=0     :  x              :                :
+:-------------------+----------------+-----------------+----------------:
+:After    Key's     :  x             :  x              :                :  
+:Touch    Ch's      :  o             :  o              :                :
+:-------------------+----------------+-----------------+----------------:
+:Pitch Bender       :  o             :  o 0 - 12 semi  :7 bit resolution:
+:-------------------+----------------+-----------------+----------------:
+:                 1 :  o             :  o              :Modulation wheel:
+:                 2 :  o             :  o              :Breath control  :
+:                 4 :  o             :  o              :Foot controller :
+:Control          5 :  x             :  o              :Portamento time :
+:                 6 :  o             :  o           ** :Data entry knob :
+:Change           7 :  x             :  o              :Volume          :
+:                   :                :                 :                :
+:                64 :  o             :  o              :Sustain foot sw :
+:                65 :  o             :  o              :Portamento f sw :
+:                   :                :                 :                :
+:                96 :  o             :  o              :Data entry +1   : 
+:                97 :  o             :  o              :Data entry -1   :
+:                   :                :                 :                :
+:-------------------+----------------+-----------------+----------------:
+:Prog               :  o 0 - 63  *** :  o 0 - 127      :                :
+:Change : True #    :  ************* :    0 - 127      :32-63:cartridge :
+:-------------------+----------------+-----------------+----------------:
+:System Exclusive   :  o        **** :  o         **** :Voice parameters:
+:-------------------+----------------+-----------------+----------------:
+:System : Song Pos  :  x             :  x              :                :
+:       : Song Sel  :  x             :  x              :                :
+:Common : Tune      :  x             :  x              :                :
+:-------------------+----------------+-----------------+----------------:
+:System    :Clock   :  x             :  x              :                :
+:Real Time :Commands:  x             :  x              :                :
+:-------------------+----------------+-----------------+----------------:
+:Aux  :Local ON/OFF :  x             :  x              :                :
+:     :All Notes OFF:  x             :  o  (126, 127)  :                :
+:Mes- :Active Sense :  o             :  o              :                :
+:sages:Reset        :  x             :  x              :                :
+:-------------------+----------------+-----------------+----------------:
+:Notes              :  **   only when master tune is selected by panel  :
+:                   :       button                                      :
+:                   :  ***  transmit if system information unavailable  :
+:                   :  **** transmit/receive if system information      :
+:                   :       available                                   :
++-----------------------------------------------------------------------+
+Mode 1 : OMNI ON,  POLY   Mode 2 : OMNI ON,  MONO                o : Yes
+Mode 3 : OMNI OFF, POLY   Mode 4 : OMNI OFF, MONO                x : No
