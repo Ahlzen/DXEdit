@@ -40,7 +40,8 @@ export default function App()
     <div className="App">
       <h1>DX Editor</h1>
     </div>
-    <div>
+    <fieldset className="panel">
+      <legend>Config</legend>
       <MidiPortSelector
         title="DX7 MIDI Input:"
         portNames={midiInPortNames}
@@ -56,7 +57,14 @@ export default function App()
         portNames={midiInPortNames}
         selectedPortName={controllerIn}
         onPortChanged={handleControllerInChanged} />
-    </div>
+    </fieldset>
+    <fieldset className="panel">
+      <legend>MIDI Test</legend>
+      <button onClick={handleSendNoteOnOff}>
+        Send Note On / Note Off
+      </button>
+    </fieldset>
+
     </>
   );
 
@@ -79,6 +87,18 @@ export default function App()
     console.log("App: handleControllerInChanged(): " + portName);
     midiRef.current?.useControllerIn(portName);
     setControllerIn(portName);
+  }
+
+  function handleSendNoteOnOff() {
+    console.log("App: handleSendNoteOnOff()");
+    if (midiRef.current) {
+      console.log("Sending Note On...");
+      midiRef.current?.sendMessage([0x90, 60, 70]);
+      setTimeout(() => {
+        console.log("Sending Note Off...");
+        midiRef.current?.sendMessage([0x80, 0, 0]);
+      }, 1000); // Send Note Off after 1 second
+    }
   }
 
 
