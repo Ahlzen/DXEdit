@@ -8,6 +8,18 @@ const NO_MIDI_PORT_VALUE = "None";
 let midi = (function() {
 	var my = {};
 
+	// Constants
+	my.START_OF_SYSEX = 0xF0;
+	my.END_OF_SYSEX = 0xF7;
+	my.YAMAHA_MANUFACTURER_ID = 0x43;
+	my.SUB_STATUS_BULK = 0x00;
+	my.SUB_STATUS_PARAMETER = 0x10; // 0x01 << 4
+	my.BULK_FORMAT_SINGLE_VOICE = 0x00;
+	my.BULK_FORMAT_32VOICES = 0x09;
+	my.PARAMETER_GROUP_VOICE = 0x00;
+	my.PARAMETER_GROUP_FUNCTION = 0x80; // 0x02 << 2
+	
+
 	// WebMIDI objects
 	var m = null;
 	var midiIn = null;

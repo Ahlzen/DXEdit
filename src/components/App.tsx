@@ -3,6 +3,7 @@ import './App.css';
 
 import midi from '../midi/midi.js';
 import MidiPortSelector from './MidiPortSelector.tsx';
+import RadioGroup from './RadioGroup.tsx';
 
 export default function App()
 {
@@ -13,6 +14,8 @@ export default function App()
   const [midiIn, setMidiIn] = useState<string|null>(null);
   const [midiOut, setMidiOut] = useState<string|null>(null);
   const [controllerIn, setControllerIn] = useState<string|null>(null);
+
+  const [midiChannel, setMidiChannel] = useState<number>(0);
 
   const midiRef = useRef<typeof midi | null>(null);
 
@@ -58,6 +61,7 @@ export default function App()
         selectedPortName={controllerIn}
         onPortChanged={handleControllerInChanged} />
     </fieldset>
+
     <fieldset className="panel">
       <legend>MIDI Test</legend>
       <button onClick={handleSendNoteOnOff}>
@@ -76,6 +80,18 @@ export default function App()
       {/* <button onClick={handleUpdatePatchName}>
         Update patch name
       </button> */}
+    </fieldset>
+
+    <fieldset className="panel">
+      <legend>Performance Parameters</legend>
+      <RadioGroup
+        title="Voice mode:"
+        options={{ 0: "Poly", 1: "Mono" }}
+        selectedValue={1}
+        onValueChanged={(value) => {handleVoiceModeChanged(value)}} />
+      <br/>
+
+
     </fieldset>
 
     </>
@@ -116,26 +132,43 @@ export default function App()
 
   function handleUpdatePatchName(patchName: string) {
     console.log("App: handleUpdatePatchName()");
-    if (midiRef.current) {
-      patchName = patchName.toUpperCase(); // TODO: Verify valid chars for DX7
-      const patchNameBytes = Array
-        .from(patchName)
-        .map(char => char.charCodeAt(0));
-      for (let i = 0; i < 10; i++) {
-        let ascii = patchNameBytes[i] || 32;
-        // DX7 Parameter Change sysex
-        // Parameter # 145-154 are Voice Name Char 1-10
-        const sysexMessage = [0xF0, 
-          0x43, // Yamaha ID
-          0x10, // Sub-status 1, Channel 1
-          0x01, // Parameter group 0 = voice, 1 = parameter bit 8
-          17+i, // parameter low 7 bits: 145-128=17
-          ascii, // ASCII char
-          0xF7];
-        midiRef.current?.sendMessage(sysexMessage);
-      }      
-    }
+    patchName = patchName.toUpperCase(); // TODO: Verify valid chars for DX7
+    const patchNameBytes = Array
+      .from(patchName)
+      .map(char => char.charCodeAt(0));
+    for (let i = 0; i < 10; i++) {
+      let ascii = patchNameBytes[i] || 32;
+      // DX7 Parameter Change sysex
+      // Parameter # 145-154 are Voice Name Char 1-10
+      const sysexMessage = [
+        midi.START_OF_SYSEX, 
+        midi.YAMAHA_MANUFACTURER_ID,
+        midi.SUB_STATUS_PARAMETER + midiChannel,
+        midi.PARAMETER_GROUP_VOICE + 0x01, // parameter bit 8
+        17+i, // parameter bit 7..1: 145-128=17
+        ascii, // ASCII char
+        midi.END_OF_SYSEX];
+      midiRef.current?.sendMessage(sysexMessage);
+    }      
   }
+
+
+  // Function (performance) parameters
+
+  function handleVoiceModeChanged(value: number) {
+    console.log("App: handleVoiceModeChanged(): " + value);
+    if (value !== 0 && value !== 1) return;
+    const sysexMessage = [
+      midi.START_OF_SYSEX, 
+      midi.YAMAHA_MANUFACTURER_ID,
+      midi.SUB_STATUS_PARAMETER + midiChannel,
+      midi.PARAMETER_GROUP_FUNCTION,
+      value,
+      midi.END_OF_SYSEX];
+    midiRef.current?.sendMessage(sysexMessage);
+  }
+
+
 
 
   // Helpers
