@@ -1,13 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
 
+// MIDI
 import midi from '../midi/midi.js';
+import type { DX7performanceParams } from '../midi/DX7performanceParams.ts';
+
+// components
 import MidiPortSelector from './MidiPortSelector.tsx';
 import RadioGroup from './RadioGroup.tsx';
+import Slider from './Slider.tsx';
 
 export default function App()
 {
-  // App state
+  const midiRef = useRef<typeof midi | null>(null);
+
+  // MIDI configuration state
   const [midiInPortNames, setMidiInPortNames] = useState<string[]>([]);
   const [midiOutPortNames, setMidiOutPortNames] = useState<string[]>([]);
 
@@ -17,9 +24,14 @@ export default function App()
 
   const [midiChannel, setMidiChannel] = useState<number>(0);
 
-  const midiRef = useRef<typeof midi | null>(null);
+  // Editor state
+  const [perfParams, setPerfParams] = useState<DX7performanceParams>({
+    monoMode: 0,
+    pitchBendRange: 2,
+    pitchBendStep: 0,
+  });
 
-
+  
   useEffect(() => {
     console.log("App: useEffect()");
     if (midiRef.current === null)
@@ -72,14 +84,8 @@ export default function App()
         <input type="text"
           maxLength={10}
           placeholder="max 10 chars"
-          onChange={(e) => {
-            const patchName = e.target.value;
-            handleUpdatePatchName(patchName);
-          }} />
+          onChange={(e) => {handleUpdatePatchName(e.target.value)}} />
       </label>
-      {/* <button onClick={handleUpdatePatchName}>
-        Update patch name
-      </button> */}
     </fieldset>
 
     <fieldset className="panel">
@@ -87,13 +93,22 @@ export default function App()
       <RadioGroup
         title="Voice mode:"
         options={{ 0: "Poly", 1: "Mono" }}
-        selectedValue={1}
+        selectedValue={perfParams.monoMode}
         onValueChanged={(value) => {handleVoiceModeChanged(value)}} />
       <br/>
-
-
+      <Slider
+        title="Pitch bend range:"
+        selectedValue={perfParams.pitchBendRange}
+        minValue={0}
+        maxValue={12}
+        onValueChanged={handlePitchBendRangeChanged}/>
+      <Slider
+        title="Pitch bend step:"
+        selectedValue={perfParams.pitchBendStep}
+        minValue={0}
+        maxValue={12}
+        onValueChanged={handlePitchBendStepChanged}/>
     </fieldset>
-
     </>
   );
 
@@ -157,18 +172,47 @@ export default function App()
 
   function handleVoiceModeChanged(value: number) {
     console.log("App: handleVoiceModeChanged(): " + value);
-    if (value !== 0 && value !== 1) return;
-    const sysexMessage = [
+    sendFunctionParameterChangeSysex(64, value, 0, 1);
+    setPerfParams({...perfParams, monoMode: value})
+  }
+
+  function handlePitchBendRangeChanged(value: number) {
+    console.log("App: handlePitchBendRangeChanged(): " + value);
+    sendFunctionParameterChangeSysex(65, value, 0, 12);
+    setPerfParams({...perfParams, pitchBendRange: value})
+  }
+
+  function handlePitchBendStepChanged(value: number) {
+    console.log("App: handlePitchBendStepChanged(): " + value);
+    sendFunctionParameterChangeSysex(66, value, 0, 12);
+    setPerfParams({...perfParams, pitchBendStep: value})
+  }
+
+
+  function sendFunctionParameterChangeSysex(
+    parameterNumber: number,
+    parameterValue: number,
+    minAllowedValue: number,
+    maxAllowedValue: number)
+  {
+    if (parameterNumber < 64 || parameterNumber > 77) {
+      console.log("Invalid parameter number: " + parameterNumber);
+      return;
+    }
+    if (parameterValue < minAllowedValue || parameterValue > maxAllowedValue) {
+      console.log(`Invalid parameter value: {parameterValue} (allowed: {minAllowedValue} {maxAllowedValue})`);
+      return;
+    }
+    const sysexData = [
       midi.START_OF_SYSEX, 
       midi.YAMAHA_MANUFACTURER_ID,
       midi.SUB_STATUS_PARAMETER + midiChannel,
       midi.PARAMETER_GROUP_FUNCTION,
-      value,
+      parameterNumber,
+      parameterValue,
       midi.END_OF_SYSEX];
-    midiRef.current?.sendMessage(sysexMessage);
+    midiRef.current?.sendMessage(sysexData);
   }
-
-
 
 
   // Helpers

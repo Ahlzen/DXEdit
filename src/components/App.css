@@ -1,6 +1,6 @@
 body {
   color: #ecb;
-  background-color: #302820;
+  background-color: #282420;
   padding: 10px;
 }
 
@@ -29,7 +29,8 @@ legend {
 select,
 button,
 input[type="text"],
-input[type="radio"]
+input[type="radio"],
+input[type="range"]
 {
   color: white;
   background-color: black;
@@ -39,7 +40,13 @@ input[type="radio"]
 }
 select,
 input[type="text"],
-input[type="radio"]
+input[type="radio"],
+input[type="range"],
+.slider .value
 {
   margin-left: 1em;
+}
+input[type="range"] {
+  padding-top: 0;
+  padding-bottom: 0;
 }
