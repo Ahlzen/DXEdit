@@ -66,9 +66,7 @@ export default function App()
 
   return (
     <>
-    <div className="App">
-      <h1>DX Editor</h1>
-    </div>
+    <h1>DX/TX Editor</h1>
     <fieldset className="panel">
       <legend>Config</legend>
       <MidiPortSelector
@@ -143,7 +141,7 @@ export default function App()
         onValueChanged={handleGlissandoChanged} />
 
 
-      <h3>Mod wheel</h3>
+      <h3>Mod Wheel</h3>
       <Slider
         title="Range:"
         selectedValue={perfParams.modWheelRange}
@@ -156,7 +154,45 @@ export default function App()
         selectedValue={perfParams.modWheelAssign}
         onValueChanged={(v) => handlePerformanceControlAssignChanged('modWheel', v)} />
 
+      <h3>Aftertouch</h3>
+      <Slider
+        title="Range:"
+        selectedValue={perfParams.aftertouchRange}
+        minValue={0}
+        maxValue={99}
+        onValueChanged={(v) => handlePerformanceControlRangeChanged('aftertouch', v)} />
+      <CheckBoxGroup
+        title="Assign:"
+        options={{1: 'Pitch', 2: 'Amp', 4: 'EG Bias'}}
+        selectedValue={perfParams.aftertouchAssign}
+        onValueChanged={(v) => handlePerformanceControlAssignChanged('aftertouch', v)} />
+
+      <h3>Foot Control</h3>
+      <Slider
+        title="Range:"
+        selectedValue={perfParams.footControlRange}
+        minValue={0}
+        maxValue={99}
+        onValueChanged={(v) => handlePerformanceControlRangeChanged('footControl', v)} />
+      <CheckBoxGroup
+        title="Assign:"
+        options={{1: 'Pitch', 2: 'Amp', 4: 'EG Bias'}}
+        selectedValue={perfParams.footControlAssign}
+        onValueChanged={(v) => handlePerformanceControlAssignChanged('footControl', v)} />
       
+      <h3>Breath Control</h3>
+      <Slider
+        title="Range:"
+        selectedValue={perfParams.breathControlRange}
+        minValue={0}
+        maxValue={99}
+        onValueChanged={(v) => handlePerformanceControlRangeChanged('breathControl', v)} />
+      <CheckBoxGroup
+        title="Assign:"
+        options={{1: 'Pitch', 2: 'Amp', 4: 'EG Bias'}}
+        selectedValue={perfParams.breathControlAssign}
+        onValueChanged={(v) => handlePerformanceControlAssignChanged('breathControl', v)} />
+
     </fieldset>
     </>
   );
@@ -288,13 +324,6 @@ export default function App()
       case 'breathControl': return 74;
       case 'aftertouch': return 76;
     }
-  }
-
-  // based on: https://stackoverflow.com/questions/74526023/setting-object-property-by-string-name
-  function setProperty<T extends object, K extends keyof T>(
-    obj: T, key: K, val: T[K])
-  {
-    obj[key] = val;
   }
 
   function sendFunctionParameterChangeSysex(
