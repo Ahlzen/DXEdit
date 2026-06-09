@@ -1,3 +1,9 @@
+export type performanceControl =
+  'modWheel' |
+  'footControl' |
+  'breathControl' |
+  'aftertouch';
+
 export type DX7performanceParams = {
   monoMode:             number, // 0=poly, 1=mono
 

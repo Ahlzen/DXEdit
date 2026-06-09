@@ -3,15 +3,14 @@ import './App.css';
 
 // MIDI
 import midi from '../midi/midi.js';
-import type { DX7performanceParams } from '../midi/DX7performanceParams.ts';
+import type { DX7performanceParams, performanceControl } from '../midi/DX7performanceParams.ts';
 
 // components
 import MidiPortSelector from './MidiPortSelector.tsx';
 import RadioGroup from './RadioGroup.tsx';
 import Slider from './Slider.tsx';
-import CheckBoxGroup from './CheckBoxGroup.tsx';
+import PerformanceControlEditor from './PerformanceControlEditor.tsx';
 
-type performanceControl = 'modWheel' | 'footControl' | 'breathControl' | 'aftertouch';
 
 export default function App()
 {
@@ -140,59 +139,30 @@ export default function App()
         selectedValue={perfParams.glissando}
         onValueChanged={handleGlissandoChanged} />
 
-
-      <h3>Mod Wheel</h3>
-      <Slider
-        title="Range:"
-        selectedValue={perfParams.modWheelRange}
-        minValue={0}
-        maxValue={99}
-        onValueChanged={(v) => handlePerformanceControlRangeChanged('modWheel', v)} />
-      <CheckBoxGroup
-        title="Assign:"
-        options={{1: 'Pitch', 2: 'Amp', 4: 'EG Bias'}}
-        selectedValue={perfParams.modWheelAssign}
-        onValueChanged={(v) => handlePerformanceControlAssignChanged('modWheel', v)} />
-
-      <h3>Aftertouch</h3>
-      <Slider
-        title="Range:"
-        selectedValue={perfParams.aftertouchRange}
-        minValue={0}
-        maxValue={99}
-        onValueChanged={(v) => handlePerformanceControlRangeChanged('aftertouch', v)} />
-      <CheckBoxGroup
-        title="Assign:"
-        options={{1: 'Pitch', 2: 'Amp', 4: 'EG Bias'}}
-        selectedValue={perfParams.aftertouchAssign}
-        onValueChanged={(v) => handlePerformanceControlAssignChanged('aftertouch', v)} />
-
-      <h3>Foot Control</h3>
-      <Slider
-        title="Range:"
-        selectedValue={perfParams.footControlRange}
-        minValue={0}
-        maxValue={99}
-        onValueChanged={(v) => handlePerformanceControlRangeChanged('footControl', v)} />
-      <CheckBoxGroup
-        title="Assign:"
-        options={{1: 'Pitch', 2: 'Amp', 4: 'EG Bias'}}
-        selectedValue={perfParams.footControlAssign}
-        onValueChanged={(v) => handlePerformanceControlAssignChanged('footControl', v)} />
-      
-      <h3>Breath Control</h3>
-      <Slider
-        title="Range:"
-        selectedValue={perfParams.breathControlRange}
-        minValue={0}
-        maxValue={99}
-        onValueChanged={(v) => handlePerformanceControlRangeChanged('breathControl', v)} />
-      <CheckBoxGroup
-        title="Assign:"
-        options={{1: 'Pitch', 2: 'Amp', 4: 'EG Bias'}}
-        selectedValue={perfParams.breathControlAssign}
-        onValueChanged={(v) => handlePerformanceControlAssignChanged('breathControl', v)} />
-
+      <PerformanceControlEditor
+        title="Mod Wheel"
+        rangeValue={perfParams.modWheelRange}
+        onRangeChanged={(v) => handlePerformanceControlRangeChanged('modWheel', v)}
+        assignValue={perfParams.modWheelAssign}
+        onAssignChanged={(v) => handlePerformanceControlAssignChanged('modWheel', v)} />
+      <PerformanceControlEditor
+        title="Aftertouch"
+        rangeValue={perfParams.aftertouchRange}
+        onRangeChanged={(v) => handlePerformanceControlRangeChanged('aftertouch', v)}
+        assignValue={perfParams.aftertouchAssign}
+        onAssignChanged={(v) => handlePerformanceControlAssignChanged('aftertouch', v)} />
+      <PerformanceControlEditor
+        title="Foot Control"
+        rangeValue={perfParams.footControlRange}
+        onRangeChanged={(v) => handlePerformanceControlRangeChanged('footControl', v)}
+        assignValue={perfParams.footControlAssign}
+        onAssignChanged={(v) => handlePerformanceControlAssignChanged('footControl', v)} />
+      <PerformanceControlEditor
+        title="Breath Control"
+        rangeValue={perfParams.breathControlRange}
+        onRangeChanged={(v) => handlePerformanceControlRangeChanged('breathControl', v)}
+        assignValue={perfParams.breathControlAssign}
+        onAssignChanged={(v) => handlePerformanceControlAssignChanged('breathControl', v)} />
     </fieldset>
     </>
   );
