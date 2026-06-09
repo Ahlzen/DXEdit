@@ -30,7 +30,8 @@ select,
 button,
 input[type="text"],
 input[type="radio"],
-input[type="range"]
+input[type="range"],
+input[type="checkbox"]
 {
   color: white;
   background-color: black;
@@ -42,6 +43,7 @@ select,
 input[type="text"],
 input[type="radio"],
 input[type="range"],
+input[type="checkbox"],
 .slider .value
 {
   margin-left: 1em;
@@ -49,4 +51,13 @@ input[type="range"],
 input[type="range"] {
   padding-top: 0;
   padding-bottom: 0;
+  position:relative;
+  top: 6px;
+}
+.panel h3 {
+  font-size: 100%;
+  font-weight: bold;
+  margin-bottom: 0;
+  margin-top: 1em;
+  border-top: 1px solid #432;
 }

@@ -5,7 +5,7 @@ export default function RadioGroup(props: {
   onValueChanged: (value: number) => void})
 {
   return (
-    <div className="radio-group">
+    <div className="radioGroup">
       <label>{props.title}
       {Object.entries(props.options).map(([value, name]) => (
         <label key={value}>

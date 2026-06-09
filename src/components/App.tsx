@@ -9,6 +9,9 @@ import type { DX7performanceParams } from '../midi/DX7performanceParams.ts';
 import MidiPortSelector from './MidiPortSelector.tsx';
 import RadioGroup from './RadioGroup.tsx';
 import Slider from './Slider.tsx';
+import CheckBoxGroup from './CheckBoxGroup.tsx';
+
+type performanceControl = 'modWheel' | 'footControl' | 'breathControl' | 'aftertouch';
 
 export default function App()
 {
@@ -29,6 +32,17 @@ export default function App()
     monoMode: 0,
     pitchBendRange: 2,
     pitchBendStep: 0,
+    portamentoTime: 0,
+    portamentoMode: 0,
+    glissando: 0,
+    modWheelRange: 0,
+    modWheelAssign: 0,
+    aftertouchRange: 0,
+    aftertouchAssign: 0,
+    footControlRange: 0,
+    footControlAssign: 0,
+    breathControlRange: 0,
+    breathControlAssign: 0,
   });
 
   
@@ -94,20 +108,55 @@ export default function App()
         title="Voice mode:"
         options={{ 0: "Poly", 1: "Mono" }}
         selectedValue={perfParams.monoMode}
-        onValueChanged={(value) => {handleVoiceModeChanged(value)}} />
-      <br/>
+        onValueChanged={handleVoiceModeChanged} />
+      
+      <h3>Pitch Bend</h3>
       <Slider
-        title="Pitch bend range:"
+        title="Range:"
         selectedValue={perfParams.pitchBendRange}
         minValue={0}
         maxValue={12}
         onValueChanged={handlePitchBendRangeChanged}/>
       <Slider
-        title="Pitch bend step:"
+        title="Step:"
         selectedValue={perfParams.pitchBendStep}
         minValue={0}
         maxValue={12}
         onValueChanged={handlePitchBendStepChanged}/>
+
+      <h3>Portamento</h3>
+      <Slider
+        title="Time:"
+        selectedValue={perfParams.portamentoTime}
+        minValue={0}
+        maxValue={99}
+        onValueChanged={handlePortamentoTimeChanged}/>
+      <RadioGroup
+        title='Mode:'
+        options={{0: 'Retain', 1: 'Follow'}}
+        selectedValue={perfParams.portamentoTime}
+        onValueChanged={handlePortamentoModeChanged} />
+      <RadioGroup
+        title='Glissando:'
+        options={{0: 'Off', 1: 'On'}}
+        selectedValue={perfParams.glissando}
+        onValueChanged={handleGlissandoChanged} />
+
+
+      <h3>Mod wheel</h3>
+      <Slider
+        title="Range:"
+        selectedValue={perfParams.modWheelRange}
+        minValue={0}
+        maxValue={99}
+        onValueChanged={(v) => handlePerformanceControlRangeChanged('modWheel', v)} />
+      <CheckBoxGroup
+        title="Assign:"
+        options={{1: 'Pitch', 2: 'Amp', 4: 'EG Bias'}}
+        selectedValue={perfParams.modWheelAssign}
+        onValueChanged={(v) => handlePerformanceControlAssignChanged('modWheel', v)} />
+
+      
     </fieldset>
     </>
   );
@@ -173,21 +222,80 @@ export default function App()
   function handleVoiceModeChanged(value: number) {
     console.log("App: handleVoiceModeChanged(): " + value);
     sendFunctionParameterChangeSysex(64, value, 0, 1);
-    setPerfParams({...perfParams, monoMode: value})
+    setPerfParams({...perfParams, monoMode: value});
   }
 
   function handlePitchBendRangeChanged(value: number) {
     console.log("App: handlePitchBendRangeChanged(): " + value);
     sendFunctionParameterChangeSysex(65, value, 0, 12);
-    setPerfParams({...perfParams, pitchBendRange: value})
+    setPerfParams({...perfParams, pitchBendRange: value});
   }
-
   function handlePitchBendStepChanged(value: number) {
     console.log("App: handlePitchBendStepChanged(): " + value);
     sendFunctionParameterChangeSysex(66, value, 0, 12);
-    setPerfParams({...perfParams, pitchBendStep: value})
+    setPerfParams({...perfParams, pitchBendStep: value});
   }
 
+  function handlePortamentoTimeChanged(value: number) {
+    console.log("App: handlePortamentoTimeChanged(): " + value);
+    sendFunctionParameterChangeSysex(69, value, 0, 99);
+    setPerfParams({...perfParams, portamentoTime: value});
+  }
+  function handlePortamentoModeChanged(value: number) {
+    console.log("App: handlePortamentoModeChanged(): " + value);
+    sendFunctionParameterChangeSysex(67, value, 0, 1);
+    setPerfParams({...perfParams, portamentoMode: value});
+  }
+  function handleGlissandoChanged(value: number) {
+    console.log("App: handleGlissandoChanged(): " + value);
+    sendFunctionParameterChangeSysex(68, value, 0, 1);
+    setPerfParams({...perfParams, glissando: value});
+  }
+
+  function handlePerformanceControlRangeChanged(
+    controlType: performanceControl, value: number) {
+    console.log(`App: handlePerformanceControlRangeChanged(): ${controlType} ${value}`);
+    sendFunctionParameterChangeSysex(
+      getPerformanceControlParameterNumber(controlType),
+      value, 0, 99);   
+    switch (controlType) {
+      case 'modWheel': setPerfParams({...perfParams, modWheelRange: value}); break;
+      case 'footControl': setPerfParams({...perfParams, footControlRange: value}); break;
+      case 'breathControl': setPerfParams({...perfParams, breathControlRange: value}); break;
+      case 'aftertouch': setPerfParams({...perfParams, aftertouchRange: value}); break;
+    }
+  }
+  function handlePerformanceControlAssignChanged(
+    controlType: performanceControl, value: number)
+  {
+    console.log(`App: handlePerformanceControlAssignChanged(): ${controlType} ${value}`);
+    sendFunctionParameterChangeSysex(
+      getPerformanceControlParameterNumber(controlType)+1,
+      value, 0, 7);
+    switch (controlType) {
+      case 'modWheel': setPerfParams({...perfParams, modWheelAssign: value}); break;
+      case 'footControl': setPerfParams({...perfParams, footControlAssign: value}); break;
+      case 'breathControl': setPerfParams({...perfParams, breathControlAssign: value}); break;
+      case 'aftertouch': setPerfParams({...perfParams, aftertouchAssign: value}); break;
+    }
+  }
+  function getPerformanceControlParameterNumber(
+    controlType: performanceControl) : number
+  {
+    switch (controlType) {
+      case 'modWheel': return 70;
+      case 'footControl': return 72;
+      case 'breathControl': return 74;
+      case 'aftertouch': return 76;
+    }
+  }
+
+  // based on: https://stackoverflow.com/questions/74526023/setting-object-property-by-string-name
+  function setProperty<T extends object, K extends keyof T>(
+    obj: T, key: K, val: T[K])
+  {
+    obj[key] = val;
+  }
 
   function sendFunctionParameterChangeSysex(
     parameterNumber: number,
