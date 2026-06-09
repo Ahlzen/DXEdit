@@ -17,7 +17,7 @@ let midi = (function() {
 	my.BULK_FORMAT_SINGLE_VOICE = 0x00;
 	my.BULK_FORMAT_32VOICES = 0x09;
 	my.PARAMETER_GROUP_VOICE = 0x00;
-	my.PARAMETER_GROUP_FUNCTION = 0x80; // 0x02 << 2
+	my.PARAMETER_GROUP_FUNCTION = 0x08; // 0x02 << 2
 	
 
 	// WebMIDI objects
