@@ -3,7 +3,8 @@ import './App.css';
 
 // MIDI
 import midi from '../midi/midi.js';
-import type { DX7performanceParams, performanceControl } from '../midi/DX7performanceParams.ts';
+import type { performanceParam, performanceValues } from '../midi/DX7performanceParams.ts'
+import { performanceParamSpecs } from '../midi/DX7performanceParams.ts';
 
 // components
 import MidiPortSelector from './MidiPortSelector.tsx';
@@ -27,21 +28,21 @@ export default function App()
   const [midiChannel, setMidiChannel] = useState<number>(0);
 
   // Editor state
-  const [perfParams, setPerfParams] = useState<DX7performanceParams>({
-    monoMode: 0,
-    pitchBendRange: 2,
-    pitchBendStep: 0,
-    portamentoTime: 0,
-    portamentoMode: 0,
-    glissando: 0,
-    modWheelRange: 0,
-    modWheelAssign: 0,
-    aftertouchRange: 0,
-    aftertouchAssign: 0,
-    footControlRange: 0,
-    footControlAssign: 0,
-    breathControlRange: 0,
-    breathControlAssign: 0,
+  const [perfParams, setPerfParams] = useState<performanceValues>({
+    'monoMode': 0,
+    'pitchBendRange': 2,
+    'pitchBendStep': 0,
+    'portamentoTime': 0,
+    'portamentoMode': 0,
+    'glissando': 0,
+    'modWheelRange': 0,
+    'modWheelAssign': 0,
+    'aftertouchRange': 0,
+    'aftertouchAssign': 0,
+    'footControlRange': 0,
+    'footControlAssign': 0,
+    'breathControlRange': 0,
+    'breathControlAssign': 0,
   });
 
   
@@ -105,7 +106,7 @@ export default function App()
         title="Voice mode:"
         options={{ 0: "Poly", 1: "Mono" }}
         selectedValue={perfParams.monoMode}
-        onValueChanged={handleVoiceModeChanged} />
+        onValueChanged={(v) => handlePerformanceParamChanged('monoMode', v)} />
       
       <h3>Pitch Bend</h3>
       <Slider
@@ -113,13 +114,13 @@ export default function App()
         selectedValue={perfParams.pitchBendRange}
         minValue={0}
         maxValue={12}
-        onValueChanged={handlePitchBendRangeChanged}/>
+        onValueChanged={(v) => handlePerformanceParamChanged('pitchBendRange', v)} />
       <Slider
         title="Step:"
         selectedValue={perfParams.pitchBendStep}
         minValue={0}
         maxValue={12}
-        onValueChanged={handlePitchBendStepChanged}/>
+        onValueChanged={(v) => handlePerformanceParamChanged('pitchBendStep', v)} />
 
       <h3>Portamento</h3>
       <Slider
@@ -127,42 +128,42 @@ export default function App()
         selectedValue={perfParams.portamentoTime}
         minValue={0}
         maxValue={99}
-        onValueChanged={handlePortamentoTimeChanged}/>
+        onValueChanged={(v) => handlePerformanceParamChanged('portamentoTime', v)} />
       <RadioGroup
         title='Mode:'
         options={{0: 'Retain', 1: 'Follow'}}
-        selectedValue={perfParams.portamentoTime}
-        onValueChanged={handlePortamentoModeChanged} />
+        selectedValue={perfParams.portamentoMode}
+        onValueChanged={(v) => handlePerformanceParamChanged('portamentoMode', v)} />
       <RadioGroup
         title='Glissando:'
         options={{0: 'Off', 1: 'On'}}
         selectedValue={perfParams.glissando}
-        onValueChanged={handleGlissandoChanged} />
+        onValueChanged={(v) => handlePerformanceParamChanged('glissando', v)} />
 
       <PerformanceControlEditor
         title="Mod Wheel"
         rangeValue={perfParams.modWheelRange}
-        onRangeChanged={(v) => handlePerformanceControlRangeChanged('modWheel', v)}
+        onRangeChanged={(v) => handlePerformanceParamChanged('modWheelRange', v)}
         assignValue={perfParams.modWheelAssign}
-        onAssignChanged={(v) => handlePerformanceControlAssignChanged('modWheel', v)} />
+        onAssignChanged={(v) => handlePerformanceParamChanged('modWheelAssign', v)} />
       <PerformanceControlEditor
         title="Aftertouch"
         rangeValue={perfParams.aftertouchRange}
-        onRangeChanged={(v) => handlePerformanceControlRangeChanged('aftertouch', v)}
+        onRangeChanged={(v) => handlePerformanceParamChanged('aftertouchRange', v)}
         assignValue={perfParams.aftertouchAssign}
-        onAssignChanged={(v) => handlePerformanceControlAssignChanged('aftertouch', v)} />
+        onAssignChanged={(v) => handlePerformanceParamChanged('aftertouchAssign', v)} />
       <PerformanceControlEditor
         title="Foot Control"
         rangeValue={perfParams.footControlRange}
-        onRangeChanged={(v) => handlePerformanceControlRangeChanged('footControl', v)}
+        onRangeChanged={(v) => handlePerformanceParamChanged('footControlRange', v)}
         assignValue={perfParams.footControlAssign}
-        onAssignChanged={(v) => handlePerformanceControlAssignChanged('footControl', v)} />
+        onAssignChanged={(v) => handlePerformanceParamChanged('footControlAssign', v)} />
       <PerformanceControlEditor
         title="Breath Control"
         rangeValue={perfParams.breathControlRange}
-        onRangeChanged={(v) => handlePerformanceControlRangeChanged('breathControl', v)}
+        onRangeChanged={(v) => handlePerformanceParamChanged('breathControlRange', v)}
         assignValue={perfParams.breathControlAssign}
-        onAssignChanged={(v) => handlePerformanceControlAssignChanged('breathControl', v)} />
+        onAssignChanged={(v) => handlePerformanceParamChanged('breathControlAssign', v)} />
     </fieldset>
     </>
   );
@@ -222,79 +223,20 @@ export default function App()
     }      
   }
 
-
-  // Function (performance) parameters
-
-  function handleVoiceModeChanged(value: number) {
-    console.log("App: handleVoiceModeChanged(): " + value);
-    sendFunctionParameterChangeSysex(64, value, 0, 1);
-    setPerfParams({...perfParams, monoMode: value});
-  }
-
-  function handlePitchBendRangeChanged(value: number) {
-    console.log("App: handlePitchBendRangeChanged(): " + value);
-    sendFunctionParameterChangeSysex(65, value, 0, 12);
-    setPerfParams({...perfParams, pitchBendRange: value});
-  }
-  function handlePitchBendStepChanged(value: number) {
-    console.log("App: handlePitchBendStepChanged(): " + value);
-    sendFunctionParameterChangeSysex(66, value, 0, 12);
-    setPerfParams({...perfParams, pitchBendStep: value});
-  }
-
-  function handlePortamentoTimeChanged(value: number) {
-    console.log("App: handlePortamentoTimeChanged(): " + value);
-    sendFunctionParameterChangeSysex(69, value, 0, 99);
-    setPerfParams({...perfParams, portamentoTime: value});
-  }
-  function handlePortamentoModeChanged(value: number) {
-    console.log("App: handlePortamentoModeChanged(): " + value);
-    sendFunctionParameterChangeSysex(67, value, 0, 1);
-    setPerfParams({...perfParams, portamentoMode: value});
-  }
-  function handleGlissandoChanged(value: number) {
-    console.log("App: handleGlissandoChanged(): " + value);
-    sendFunctionParameterChangeSysex(68, value, 0, 1);
-    setPerfParams({...perfParams, glissando: value});
-  }
-
-  function handlePerformanceControlRangeChanged(
-    controlType: performanceControl, value: number) {
-    console.log(`App: handlePerformanceControlRangeChanged(): ${controlType} ${value}`);
-    sendFunctionParameterChangeSysex(
-      getPerformanceControlParameterNumber(controlType),
-      value, 0, 99);   
-    switch (controlType) {
-      case 'modWheel': setPerfParams({...perfParams, modWheelRange: value}); break;
-      case 'footControl': setPerfParams({...perfParams, footControlRange: value}); break;
-      case 'breathControl': setPerfParams({...perfParams, breathControlRange: value}); break;
-      case 'aftertouch': setPerfParams({...perfParams, aftertouchRange: value}); break;
-    }
-  }
-  function handlePerformanceControlAssignChanged(
-    controlType: performanceControl, value: number)
+  function handlePerformanceParamChanged(
+    parameter: performanceParam,
+    value: number)
   {
-    console.log(`App: handlePerformanceControlAssignChanged(): ${controlType} ${value}`);
+    console.log(`App: handlePerformanceParamChanged(): ${parameter} ${value}`);
+    let paramSpec = performanceParamSpecs[parameter];
     sendFunctionParameterChangeSysex(
-      getPerformanceControlParameterNumber(controlType)+1,
-      value, 0, 7);
-    switch (controlType) {
-      case 'modWheel': setPerfParams({...perfParams, modWheelAssign: value}); break;
-      case 'footControl': setPerfParams({...perfParams, footControlAssign: value}); break;
-      case 'breathControl': setPerfParams({...perfParams, breathControlAssign: value}); break;
-      case 'aftertouch': setPerfParams({...perfParams, aftertouchAssign: value}); break;
-    }
+      paramSpec.paramNumber, value,
+      paramSpec.minValue, paramSpec.maxValue);   
+    let newParams = {...perfParams};
+    newParams[parameter] = value;
+    setPerfParams(newParams)
   }
-  function getPerformanceControlParameterNumber(
-    controlType: performanceControl) : number
-  {
-    switch (controlType) {
-      case 'modWheel': return 70;
-      case 'footControl': return 72;
-      case 'breathControl': return 74;
-      case 'aftertouch': return 76;
-    }
-  }
+
 
   function sendFunctionParameterChangeSysex(
     parameterNumber: number,

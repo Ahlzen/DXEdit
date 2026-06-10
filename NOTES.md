@@ -3,9 +3,10 @@
 
 ## TODO
 
-* Ensure WebMIDI works with FF linux (snap or deb)
-* List and select midi ports, send and receive midi
-* Edit performance parameters
+o Ensure WebMIDI works with FF linux (snap or deb)
+o List and select midi ports, send and receive midi
+o Edit performance parameters
+* Send sysex only on release (sliders)
 * Edit current program params and name
 * Send/receive sysex.
 * Send individual programs.

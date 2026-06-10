@@ -1,28 +1,45 @@
-export type performanceControl =
-  'modWheel' |
-  'footControl' |
-  'breathControl' |
-  'aftertouch';
+export type performanceParam =
+  'monoMode' |
+  'pitchBendRange' |
+  'pitchBendStep' |
+  'portamentoTime' |
+  'portamentoMode' |
+  'glissando' |
+  'modWheelRange' |
+  'modWheelAssign' |
+  'aftertouchRange' |
+  'aftertouchAssign' |
+  'footControlRange' |
+  'footControlAssign' |
+  'breathControlRange' |
+  'breathControlAssign';
 
-export type DX7performanceParams = {
-  monoMode:             number, // 0=poly, 1=mono
+export type performanceValues = {
+  [name in performanceParam]: number
+};
 
-  pitchBendRange:       number, // 0..12
-  pitchBendStep:        number, // 0..12
 
-  portamentoTime:       number, // 0-99
-  portamentoMode:       number, // 0=retain, 1=follow
-  glissando:            number, // 0 (disabled), 1 (enabled)
+export type performanceParamSpec = {
+  paramNumber: number,
+  minValue: number,
+  maxValue: number
+}
 
-  modWheelRange:        number, // 0-99
-  modWheelAssign:       number, // 0-7: 1=pitch, 2=amp, 4=EG bias
-
-  aftertouchRange:      number, // 0-99
-  aftertouchAssign:     number, // 0-7: 1=pitch, 2=amp, 4=EG bias
-
-  footControlRange:     number, // 0-99
-  footControlAssign:    number, // 0-7: 1=pitch, 2=amp, 4=EG bias
-
-  breathControlRange:   number, // 0-99
-  breathControlAssign:  number, // 0-7: 1=pitch, 2=amp, 4=EG bias
+export let performanceParamSpecs:
+  {[name in performanceParam]: performanceParamSpec} =
+{ 
+  'monoMode': {paramNumber: 64, minValue: 0, maxValue: 1},
+  'pitchBendRange': {paramNumber: 65, minValue: 0, maxValue: 12},
+  'pitchBendStep': {paramNumber: 66, minValue: 0, maxValue: 12},
+  'portamentoTime': {paramNumber: 69, minValue: 0, maxValue: 99},
+  'portamentoMode': {paramNumber: 67, minValue: 0, maxValue: 1},
+  'glissando': {paramNumber: 68, minValue: 0, maxValue: 1},
+  'modWheelRange': {paramNumber: 70, minValue: 0, maxValue: 99},
+  'modWheelAssign': {paramNumber: 71, minValue: 0, maxValue: 7},
+  'aftertouchRange': {paramNumber: 76, minValue: 0, maxValue: 99},
+  'aftertouchAssign': {paramNumber: 77, minValue: 0, maxValue: 7},
+  'footControlRange': {paramNumber: 72, minValue: 0, maxValue: 99},
+  'footControlAssign': {paramNumber: 73, minValue: 0, maxValue: 7},
+  'breathControlRange': {paramNumber: 74, minValue: 0, maxValue: 99},
+  'breathControlAssign': {paramNumber: 75, minValue: 0, maxValue: 7}
 };
