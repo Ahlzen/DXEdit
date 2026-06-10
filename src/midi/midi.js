@@ -70,7 +70,7 @@ let midi = (function() {
 			midiIn.onmidimessage = message => handleMidiIn(this, message);
 			console.log("Using MIDI in: " + portName);
 		}
-		else console.log("MIDI port not available");
+		else console.log("MIDI port not available: " + portName);
 	};
 
 	my.useControllerIn = function(portName) {
@@ -81,7 +81,7 @@ let midi = (function() {
 			controllerIn.onmidimessage = message => handleControllerIn(this, message);
 			console.log("Using MIDI controller in: " + portName);
 		}
-		else console.log("MIDI port not available");
+		else console.log("MIDI port not available: " + portName);
 	};
 
 	my.useMidiOut = function(portName) {
@@ -91,7 +91,7 @@ let midi = (function() {
 			midiOut = port;
 			console.log("Using MIDI out: " + portName);
 		}
-		else console.log("MIDI port not available");
+		else console.log("MIDI port not available: " + portName);
 	};
 
 
@@ -148,7 +148,7 @@ let midi = (function() {
 	my.getOutPort = (portName) =>
 		midiOutPorts.find(port => port.name === portName);
 
-	my.listPorts = function() {
+	my.listPortsToConsole = function() {
 		midiInPorts.forEach(port => console.log("In: " + port.name));
 		midiOutPorts.forEach(port => console.log("Out: " + port.name));
 	};

@@ -98,7 +98,7 @@ export function buildUint8Array()
   	// Create and fill typed array
   	var arr = new Uint8Array(length);
   	var offset = 0;
-	for (var i = 0; i < arguments.length; i++) {
+		for (var i = 0; i < arguments.length; i++) {
 	    var obj = arguments[i];
 	    if (obj instanceof Array || obj instanceof Uint8Array)
 	    {

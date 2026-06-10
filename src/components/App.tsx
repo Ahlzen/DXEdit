@@ -3,6 +3,8 @@ import './App.css';
 
 // MIDI
 import midi from '../midi/midi.js';
+import { setPrefs, getPrefs } from '../util.js';
+
 import type { performanceParam, performanceValues } from '../midi/DX7performanceParams.ts'
 import { performanceParamSpecs } from '../midi/DX7performanceParams.ts';
 
@@ -54,8 +56,17 @@ export default function App()
       console.log("App: useEffect(): Initializing MIDI...");
       midi.initialize(() => {
         midiRef.current = midi;
-        midi.listPorts();
+        midi.listPortsToConsole();
         updateMidiPorts();
+        if (getPrefs('midiIn')) {
+          handleMidiInChanged(getPrefs('midiIn'));
+        }
+        if (getPrefs('midiOut')) {
+          handleMidiOutChanged(getPrefs('midiOut'));
+        }
+        if (getPrefs('controllerIn')) {
+          handleControllerInChanged(getPrefs('controllerIn'));
+        }
       }, (error: any) => {
         console.error("Failed to initialize MIDI: " + error);
       });
@@ -174,19 +185,22 @@ export default function App()
   async function handleMidiInChanged(portName: string|null) {
     console.log("App: handleMidiInChanged(): " + portName);
     midiRef.current?.useMidiIn(portName);
-    setMidiIn(portName);   
+    setMidiIn(portName);
+    setPrefs('midiIn', portName);
   }
 
   async function handleMidiOutChanged(portName: string|null) {
     console.log("App: handleMidiOutChanged(): " + portName);
     midiRef.current?.useMidiOut(portName);
     setMidiOut(portName);
+    setPrefs('midiOut', portName);
   }
 
   async function handleControllerInChanged(portName: string|null) {
     console.log("App: handleControllerInChanged(): " + portName);
     midiRef.current?.useControllerIn(portName);
     setControllerIn(portName);
+    setPrefs('controllerIn', portName);
   }
 
   function handleSendNoteOnOff() {
