@@ -1,8 +1,6 @@
-// Work in progress
-
 export class WebMidi
 {
-  // Internal state
+  ///// Internal state
   
   private _midiAccess?: MIDIAccess; // set when initialized
   private _midiIn?: MIDIInput;
@@ -11,37 +9,60 @@ export class WebMidi
   private _midiInPorts: MIDIInput[] = [];
   private _midiOutPorts: MIDIOutput[] = [];
 
+  private _isInitialized = false;
+  get isInitialized() {
+    return this._isInitialized;
+  }
 
-  // Public events
+
+  ///// Public events
 
   onMidiIn?: (data: Uint8Array) => void;
   onControllerIn?: (data: Uint8Array) => void;
 
 
+  ///// Constants
+
+	START_OF_SYSEX = 0xF0;
+	END_OF_SYSEX = 0xF7;
+	YAMAHA_MANUFACTURER_ID = 0x43;
+  // TODO: factor out. these are DX7 specific:
+	SUB_STATUS_BULK = 0x00;
+	SUB_STATUS_PARAMETER = 0x10; // 0x01 << 4
+	BULK_FORMAT_SINGLE_VOICE = 0x00;
+	BULK_FORMAT_32VOICES = 0x09;
+	PARAMETER_GROUP_VOICE = 0x00;
+	PARAMETER_GROUP_FUNCTION = 0x08; // 0x02 << 2
+
+
   ///// Initialization
 
-  constructor(needSysex: boolean)
+  constructor()
   {
+  }
+
+  initialize(needSysex: boolean,
+    onSuccess: () => void,
+    onError: (errorMessage: string) => void
+  ) {
     const midiOptions: MIDIOptions = {
       sysex: needSysex
     }
     navigator.requestMIDIAccess(midiOptions).then(
       (access: MIDIAccess) => {
         this._midiAccess = access;
-        this.reinitialize();
+        this._midiInPorts = [];
+        this._midiOutPorts = [];
+        this._midiAccess?.inputs.forEach((port) => this._midiInPorts.push(port));
+        this._midiAccess?.outputs.forEach((port) => this._midiOutPorts.push(port));    
+        this._isInitialized = true;
+        onSuccess();
       },
       (error: any) => {
-        console.error("Error initializing WebMIDI: " + error.name);    
+        const errorMessage = "Error initializing WebMIDI: " + error.name;
+        onError(errorMessage);
       }
     )
-  }
-
-  reinitialize() {
-    if (!this._midiAccess) console.error('No MIDI access.');
-    this._midiInPorts = [];
-    this._midiOutPorts = [];
-    this._midiAccess?.inputs.forEach((port) => this._midiInPorts.push(port));
-    this._midiAccess?.outputs.forEach((port) => this._midiOutPorts.push(port));
   }
 
   
@@ -65,8 +86,9 @@ export class WebMidi
   }
 
 
-  useMidiIn(portName: string) {
+  useMidiIn(portName: string|null) {
     this.closeMidiIn();
+    if (portName === null) return;
     let port = this.getInPort(portName);
     if (port) {
       this._midiIn = port;
@@ -77,8 +99,9 @@ export class WebMidi
     }
   }
 
-  useControllerIn(portName: string) {
+  useControllerIn(portName: string|null) {
     this.closeControllerIn();
+    if (portName === null) return;
     let port = this.getInPort(portName);
     if (port) {
       this._controllerIn = port;
@@ -89,8 +112,9 @@ export class WebMidi
     }
   }
 
-  useMidiOut(portName: string) {
+  useMidiOut(portName: string|null) {
     this.closeMidiOut();
+    if (portName === null) return;
     let port = this.getOutPort(portName);
     if (port) {
       this._midiOut = port;
@@ -166,6 +190,14 @@ export class WebMidi
       if (this.onControllerIn)
         this.onControllerIn(data);
     }
+  }
+
+
+  ///// Diagnostics
+
+  listPortsToConsole() : void {
+    this._midiInPorts.forEach(port => console.log(" In: " + port.name));
+		this._midiOutPorts.forEach(port => console.log(" Out: " + port.name));
   }
 
 
