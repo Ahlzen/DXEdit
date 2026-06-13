@@ -1,3 +1,5 @@
+import { toHexStrings } from "../utils";
+
 export class WebMidi
 {
   ///// Internal state
@@ -168,7 +170,7 @@ export class WebMidi
   sendMessage(data: Iterable<number>) {
     if (!this._midiOut) return;
     this._midiOut.send(data);
-    console.log('Out: [' + this.toHexStrings(data) + ']');
+    console.log('Out: [' + toHexStrings(data) + ']');
   }
 
 
@@ -177,7 +179,7 @@ export class WebMidi
   private handleMidiIn(event: MIDIMessageEvent) : any {
     let data = event.data;
     if (data !== null) {
-      console.log('In: [' + this.toHexStrings(data) + ']');
+      console.log('In: [' + toHexStrings(data) + ']');
       if (this.onMidiIn)
         this.onMidiIn(data);
     }
@@ -186,7 +188,7 @@ export class WebMidi
   private handleControllerIn(event: MIDIMessageEvent) : any {
     let data = event.data;
     if (data !== null) {
-      console.log('C.In: [' + this.toHexStrings(data) + ']');
+      console.log('C.In: [' + toHexStrings(data) + ']');
       if (this.onControllerIn)
         this.onControllerIn(data);
     }
@@ -198,15 +200,6 @@ export class WebMidi
   listPortsToConsole() : void {
     this._midiInPorts.forEach(port => console.log(" In: " + port.name));
 		this._midiOutPorts.forEach(port => console.log(" Out: " + port.name));
-  }
-
-
-  ///// Helpers
-
-  // TODO: Factor out
-  private* toHexStrings(data: Iterable<number>) : Iterable<string> {
-    for (let n of data)
-      yield n.toString(16);
   }
 
 };

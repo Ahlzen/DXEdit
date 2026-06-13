@@ -1,11 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
+import { Preferences } from '../preferences';
 import './App.css';
 
 // MIDI
-//import midi from '../midi/midi.js';
 import { WebMidi } from '../midi/webmidi'
-import { setPrefs, getPrefs } from '../util.js';
-
 import type { performanceParam, performanceValues } from '../midi/DX7performanceParams.ts'
 import { performanceParamSpecs } from '../midi/DX7performanceParams.ts';
 
@@ -20,6 +18,7 @@ export default function App()
 {
   //const midiRef = useRef<typeof midi | null>(null);
   const midi = useRef<WebMidi>(new WebMidi());
+  const prefs = useRef<Preferences>(new Preferences('dxEdit'));
 
   // MIDI configuration state
   const [midiInPortNames, setMidiInPortNames] = useState<string[]>([]);
@@ -56,14 +55,14 @@ export default function App()
         () => {
           midi.current.listPortsToConsole();
           updateMidiPorts();
-          if (getPrefs('midiIn')) {
-            handleMidiInChanged(getPrefs('midiIn'));
+          if (prefs.current.getPrefs('midiIn')) {
+            handleMidiInChanged(prefs.current.getPrefs('midiIn'));
           }
-          if (getPrefs('midiOut')) {
-            handleMidiOutChanged(getPrefs('midiOut'));
+          if (prefs.current.getPrefs('midiOut')) {
+            handleMidiOutChanged(prefs.current.getPrefs('midiOut'));
           }
-          if (getPrefs('controllerIn')) {
-            handleControllerInChanged(getPrefs('controllerIn'));
+          if (prefs.current.getPrefs('controllerIn')) {
+            handleControllerInChanged(prefs.current.getPrefs('controllerIn'));
           }
         },
         (errorMessage) => {
