@@ -8,10 +8,10 @@ o List and select midi ports, send and receive midi
 o Edit performance parameters
 * Send sysex only on release (sliders)
 o Save MIDI settings
-* Port midi.js to TS
+o Port midi.js to TS
 * Try mantine (mantine.dev) ?
 * Edit current program params and name
-* Send/receive sysex.
+* Send/receive full voice/bank sysex.
 * Send individual programs.
 * Librarian features. Save and remix banks.
 * Cloud/share support.
