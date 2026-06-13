@@ -1,10 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
+import { Preferences } from '../preferences';
 import './App.css';
 
 // MIDI
-import midi from '../midi/midi.js';
-import { setPrefs, getPrefs } from '../util.js';
-
+import { WebMidi } from '../midi/webmidi'
 import type { performanceParam, performanceValues } from '../midi/DX7performanceParams.ts'
 import { performanceParamSpecs } from '../midi/DX7performanceParams.ts';
 
@@ -17,7 +16,9 @@ import PerformanceControlEditor from './PerformanceControlEditor.tsx';
 
 export default function App()
 {
-  const midiRef = useRef<typeof midi | null>(null);
+  //const midiRef = useRef<typeof midi | null>(null);
+  const midi = useRef<WebMidi>(new WebMidi());
+  const prefs = useRef<Preferences>(new Preferences('dxEdit'));
 
   // MIDI configuration state
   const [midiInPortNames, setMidiInPortNames] = useState<string[]>([]);
@@ -47,33 +48,29 @@ export default function App()
     'breathControlAssign': 0,
   });
 
-  
   useEffect(() => {
     console.log("App: useEffect()");
-    if (midiRef.current === null)
-    {
-      // need to initialize WebMIDI
-      console.log("App: useEffect(): Initializing MIDI...");
-      midi.initialize(() => {
-        midiRef.current = midi;
-        midi.listPortsToConsole();
-        updateMidiPorts();
-        if (getPrefs('midiIn')) {
-          handleMidiInChanged(getPrefs('midiIn'));
+    if (!midi.current.isInitialized) {
+      midi.current.initialize(true,
+        () => {
+          midi.current.listPortsToConsole();
+          updateMidiPorts();
+          if (prefs.current.getPrefs('midiIn')) {
+            handleMidiInChanged(prefs.current.getPrefs('midiIn'));
+          }
+          if (prefs.current.getPrefs('midiOut')) {
+            handleMidiOutChanged(prefs.current.getPrefs('midiOut'));
+          }
+          if (prefs.current.getPrefs('controllerIn')) {
+            handleControllerInChanged(prefs.current.getPrefs('controllerIn'));
+          }
+        },
+        (errorMessage) => {
+          console.error("Failed to initialize MIDI: " + errorMessage);
         }
-        if (getPrefs('midiOut')) {
-          handleMidiOutChanged(getPrefs('midiOut'));
-        }
-        if (getPrefs('controllerIn')) {
-          handleControllerInChanged(getPrefs('controllerIn'));
-        }
-      }, (error: any) => {
-        console.error("Failed to initialize MIDI: " + error);
-      });
+      );
     }
-    // no need for cleanup
   });
-
 
   return (
     <>
@@ -184,33 +181,33 @@ export default function App()
 
   async function handleMidiInChanged(portName: string|null) {
     console.log("App: handleMidiInChanged(): " + portName);
-    midiRef.current?.useMidiIn(portName);
+    midi.current.useMidiIn(portName);
     setMidiIn(portName);
     setPrefs('midiIn', portName);
   }
 
   async function handleMidiOutChanged(portName: string|null) {
     console.log("App: handleMidiOutChanged(): " + portName);
-    midiRef.current?.useMidiOut(portName);
+    midi.current.useMidiOut(portName);
     setMidiOut(portName);
     setPrefs('midiOut', portName);
   }
 
   async function handleControllerInChanged(portName: string|null) {
     console.log("App: handleControllerInChanged(): " + portName);
-    midiRef.current?.useControllerIn(portName);
+    midi.current.useControllerIn(portName);
     setControllerIn(portName);
     setPrefs('controllerIn', portName);
   }
 
   function handleSendNoteOnOff() {
     console.log("App: handleSendNoteOnOff()");
-    if (midiRef.current) {
+    if (midi.current) {
       console.log("Sending Note On...");
-      midiRef.current?.sendMessage([0x90, 60, 70]);
+      midi.current.sendMessage([0x90 + midiChannel, 60, 70]);
       setTimeout(() => {
         console.log("Sending Note Off...");
-        midiRef.current?.sendMessage([0x80, 60, 0]);
+        midi.current.sendMessage([0x80 + midiChannel, 60, 0]);
       }, 1000); // Send Note Off after 1 second
     }
   }
@@ -226,14 +223,14 @@ export default function App()
       // DX7 Parameter Change sysex
       // Parameter # 145-154 are Voice Name Char 1-10
       const sysexMessage = [
-        midi.START_OF_SYSEX, 
-        midi.YAMAHA_MANUFACTURER_ID,
-        midi.SUB_STATUS_PARAMETER + midiChannel,
-        midi.PARAMETER_GROUP_VOICE + 0x01, // parameter bit 8
+        midi.current.START_OF_SYSEX, 
+        midi.current.YAMAHA_MANUFACTURER_ID,
+        midi.current.SUB_STATUS_PARAMETER + midiChannel,
+        midi.current.PARAMETER_GROUP_VOICE + 0x01, // parameter bit 8
         17+i, // parameter bit 7..1: 145-128=17
         ascii, // ASCII char
-        midi.END_OF_SYSEX];
-      midiRef.current?.sendMessage(sysexMessage);
+        midi.current.END_OF_SYSEX];
+      midi.current.sendMessage(sysexMessage);
     }      
   }
 
@@ -267,14 +264,14 @@ export default function App()
       return;
     }
     const sysexData = [
-      midi.START_OF_SYSEX, 
-      midi.YAMAHA_MANUFACTURER_ID,
-      midi.SUB_STATUS_PARAMETER + midiChannel,
-      midi.PARAMETER_GROUP_FUNCTION,
+      midi.current.START_OF_SYSEX, 
+      midi.current.YAMAHA_MANUFACTURER_ID,
+      midi.current.SUB_STATUS_PARAMETER + midiChannel,
+      midi.current.PARAMETER_GROUP_FUNCTION,
       parameterNumber,
       parameterValue,
-      midi.END_OF_SYSEX];
-    midiRef.current?.sendMessage(sysexData);
+      midi.current.END_OF_SYSEX];
+    midi.current.sendMessage(sysexData);
   }
 
 
@@ -283,8 +280,8 @@ export default function App()
   function updateMidiPorts()
   {
     console.log("App: updateMidiPorts()");
-    setMidiInPortNames(midi.getInNames());
-    setMidiOutPortNames(midi.getOutNames());
+    setMidiInPortNames(midi.current.getInNames());
+    setMidiOutPortNames(midi.current.getOutNames());
   }
 }
 
