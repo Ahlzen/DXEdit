@@ -18,7 +18,6 @@ import PerformanceControlEditor from './PerformanceControlEditor.tsx';
 
 export default function App()
 {
-  //const midiRef = useRef<typeof midi | null>(null);
   const midi = useRef<WebMidi>(new WebMidi());
   const prefs = useRef<Preferences>(new Preferences('dxEdit'));
 
@@ -183,7 +182,9 @@ export default function App()
       <h3>OP6 EG</h3>
       <Slider
         title="Rate 1:"
-        selectedValue={}
+        selectedValue={voiceParams.getValue('OP6 EG Rate 1')}
+        minValue={0} maxValue={99}
+        onValueChanged={(v) => { console.log('op eg rate1: ' + v)}} />
     </fieldset>
     </>
   );
@@ -195,21 +196,21 @@ export default function App()
     console.log("App: handleMidiInChanged(): " + portName);
     midi.current.useMidiIn(portName);
     setMidiIn(portName);
-    setPrefs('midiIn', portName);
+    prefs.current.setPrefs('midiIn', portName);
   }
 
   async function handleMidiOutChanged(portName: string|null) {
     console.log("App: handleMidiOutChanged(): " + portName);
     midi.current.useMidiOut(portName);
     setMidiOut(portName);
-    setPrefs('midiOut', portName);
+    prefs.current.setPrefs('midiOut', portName);
   }
 
   async function handleControllerInChanged(portName: string|null) {
     console.log("App: handleControllerInChanged(): " + portName);
     midi.current.useControllerIn(portName);
     setControllerIn(portName);
-    setPrefs('controllerIn', portName);
+    prefs.current.setPrefs('controllerIn', portName);
   }
 
   function handleSendNoteOnOff() {
