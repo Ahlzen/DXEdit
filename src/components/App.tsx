@@ -4,8 +4,10 @@ import './App.css';
 
 // MIDI
 import { WebMidi } from '../midi/webmidi'
-import type { performanceParam, performanceValues } from '../midi/DX7performanceParams.ts'
-import { performanceParamSpecs } from '../midi/DX7performanceParams.ts';
+import type { performanceParam, performanceValues } from '../midi/performanceParams.ts'
+import { performanceParamSpecs } from '../midi/performanceParams.ts';
+import type { voiceParam } from '../midi/voiceParams';
+import { voiceParamData } from '../midi/voiceParams';
 
 // components
 import MidiPortSelector from './MidiPortSelector.tsx';
@@ -47,6 +49,8 @@ export default function App()
     'breathControlRange': 0,
     'breathControlAssign': 0,
   });
+  const [voiceParams, setVoiceParams] =
+    useState<voiceParamData>(new voiceParamData());
 
   useEffect(() => {
     console.log("App: useEffect()");
@@ -172,6 +176,14 @@ export default function App()
         onRangeChanged={(v) => handlePerformanceParamChanged('breathControlRange', v)}
         assignValue={perfParams.breathControlAssign}
         onAssignChanged={(v) => handlePerformanceParamChanged('breathControlAssign', v)} />
+    </fieldset>
+
+    <fieldset className='panel'>
+      <legend>Voice Parameters</legend>
+      <h3>OP6 EG</h3>
+      <Slider
+        title="Rate 1:"
+        selectedValue={}
     </fieldset>
     </>
   );

@@ -23,7 +23,7 @@ export type performanceParamSpec = {
   paramNumber: number,
   minValue: number,
   maxValue: number
-}
+};
 
 export let performanceParamSpecs:
   {[name in performanceParam]: performanceParamSpec} =
