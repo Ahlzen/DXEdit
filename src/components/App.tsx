@@ -6,8 +6,8 @@ import './App.css';
 import { WebMidi } from '../midi/webmidi'
 import type { performanceParam, performanceValues } from '../midi/performanceParams.ts'
 import { performanceParamSpecs } from '../midi/performanceParams.ts';
-import type { voiceParam } from '../midi/voiceParams';
-import { voiceParamData } from '../midi/voiceParams';
+import type { voiceParam, voiceParamSpec } from '../midi/voiceParams';
+import { voiceParamData, voiceParamSpecs } from '../midi/voiceParams';
 
 // components
 import MidiPortSelector from './MidiPortSelector.tsx';
@@ -184,7 +184,7 @@ export default function App()
         title="Rate 1:"
         selectedValue={voiceParams.getValue('OP6 EG Rate 1')}
         minValue={0} maxValue={99}
-        onValueChanged={(v) => { console.log('op eg rate1: ' + v)}} />
+        onValueChanged={(v) => handleVoiceParamChanged('OP6 EG Rate 1', v)} />
     </fieldset>
     </>
   );
@@ -212,6 +212,8 @@ export default function App()
     setControllerIn(portName);
     prefs.current.setPrefs('controllerIn', portName);
   }
+
+  // For testing
 
   function handleSendNoteOnOff() {
     console.log("App: handleSendNoteOnOff()");
@@ -247,13 +249,15 @@ export default function App()
     }      
   }
 
+  // General performance ("function") or voice parameter changes
+
   function handlePerformanceParamChanged(
     parameter: performanceParam,
     value: number)
   {
     console.log(`App: handlePerformanceParamChanged(): ${parameter} ${value}`);
     let paramSpec = performanceParamSpecs[parameter];
-    sendFunctionParameterChangeSysex(
+    sendParameterChangeSysex('function',
       paramSpec.paramNumber, value,
       paramSpec.minValue, paramSpec.maxValue);   
     let newParams = {...perfParams};
@@ -261,17 +265,26 @@ export default function App()
     setPerfParams(newParams)
   }
 
+  function handleVoiceParamChanged(
+    parameter: voiceParam,
+    value: number
+  )
+  {
+    console.log(`App: handleVoiceParamChanged(): ${parameter} ${value}`);
+    let paramSpec = voiceParamSpecs[parameter];
+    sendParameterChangeSysex('voice',
+      paramSpec.offset, value,
+      0, paramSpec.maxValue);
+    setVoiceParams(voiceParams.setValue(parameter, value));
+  }
 
-  function sendFunctionParameterChangeSysex(
+  function sendParameterChangeSysex(
+    type: 'voice' | 'function',
     parameterNumber: number,
     parameterValue: number,
     minAllowedValue: number,
     maxAllowedValue: number)
   {
-    if (parameterNumber < 64 || parameterNumber > 77) {
-      console.log("Invalid parameter number: " + parameterNumber);
-      return;
-    }
     if (parameterValue < minAllowedValue || parameterValue > maxAllowedValue) {
       console.log(`Invalid parameter value: {parameterValue} (allowed: {minAllowedValue} {maxAllowedValue})`);
       return;
@@ -280,7 +293,9 @@ export default function App()
       midi.current.START_OF_SYSEX, 
       midi.current.YAMAHA_MANUFACTURER_ID,
       midi.current.SUB_STATUS_PARAMETER + midiChannel,
-      midi.current.PARAMETER_GROUP_FUNCTION,
+      type === 'voice' ? 
+        midi.current.PARAMETER_GROUP_VOICE :
+        midi.current.PARAMETER_GROUP_FUNCTION,
       parameterNumber,
       parameterValue,
       midi.current.END_OF_SYSEX];

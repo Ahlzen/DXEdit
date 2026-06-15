@@ -10,12 +10,12 @@ export type voiceParam =
   'Feeback' |
   'Oscillator Sync';
 
-type voiceParamSpec = {
+export type voiceParamSpec = {
   offset: number, // parameter number or offset from start of sub-structure
   maxValue: number,
 }
 
-let voiceParamSpecs : {[name in voiceParam]: voiceParamSpec} = {
+export let voiceParamSpecs : {[name in voiceParam]: voiceParamSpec} = {
   'OP6 EG Rate 1': { offset: 0, maxValue: 99 },
   'OP6 EG Rate 2': { offset: 1, maxValue: 99 },
   'OP6 EG Rate 3': { offset: 2, maxValue: 99 },
@@ -29,10 +29,11 @@ let voiceParamSpecs : {[name in voiceParam]: voiceParamSpec} = {
 };
 
 
+// immutable
 export class voiceParamData {
   private data: Uint8Array;
 
-  constructor();
+  //constructor();
   constructor(data: Uint8Array | null = null) {
     if (data) {
       this.data = new Uint8Array(data);
@@ -48,10 +49,12 @@ export class voiceParamData {
     return this.data[offset];
   }
 
-  setValue(param: voiceParam, value: number) : void {
+  setValue(param: voiceParam, value: number) : voiceParamData {
     let specs = voiceParamSpecs[param];
     value = this.clamp(value, 0, specs.maxValue);
-    this.data[specs.offset] = value;
+    let newData = new voiceParamData(this.data);
+    newData.data[specs.offset] = value;
+    return newData;
   }
 
   private clamp(value: number, min: number, max: number) : number {
@@ -60,153 +63,3 @@ export class voiceParamData {
     return value;
   }
 }
-
-
-
-
-// ///// Voice parameters
-
-// export type voiceParam =
-//   'ops' |
-//   'pitchEg' |
-//   'algorithm'
-//   // TODO: rest
-//   ;
-
-// export type opParam =
-//   'eg' |
-//   'kbdLevSclBrkPt' |
-//   'kbdLevSclLftDepth' |
-//   'kbdLevSclRhtDepth' |
-//   'kbdLevSclLftCurve' |
-//   'kbdLevSclRhtCurve'
-//   // TODO: rest
-//   ;
-
-// export type egValues = {
-//   'rates': number[],
-//   'levels': number[]
-// }
-
-// export type opValues = {
-//   [name in opParam]: number | egValues;
-// }
-
-// export type voiceValues = {
-//   [name in voiceParam]: number | opValues[] | egValues;
-// }
-
-
-// ///// Parameter specs
-
-// export type voiceParamSpec = {
-//   offset: number, // parameter number or offset from start of sub-structure
-//   maxValue: number,
-// }
-
-// export type egParamSpecs = {
-//   [name in 'rates' | 'levels']: voiceParamSpec[]
-// }
-
-// export type opParamSpecs = {
-//   [name in opParam]: voiceParamSpec | egParamSpecs
-// }
-
-// export type voiceParamSpecsT = {
-//   [name in voiceParam]: voiceParamSpec | egParamSpecs | opParamSpecs[]
-// }
-
-
-// export let voiceParamSpecs : voiceParamSpecsT = {
-//   'algorithm': { offset: 134, maxValue: 31 },
-//   'pitchEg': {
-//     'rates': [],
-//     'levels': []
-//   },
-//   'ops': [
-    
-//   ]
-// }
-
-
-
-
-// ///// Helpers
-
-// // TODO: Get actual init patch parameters
-// export function getInitVoice(): voiceValues {
-//   return {
-//     'ops': [
-//       {
-//         'eg': {
-//           'rates': [99, 50, 0, 50],
-//           'levels': [99, 99, 0, 0]
-//         },
-//         'kbdLevSclBrkPt': 64,
-//         'kbdLevSclLftDepth': 0,
-//         'kbdLevSclLftCurve': 0,
-//         'kbdLevSclRhtDepth': 0,
-//         'kbdLevSclRhtCurve': 0,
-//       },
-//       {
-//         'eg': {
-//           'rates': [0, 0, 0, 0],
-//           'levels': [0, 0, 0, 0]
-//         },
-//         'kbdLevSclBrkPt': 64,
-//         'kbdLevSclLftDepth': 0,
-//         'kbdLevSclLftCurve': 0,
-//         'kbdLevSclRhtDepth': 0,
-//         'kbdLevSclRhtCurve': 0,
-//       },
-//       {
-//         'eg': {
-//           'rates': [0, 0, 0, 0],
-//           'levels': [0, 0, 0, 0]
-//         },
-//         'kbdLevSclBrkPt': 64,
-//         'kbdLevSclLftDepth': 0,
-//         'kbdLevSclLftCurve': 0,
-//         'kbdLevSclRhtDepth': 0,
-//         'kbdLevSclRhtCurve': 0,
-//       },
-//       {
-//         'eg': {
-//           'rates': [0, 0, 0, 0],
-//           'levels': [0, 0, 0, 0]
-//         },
-//         'kbdLevSclBrkPt': 64,
-//         'kbdLevSclLftDepth': 0,
-//         'kbdLevSclLftCurve': 0,
-//         'kbdLevSclRhtDepth': 0,
-//         'kbdLevSclRhtCurve': 0,
-//       },
-//       {
-//         'eg': {
-//           'rates': [0, 0, 0, 0],
-//           'levels': [0, 0, 0, 0]
-//         },
-//         'kbdLevSclBrkPt': 64,
-//         'kbdLevSclLftDepth': 0,
-//         'kbdLevSclLftCurve': 0,
-//         'kbdLevSclRhtDepth': 0,
-//         'kbdLevSclRhtCurve': 0,
-//       },
-//       {
-//         'eg': {
-//           'rates': [0, 0, 0, 0],
-//           'levels': [0, 0, 0, 0]
-//         },
-//         'kbdLevSclBrkPt': 64,
-//         'kbdLevSclLftDepth': 0,
-//         'kbdLevSclLftCurve': 0,
-//         'kbdLevSclRhtDepth': 0,
-//         'kbdLevSclRhtCurve': 0,
-//       },
-//     ],
-//     'pitchEg': {
-//       'rates': [99, 99, 99, 99],
-//       'levels': [50, 50, 50, 50],
-//     },
-//     'algorithm': 1,
-//   }
