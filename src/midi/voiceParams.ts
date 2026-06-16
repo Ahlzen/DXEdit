@@ -28,6 +28,51 @@ export let voiceParamSpecs : {[name in voiceParam]: voiceParamSpec} = {
   'Oscillator Sync': { offset: 136, maxValue: 1 },
 };
 
+export type opNumber = 'op1' | 'op2' | 'op3' | 'op4' | 'op5' | 'op6';
+export type egType = opNumber | 'pitch';
+
+//export type egType = 'op1' | 'op2' | 'op3' | 'op4' | 'op5' | 'op6' | 'pitch';
+// export type egType = opNumber | 'pitch';
+// export let egTypeOffsets : {[key in egType]: number} = {
+//   'op1': 105,
+//   'op2': 84,
+//   'op3': 63,
+//   'op4': 42,
+//   'op5': 21,
+//   'op6': 0,
+//   'pitch': 126,
+// };
+
+export let opOffsets : {[key in opNumber]: number} = {
+  'op1': 105,
+  'op2': 84,
+  'op3': 63,
+  'op4': 42,
+  'op5': 21,
+  'op6': 0,
+};
+
+export let egTypeOffsets : {[key in egType]: number} = {
+  'op1': 105,
+  'op2': 84,
+  'op3': 63,
+  'op4': 42,
+  'op5': 21,
+  'op6': 0,
+  'pitch': 126,
+};
+
+
+
+
+// export type opParameter = 
+//   'eg' |
+//   'kbdLevSclBrkPt' |
+//   'kbdLevSclLftDepth' |
+//   'kbdLevSclRhtDepth' |
+//   'kbdLevSclLftCurve' |
+//   'kbdLevSclRhtCurve' |
+
 
 // immutable
 export class voiceParamData {
@@ -45,17 +90,44 @@ export class voiceParamData {
   }
 
   getValue(param: voiceParam) : number {
-    let offset = voiceParamSpecs[param].offset;
-    return this.data[offset];
+    return this.getValueByOffset(voiceParamSpecs[param].offset);
   }
-
   setValue(param: voiceParam, value: number) : voiceParamData {
     let specs = voiceParamSpecs[param];
     value = this.clamp(value, 0, specs.maxValue);
+    return this.setValueByOffset(specs.offset, value);
+  }
+  
+  getValueByOffset(offset: number) : number {
+    return this.data[offset];
+  }
+  setValueByOffset(offset: number, value: number) : voiceParamData {
     let newData = new voiceParamData(this.data);
-    newData.data[specs.offset] = value;
+    newData.data[offset] = value;
     return newData;
   }
+
+  getEgData(type: egType) : Uint8Array {
+    return this.data.slice(egTypeOffsets[type], 8);
+  }
+  setEgData(type: egType, data: Uint8Array) : voiceParamData {
+    console.assert(data.length === 8, 'EG data must be 8 bytes');
+    let newData = new voiceParamData(this.data);
+    newData.data.set(data, egTypeOffsets[type]);
+    return newData;
+  }
+
+  getOpParam(oo: opNumber, offset: number) : number {
+    return this.data[opOffsets[oo]+offset];
+  }
+  setOpParam(op: opNumber, offset: number, value: number) {
+    let newData = new voiceParamData(this.data);
+    this.data[opOffsets[op]+offset] = value;
+    return newData;
+  }
+
+  //setOpData()
+
 
   private clamp(value: number, min: number, max: number) : number {
     if (value < min) value = min;

@@ -9,19 +9,19 @@ export default function PerformanceControlEditor(props: {
   onAssignChanged: (value: number) => void})
 {
   return (
-    <>
-    <h3>{props.title}</h3>
-    <Slider
-      title="Range:"
-      selectedValue={props.rangeValue}
-      minValue={0}
-      maxValue={99}
-      onValueChanged={props.onRangeChanged} />
-    <CheckBoxGroup
-      title="Assign:"
-      options={{1: 'Pitch', 2: 'Amp', 4: 'EG Bias'}}
-      selectedValue={props.assignValue}
-      onValueChanged={props.onAssignChanged} />
-    </>
+    <div className='performanceControlEditor'>
+      <h3>{props.title}</h3>
+      <Slider
+        title="Range:"
+        selectedValue={props.rangeValue}
+        minValue={0}
+        maxValue={99}
+        onValueChanged={props.onRangeChanged} />
+      <CheckBoxGroup
+        title="Assign:"
+        options={{1: 'Pitch', 2: 'Amp', 4: 'EG Bias'}}
+        selectedValue={props.assignValue}
+        onValueChanged={props.onAssignChanged} />
+    </div>
   );
 }

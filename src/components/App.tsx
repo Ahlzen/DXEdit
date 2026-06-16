@@ -6,14 +6,16 @@ import './App.css';
 import { WebMidi } from '../midi/webmidi'
 import type { performanceParam, performanceValues } from '../midi/performanceParams.ts'
 import { performanceParamSpecs } from '../midi/performanceParams.ts';
-import type { voiceParam, voiceParamSpec } from '../midi/voiceParams';
-import { voiceParamData, voiceParamSpecs } from '../midi/voiceParams';
+import type { voiceParam, voiceParamSpec, egType, opNumber } from '../midi/voiceParams';
+import { voiceParamData, voiceParamSpecs, egTypeOffsets, opOffsets } from '../midi/voiceParams';
 
 // components
 import MidiPortSelector from './MidiPortSelector.tsx';
 import RadioGroup from './RadioGroup.tsx';
 import Slider from './Slider.tsx';
 import PerformanceControlEditor from './PerformanceControlEditor.tsx';
+import EnvelopeEditor from './EnvelopeEditor.tsx';
+import OpEditor from './OpEditor.tsx';
 
 
 export default function App()
@@ -179,12 +181,8 @@ export default function App()
 
     <fieldset className='panel'>
       <legend>Voice Parameters</legend>
-      <h3>OP6 EG</h3>
-      <Slider
-        title="Rate 1:"
-        selectedValue={voiceParams.getValue('OP6 EG Rate 1')}
-        minValue={0} maxValue={99}
-        onValueChanged={(v) => handleVoiceParamChanged('OP6 EG Rate 1', v)} />
+      <OpEditor title="OP6" op='op6' data={voiceParams}
+        onValueChanged={(offset, value) => handleOpParamChanged('op6', offset, value)} />
     </fieldset>
     </>
   );
@@ -256,10 +254,8 @@ export default function App()
     value: number)
   {
     console.log(`App: handlePerformanceParamChanged(): ${parameter} ${value}`);
-    let paramSpec = performanceParamSpecs[parameter];
-    sendParameterChangeSysex('function',
-      paramSpec.paramNumber, value,
-      paramSpec.minValue, paramSpec.maxValue);   
+    let paramNumber = performanceParamSpecs[parameter].paramNumber;
+    sendParameterChangeSysex('function', paramNumber, value);
     let newParams = {...perfParams};
     newParams[parameter] = value;
     setPerfParams(newParams)
@@ -267,28 +263,43 @@ export default function App()
 
   function handleVoiceParamChanged(
     parameter: voiceParam,
-    value: number
-  )
+    value: number)
   {
     console.log(`App: handleVoiceParamChanged(): ${parameter} ${value}`);
-    let paramSpec = voiceParamSpecs[parameter];
-    sendParameterChangeSysex('voice',
-      paramSpec.offset, value,
-      0, paramSpec.maxValue);
+    //let paramSpec = voiceParamSpecs[parameter];
+    let offset = voiceParamSpecs[parameter].offset;
+    sendParameterChangeSysex('voice', offset, value)
     setVoiceParams(voiceParams.setValue(parameter, value));
+  }
+
+  function handleEgParamChanged(
+    envelope: egType,
+    offset: number,
+    value: number)
+  {
+    // send sysex
+    let egOffset = egTypeOffsets[envelope];
+    let parameterNumber = egOffset + offset;
+    sendParameterChangeSysex('voice', parameterNumber, value);
+
+    // update state
+    let egData = voiceParams.getEgData(envelope);
+    egData[offset] = value;
+    let newVoiceParams = voiceParams.setEgData(envelope, egData);
+    setVoiceParams(newVoiceParams);
+  }
+
+  function handleOpParamChanged(op: opNumber, offset: number, value: number) {
+    let absoluteOffset = opOffsets[op] + offset;
+    sendParameterChangeSysex('voice', absoluteOffset, value);
+    setVoiceParams(voiceParams.setValueByOffset(absoluteOffset, value));
   }
 
   function sendParameterChangeSysex(
     type: 'voice' | 'function',
     parameterNumber: number,
-    parameterValue: number,
-    minAllowedValue: number,
-    maxAllowedValue: number)
+    parameterValue: number)
   {
-    if (parameterValue < minAllowedValue || parameterValue > maxAllowedValue) {
-      console.log(`Invalid parameter value: {parameterValue} (allowed: {minAllowedValue} {maxAllowedValue})`);
-      return;
-    }
     const sysexData = [
       midi.current.START_OF_SYSEX, 
       midi.current.YAMAHA_MANUFACTURER_ID,
