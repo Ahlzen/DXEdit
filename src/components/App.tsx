@@ -52,6 +52,7 @@ export default function App()
   });
   const [voiceParams, setVoiceParams] =
     useState<voiceParamData>(new voiceParamData());
+  const [currentOp, setCurrentOp] = useState<opNumber>('op1');
 
   useEffect(() => {
     console.log("App: useEffect()");
@@ -92,7 +93,7 @@ export default function App()
         portNames={midiOutPortNames}
         selectedPortName={midiOut}
         onPortChanged={handleMidiOutChanged} />
-      <MidiPortSelector 
+      <MidiPortSelector
         title="Controller Input (optional):"
         portNames={midiInPortNames}
         selectedPortName={controllerIn}
@@ -125,13 +126,11 @@ export default function App()
       <Slider
         title="Range:"
         selectedValue={perfParams.pitchBendRange}
-        minValue={0}
         maxValue={12}
         onValueChanged={(v) => handlePerformanceParamChanged('pitchBendRange', v)} />
       <Slider
         title="Step:"
         selectedValue={perfParams.pitchBendStep}
-        minValue={0}
         maxValue={12}
         onValueChanged={(v) => handlePerformanceParamChanged('pitchBendStep', v)} />
 
@@ -139,7 +138,6 @@ export default function App()
       <Slider
         title="Time:"
         selectedValue={perfParams.portamentoTime}
-        minValue={0}
         maxValue={99}
         onValueChanged={(v) => handlePerformanceParamChanged('portamentoTime', v)} />
       <RadioGroup
@@ -181,8 +179,12 @@ export default function App()
 
     <fieldset className='panel'>
       <legend>Voice Parameters</legend>
-      <OpEditor title="OP6" op='op6' data={voiceParams}
-        onValueChanged={(offset, value) => handleOpParamChanged('op6', offset, value)} />
+      <button className='opButton' onClick={() => setCurrentOp('op1')}>OP1</button>
+      <button className='opButton' onClick={() => setCurrentOp('op2')}>OP2</button>
+      <button className='opButton' onClick={() => setCurrentOp('op3')}>OP3</button>
+
+      <OpEditor title={currentOp} op={currentOp} data={voiceParams}
+        onValueChanged={(offset, value) => handleOpParamChanged(offset, value)} />
     </fieldset>
     </>
   );
@@ -289,10 +291,9 @@ export default function App()
     setVoiceParams(newVoiceParams);
   }
 
-  function handleOpParamChanged(op: opNumber, offset: number, value: number) {
-    let absoluteOffset = opOffsets[op] + offset;
-    sendParameterChangeSysex('voice', absoluteOffset, value);
-    setVoiceParams(voiceParams.setValueByOffset(absoluteOffset, value));
+  function handleOpParamChanged(offset: number, value: number) {
+    sendParameterChangeSysex('voice', offset, value);
+    setVoiceParams(voiceParams.setValueByOffset(offset, value));
   }
 
   function sendParameterChangeSysex(

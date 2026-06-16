@@ -31,18 +31,6 @@ export let voiceParamSpecs : {[name in voiceParam]: voiceParamSpec} = {
 export type opNumber = 'op1' | 'op2' | 'op3' | 'op4' | 'op5' | 'op6';
 export type egType = opNumber | 'pitch';
 
-//export type egType = 'op1' | 'op2' | 'op3' | 'op4' | 'op5' | 'op6' | 'pitch';
-// export type egType = opNumber | 'pitch';
-// export let egTypeOffsets : {[key in egType]: number} = {
-//   'op1': 105,
-//   'op2': 84,
-//   'op3': 63,
-//   'op4': 42,
-//   'op5': 21,
-//   'op6': 0,
-//   'pitch': 126,
-// };
-
 export let opOffsets : {[key in opNumber]: number} = {
   'op1': 105,
   'op2': 84,
@@ -61,18 +49,6 @@ export let egTypeOffsets : {[key in egType]: number} = {
   'op6': 0,
   'pitch': 126,
 };
-
-
-
-
-// export type opParameter = 
-//   'eg' |
-//   'kbdLevSclBrkPt' |
-//   'kbdLevSclLftDepth' |
-//   'kbdLevSclRhtDepth' |
-//   'kbdLevSclLftCurve' |
-//   'kbdLevSclRhtCurve' |
-
 
 // immutable
 export class voiceParamData {
@@ -125,8 +101,6 @@ export class voiceParamData {
     this.data[opOffsets[op]+offset] = value;
     return newData;
   }
-
-  //setOpData()
 
 
   private clamp(value: number, min: number, max: number) : number {
