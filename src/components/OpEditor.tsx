@@ -4,14 +4,12 @@ import EnvelopeEditor from "./EnvelopeEditor";
 import Slider from "./Slider";
 
 export default function OpEditor(props: {
-  title: string,
   data: voiceParamData,
   op: opNumber,
   onValueChanged: (offset: number, value: number) => void})
 {
   return (
   <div className="opEditor">
-    <h3>{props.title}</h3>
     <Slider
       title='Level:'
       selectedValue={props.data.getValueByOffset(opOffsets[props.op]+16)}

@@ -179,12 +179,22 @@ export default function App()
 
     <fieldset className='panel'>
       <legend>Voice Parameters</legend>
-      <button className='opButton' onClick={() => setCurrentOp('op1')}>OP1</button>
-      <button className='opButton' onClick={() => setCurrentOp('op2')}>OP2</button>
-      <button className='opButton' onClick={() => setCurrentOp('op3')}>OP3</button>
 
-      <OpEditor title={currentOp} op={currentOp} data={voiceParams}
-        onValueChanged={(offset, value) => handleOpParamChanged(offset, value)} />
+      <div className="opSelectors">
+      {['op1','op2','op3','op4','op5','op6'].map(function (o,i) {
+        return (
+          <label key={o}>
+          <input type="radio" value={o} name="op"
+            defaultChecked={currentOp === o} 
+            onChange={() => setCurrentOp(o as opNumber)}/>
+          OP{i+1}
+        </label>
+        );
+      })}
+      </div>
+
+      <OpEditor op={currentOp} data={voiceParams}
+        onValueChanged={handleOpParamChanged} />
     </fieldset>
     </>
   );
