@@ -25,6 +25,9 @@ export class WebMidi
 
   ///// Constants
 
+  // Enable for more debug output
+  private verbose: boolean = false;
+
 	START_OF_SYSEX = 0xF0;
 	END_OF_SYSEX = 0xF7;
 	YAMAHA_MANUFACTURER_ID = 0x43;
@@ -170,7 +173,8 @@ export class WebMidi
   sendMessage(data: Iterable<number>) {
     if (!this._midiOut) return;
     this._midiOut.send(data);
-    console.log('Out: [' + toHexString(data) + ']');
+    if (this.verbose)
+      console.log('Out: [' + toHexString(data) + ']');
   }
 
 
@@ -179,7 +183,8 @@ export class WebMidi
   private handleMidiIn(event: MIDIMessageEvent) : any {
     let data = event.data;
     if (data !== null) {
-      console.log('In: [' + toHexString(data) + ']');
+      if (this.verbose)
+        console.log('In: [' + toHexString(data) + ']');
       if (this.onMidiIn)
         this.onMidiIn(data);
     }
@@ -188,7 +193,8 @@ export class WebMidi
   private handleControllerIn(event: MIDIMessageEvent) : any {
     let data = event.data;
     if (data !== null) {
-      console.log('C.In: [' + toHexString(data) + ']');
+      if (this.verbose)
+        console.log('C.In: [' + toHexString(data) + ']');
       if (this.onControllerIn)
         this.onControllerIn(data);
     }

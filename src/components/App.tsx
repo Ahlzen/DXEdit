@@ -16,6 +16,7 @@ import Slider from './Slider.tsx';
 import PerformanceControlEditor from './PerformanceControlEditor.tsx';
 import EnvelopeEditor from './EnvelopeEditor.tsx';
 import OpEditor from './OpEditor.tsx';
+import { toHexString } from '../utils.ts';
 
 
 export default function App()
@@ -60,6 +61,8 @@ export default function App()
       midi.current.initialize(true,
         () => {
           midi.current.listPortsToConsole();
+          midi.current.onMidiIn = handleMidiIn;
+          midi.current.onControllerIn = handleControllerIn;
           updateMidiPorts();
           if (prefs.current.getPrefs('midiIn')) {
             handleMidiInChanged(prefs.current.getPrefs('midiIn'));
@@ -266,7 +269,7 @@ export default function App()
   );
 
 
-  // Event handlers
+  ///// UI Event handlers
 
   async function handleMidiInChanged(portName: string|null) {
     console.log("App: handleMidiInChanged(): " + portName);
@@ -325,8 +328,6 @@ export default function App()
     }      
   }
 
-  // General performance ("function") or voice parameter changes
-
   function handlePerformanceParamChanged(
     parameter: performanceParam,
     value: number)
@@ -344,7 +345,6 @@ export default function App()
     value: number)
   {
     console.log(`App: handleVoiceParamChanged(): ${parameter} ${value}`);
-    //let paramSpec = voiceParamSpecs[parameter];
     let offset = voiceParamSpecs[parameter].offset;
     sendParameterChangeSysex('voice', offset, value)
     setVoiceParams(voiceParams.setValue(parameter, value));
@@ -391,7 +391,27 @@ export default function App()
   }
 
 
-  // Helpers
+  ///// MIDI event handlers
+
+  function handleMidiIn(data: Uint8Array)
+  {
+    //console.log("Received: [" + toHexString(data) + "]");
+    if (data.length === 0) return;
+
+    if (data[0] === midi.current.START_OF_SYSEX &&
+      data.at(-1) === midi.current.END_OF_SYSEX)
+    {
+      console.log(`Received sysex: ${data.length} bytes.`);
+    }
+  }
+
+  function handleControllerIn(data: Uint8Array)
+  {
+    //console.log("Received (c): [" + toHexString(data) + "]");
+  }
+
+
+  ///// Helpers
 
   function updateMidiPorts()
   {
