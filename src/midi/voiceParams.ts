@@ -1,14 +1,15 @@
 export type voiceParam = 
-  'OP6 EG Rate 1' |
-  'OP6 EG Rate 2' |
-  'OP6 EG Rate 3' |
-  'OP6 EG Rate 4' |
-  'OP6 EG Level 1' |
-  'OP6 EG Level 2' |
-  'OP6 EG Level 3' |
-  'OP6 EG Level 4' |
-  'Feeback' |
-  'Oscillator Sync';
+  'Algorithm' |
+  'Feedback' |
+  'Oscillator Sync' |
+  'LFO Speed' |
+  'LFO Delay' |
+  'LFO Pitch Mod Depth' |
+  'LFO Amp Mod Depth' |
+  'LFO Sync' |
+  'LFO Waveform' |
+  'Pitch Mod Sensitivity' |
+  'Transpose';
 
 export type voiceParamSpec = {
   offset: number, // parameter number or offset from start of sub-structure
@@ -16,16 +17,18 @@ export type voiceParamSpec = {
 }
 
 export let voiceParamSpecs : {[name in voiceParam]: voiceParamSpec} = {
-  'OP6 EG Rate 1': { offset: 0, maxValue: 99 },
-  'OP6 EG Rate 2': { offset: 1, maxValue: 99 },
-  'OP6 EG Rate 3': { offset: 2, maxValue: 99 },
-  'OP6 EG Rate 4': { offset: 3, maxValue: 99 },
-  'OP6 EG Level 1': { offset: 4, maxValue: 99 },
-  'OP6 EG Level 2': { offset: 5, maxValue: 99 },
-  'OP6 EG Level 3': { offset: 6, maxValue: 99 },
-  'OP6 EG Level 4': { offset: 7, maxValue: 99 },
-  'Feeback': { offset: 135, maxValue: 7 },
+  'Algorithm': {offset: 134, maxValue: 31},
+  'Feedback': { offset: 135, maxValue: 7 },
   'Oscillator Sync': { offset: 136, maxValue: 1 },
+  'LFO Speed': {offset: 137, maxValue: 99},
+  'LFO Delay': {offset: 138, maxValue: 99},
+  'LFO Pitch Mod Depth': {offset: 139, maxValue: 99},
+  'LFO Amp Mod Depth': {offset: 140, maxValue: 99},
+  'LFO Sync': {offset: 141, maxValue: 1},
+  'LFO Waveform': {offset: 142, maxValue: 5},
+  'Pitch Mod Sensitivity': {offset: 143, maxValue: 7},
+  'Transpose': {offset: 144, maxValue: 48},
+  // NOTE: The rest are accessed separately
 };
 
 export type opNumber = 'op1' | 'op2' | 'op3' | 'op4' | 'op5' | 'op6';
@@ -102,10 +105,18 @@ export class voiceParamData {
     return newData;
   }
 
-
   private clamp(value: number, min: number, max: number) : number {
     if (value < min) value = min;
     if (value > max) value = max;
     return value;
   }
+
+  static getInitPatch(): voiceParamData {
+    let initData = new Uint8Array([
+      // TODO
+
+    ])
+  }
 }
+
+

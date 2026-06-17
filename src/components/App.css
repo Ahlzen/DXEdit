@@ -75,3 +75,9 @@ input[type="range"] {
   border: 1px solid #654;
   border-radius: 5px;
 }
+
+.voiceEditor {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+}

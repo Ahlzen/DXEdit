@@ -7,50 +7,59 @@ export default function EnvelopeEditor(props: {
   eg: egType,
   onValueChanged: (offset: number, value: number) => void })
 {
+  let getVal = (o: number) =>
+    props.data.getValueByOffset(
+      egTypeOffsets[props.eg] + o);
+  let setVal = function(o: number) : ((n: number) => void) {
+    return function(v) {
+      props.onValueChanged(egTypeOffsets[props.eg]+o, v)
+    };
+  }
+
   return (
-    <div className="envelopeEditor">      
+    <div className="envelopeEditor">
       <h3>{props.title}</h3>
       <Slider
         title="Rate 1:"
-        selectedValue={props.data.getValueByOffset(egTypeOffsets[props.eg]+0)}
+        selectedValue={getVal(0)}
         maxValue={99}
-        onValueChanged={(v) => props.onValueChanged(egTypeOffsets[props.eg]+0, v)} />
+        onValueChanged={setVal(0)} />
       <Slider
         title="Rate 2:"
-        selectedValue={props.data.getValueByOffset(egTypeOffsets[props.eg]+1)}
+        selectedValue={getVal(1)}
         maxValue={99}
-        onValueChanged={(v) => props.onValueChanged(egTypeOffsets[props.eg]+1, v)} />
+        onValueChanged={setVal(1)} />
       <Slider
         title="Rate 3:"
-        selectedValue={props.data.getValueByOffset(egTypeOffsets[props.eg]+2)}
+        selectedValue={getVal(2)}
         maxValue={99}
-        onValueChanged={(v) => props.onValueChanged(egTypeOffsets[props.eg]+2, v)} />
+        onValueChanged={setVal(2)} />
       <Slider
         title="Rate 4:"
-        selectedValue={props.data.getValueByOffset(egTypeOffsets[props.eg]+3)}
+        selectedValue={getVal(3)}
         maxValue={99}
-        onValueChanged={(v) => props.onValueChanged(egTypeOffsets[props.eg]+3, v)} />
+        onValueChanged={setVal(3)} />
 
       <Slider
         title="Level 1:"
-        selectedValue={props.data.getValueByOffset(egTypeOffsets[props.eg]+4)}
+        selectedValue={getVal(4)}
         maxValue={99}
-        onValueChanged={(v) => props.onValueChanged(egTypeOffsets[props.eg]+4, v)} />
+        onValueChanged={setVal(4)} />
       <Slider
         title="Level 2:"
-        selectedValue={props.data.getValueByOffset(egTypeOffsets[props.eg]+5)}
+        selectedValue={getVal(5)}
         maxValue={99}
-        onValueChanged={(v) => props.onValueChanged(egTypeOffsets[props.eg]+5, v)} />
+        onValueChanged={setVal(5)} />
       <Slider
         title="Level 3:"
-        selectedValue={props.data.getValueByOffset(egTypeOffsets[props.eg]+6)}
+        selectedValue={getVal(6)}
         maxValue={99}
-        onValueChanged={(v) => props.onValueChanged(egTypeOffsets[props.eg]+6, v)} />
+        onValueChanged={setVal(6)} />
       <Slider
         title="Level 4:"
-        selectedValue={props.data.getValueByOffset(egTypeOffsets[props.eg]+7)}
+        selectedValue={getVal(7)}
         maxValue={99}
-        onValueChanged={(v) => props.onValueChanged(egTypeOffsets[props.eg]+7, v)} />
+        onValueChanged={setVal(7)} />
     </div>
     // TODO: Add envelope shape (canvas)
     // TODO: Show values in actual units (dB, seconds)

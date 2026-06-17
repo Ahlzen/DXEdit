@@ -14,7 +14,6 @@ export default function PerformanceControlEditor(props: {
       <Slider
         title="Range:"
         selectedValue={props.rangeValue}
-        minValue={0}
         maxValue={99}
         onValueChanged={props.onRangeChanged} />
       <CheckBoxGroup

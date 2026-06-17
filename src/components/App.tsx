@@ -193,8 +193,74 @@ export default function App()
       })}
       </div>
 
-      <OpEditor op={currentOp} data={voiceParams}
-        onValueChanged={handleOpParamChanged} />
+      <div className="voiceEditor">
+
+        <div className='opsEditor'>
+          
+          <OpEditor op={currentOp} data={voiceParams}
+            onValueChanged={handleOpParamChanged} />
+        </div>
+
+        <div className='commonEditor'>
+          <h3>Common</h3>
+          <Slider
+            title="Algorithm:"
+            selectedValue={voiceParams.getValue('Algorithm')}
+            maxValue={31}
+            onValueChanged={(v) => handleVoiceParamChanged('Algorithm', v)} />
+          <Slider
+            title="Feedback:"
+            selectedValue={voiceParams.getValue('Feedback')}
+            maxValue={7}
+            onValueChanged={(v) => handleVoiceParamChanged('Feedback', v)} />
+          <RadioGroup
+            title="Osc Sync:"
+            options={{ 0: "Off", 1: "On" }}
+            selectedValue={voiceParams.getValue('Oscillator Sync')}
+            onValueChanged={(v) => handleVoiceParamChanged('Oscillator Sync', v)} />
+          <Slider
+            title="LFO Speed:"
+            selectedValue={voiceParams.getValue('LFO Speed')}
+            maxValue={99}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Speed', v)} />
+          <Slider
+            title="LFO Delay:"
+            selectedValue={voiceParams.getValue('LFO Delay')}
+            maxValue={99}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Delay', v)} />
+          <Slider
+            title="LFO Pitch Mod:"
+            selectedValue={voiceParams.getValue('LFO Pitch Mod Depth')}
+            maxValue={99}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Pitch Mod Depth', v)} />
+          <Slider
+            title="LFO Amp Mod:"
+            selectedValue={voiceParams.getValue('LFO Amp Mod Depth')}
+            maxValue={99}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Amp Mod Depth', v)} />
+          <RadioGroup
+            title="LFO Sync:"
+            options={{ 0: "Off", 1: "On" }}
+            selectedValue={voiceParams.getValue('LFO Sync')}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Sync', v)} />
+          <RadioGroup
+            title="LFO Wave:"
+            options={{ 0: "Tri", 1: "Saw Dn", 2: "Saw Up", 3: "Square", 4: "Sine", 5: "S&H" }}
+            selectedValue={voiceParams.getValue('LFO Waveform')}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', v)} />
+          <Slider
+            title="Pitch Mod Sens:"
+            selectedValue={voiceParams.getValue('Pitch Mod Sensitivity')}
+            maxValue={7}
+            onValueChanged={(v) => handleVoiceParamChanged('Pitch Mod Sensitivity', v)} />
+          <Slider
+            title="Transpose:"
+            selectedValue={voiceParams.getValue('Transpose')}
+            maxValue={99}
+            onValueChanged={(v) => handleVoiceParamChanged('Transpose', v)} />
+        </div>
+
+      </div>
     </fieldset>
     </>
   );
