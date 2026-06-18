@@ -381,10 +381,13 @@ export default function App()
       midi.current.START_OF_SYSEX, 
       midi.current.YAMAHA_MANUFACTURER_ID,
       midi.current.SUB_STATUS_PARAMETER + midiChannel,
-      type === 'voice' ? 
+      // Parameter group# + high bit of parameter number
+      (type === 'voice' ? 
         midi.current.PARAMETER_GROUP_VOICE :
-        midi.current.PARAMETER_GROUP_FUNCTION,
-      parameterNumber,
+        midi.current.PARAMETER_GROUP_FUNCTION) +
+        (parameterNumber > 127 ? 1 : 0),
+      // parameter number (remaining bits)
+      parameterNumber & 127,
       parameterValue,
       midi.current.END_OF_SYSEX];
     midi.current.sendMessage(sysexData);
