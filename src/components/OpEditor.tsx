@@ -53,15 +53,15 @@ export default function OpEditor(props: {
       const base = Math.pow(10, 0.01);
       const fineFactor = Math.pow(base, n);
       const freq = coarseFactor * fineFactor;
-      return String(freq.toFixed(decimals));
+      return String(freq.toFixed(decimals)) + " Hz";
     }
     else {
       return `1.${String(n).padStart(2, '0')}`;
     }
   }
-
-  // TODO: Not sure if the INIT patch detune is right
-
+  function formatDetune(n: number) : string {
+    return String(n-7);
+  }
 
   return (
   <div className="opEditor">
@@ -91,7 +91,8 @@ export default function OpEditor(props: {
       title='Detune:'
       selectedValue={getVal(20)}
       maxValue={14}
-      onValueChanged={setVal(20)} />
+      onValueChanged={setVal(20)}
+      valueFormatter={formatDetune} />
     
     <EnvelopeEditor title="Envelope"
       data={props.data}

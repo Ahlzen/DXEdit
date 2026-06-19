@@ -127,7 +127,7 @@ export class voiceParamData {
       0, // Level
       0, // Osc mode (0=ratio)
       1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
-      0, // detune
+      7, // detune (7=no detune)
 
       // OP5
       99,99,99,99, // EG Rate 1-4
@@ -141,7 +141,7 @@ export class voiceParamData {
       0, // Level
       0, // Osc mode (0=ratio)
       1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
-      0, // detune
+      7, // detune (7=no detune)
 
       // OP4
       99,99,99,99, // EG Rate 1-4
@@ -155,7 +155,7 @@ export class voiceParamData {
       0, // Level
       0, // Osc mode (0=ratio)
       1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
-      0, // detune
+      7, // detune (7=no detune)
 
       // OP3
       99,99,99,99, // EG Rate 1-4
@@ -169,7 +169,7 @@ export class voiceParamData {
       0, // Level
       0, // Osc mode (0=ratio)
       1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
-      0, // detune
+      7, // detune (7=no detune)
 
       // OP2
       99,99,99,99, // EG Rate 1-4
@@ -183,7 +183,7 @@ export class voiceParamData {
       0, // Level
       0, // Osc mode (0=ratio)
       1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
-      0, // detune
+      7, // detune (7=no detune)
 
       // OP1
       99,99,99,99, // EG Rate 1-4
@@ -197,7 +197,7 @@ export class voiceParamData {
       99, // Level
       0, // Osc mode (0=ratio)
       1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
-      0, // detune
+      7, // detune (7=no detune)
 
       // Pitch EG
       99,99,99,99, // EG Rate 1-4
