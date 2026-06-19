@@ -42,3 +42,22 @@ export let performanceParamSpecs:
   'breathControlRange': {paramNumber: 74, maxValue: 99},
   'breathControlAssign': {paramNumber: 75, maxValue: 7}
 };
+
+export function getInitPerformanceParams() : performanceValues {
+  return {
+    'monoMode': 0,
+    'pitchBendRange': 2,
+    'pitchBendStep': 0,
+    'portamentoTime': 0,
+    'portamentoMode': 0,
+    'glissando': 0,
+    'modWheelRange': 0,
+    'modWheelAssign': 0,
+    'aftertouchRange': 0,
+    'aftertouchAssign': 0,
+    'footControlRange': 0,
+    'footControlAssign': 0,
+    'breathControlRange': 0,
+    'breathControlAssign': 0,
+  };
+}

@@ -4,17 +4,16 @@ import './App.css';
 
 // MIDI / DX7 sysex
 import { WebMidi } from '../midi/webmidi'
-import type { performanceParam, performanceValues } from '../midi/performanceParams.ts'
-import { performanceParamSpecs } from '../midi/performanceParams.ts';
-import type { voiceParam, voiceParamSpec, egType, opNumber } from '../midi/voiceParams';
-import { voiceParamData, voiceParamSpecs, egTypeOffsets, opOffsets } from '../midi/voiceParams';
+import { type performanceParam, type performanceValues,
+  performanceParamSpecs, getInitPerformanceParams } from '../midi/performanceParams.ts';
+import { type voiceParam, type egType, type opNumber,
+  voiceParamData, voiceParamSpecs, egTypeOffsets } from '../midi/voiceParams';
 
-// components
+// Components
 import MidiPortSelector from './MidiPortSelector.tsx';
 import RadioGroup from './RadioGroup.tsx';
 import Slider from './Slider.tsx';
 import PerformanceControlEditor from './PerformanceControlEditor.tsx';
-import EnvelopeEditor from './EnvelopeEditor.tsx';
 import OpEditor from './OpEditor.tsx';
 
 
@@ -34,22 +33,8 @@ export default function App()
   const [midiChannel, setMidiChannel] = useState<number>(0);
 
   // Editor state
-  const [perfParams, setPerfParams] = useState<performanceValues>({
-    'monoMode': 0,
-    'pitchBendRange': 2,
-    'pitchBendStep': 0,
-    'portamentoTime': 0,
-    'portamentoMode': 0,
-    'glissando': 0,
-    'modWheelRange': 0,
-    'modWheelAssign': 0,
-    'aftertouchRange': 0,
-    'aftertouchAssign': 0,
-    'footControlRange': 0,
-    'footControlAssign': 0,
-    'breathControlRange': 0,
-    'breathControlAssign': 0,
-  });
+  const [perfParams, setPerfParams] = useState<performanceValues>(
+    getInitPerformanceParams());
   const [voiceParams, setVoiceParams] =
     useState<voiceParamData>(new voiceParamData());
   const [currentOp, setCurrentOp] = useState<opNumber>('op1');
@@ -99,6 +84,11 @@ export default function App()
         portNames={midiInPortNames}
         selectedPortName={controllerIn}
         onPortChanged={handleControllerInChanged} />
+      <Slider
+        title="MIDI Channel:"
+        selectedValue={midiChannel}
+        maxValue={15}
+        onValueChanged={setMidiChannel} />
     </fieldset>
 
     <fieldset className="panel">
