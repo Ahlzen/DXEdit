@@ -64,6 +64,9 @@ export default function App()
     }
   });
 
+  // Formatters
+  function formatMidiChannel(ch: number) { return String(ch+1); }
+
   return (
     <>
     <h1>DX/TX Editor</h1>
@@ -88,7 +91,8 @@ export default function App()
         title="MIDI Channel:"
         selectedValue={midiChannel}
         maxValue={15}
-        onValueChanged={setMidiChannel} />
+        onValueChanged={setMidiChannel}
+        valueFormatter={formatMidiChannel} />
     </fieldset>
 
     <fieldset className="panel">
