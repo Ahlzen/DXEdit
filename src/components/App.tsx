@@ -71,6 +71,7 @@ export default function App()
     // transpose (24=C3)
     return String(n); // TODO: Find out how DX7 displays this
   }
+  function formatAlgorithm(n: number): string { return String(n+1); }
 
   return (
     <>
@@ -208,7 +209,8 @@ export default function App()
             title="Algorithm:"
             selectedValue={voiceParams.getValue('Algorithm')}
             maxValue={31}
-            onValueChanged={(v) => handleVoiceParamChanged('Algorithm', v)} />
+            onValueChanged={(v) => handleVoiceParamChanged('Algorithm', v)}
+            valueFormatter={formatAlgorithm} />
           <Slider
             title="Feedback:"
             selectedValue={voiceParams.getValue('Feedback')}
