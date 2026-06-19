@@ -9,12 +9,13 @@ o Edit performance parameters
 * Send sysex only on release (sliders)
 o Save MIDI settings
 o Port midi.js to TS
-* Remove minValue support (not needed)
+o Remove minValue support (not needed)
 * Envelope Editor
   - Show envelope shape (canvas)
   - Show values in actual units (dB, seconds)
   - Support Rate/Level, ADSR, AR envelopes
-* Add INIT patch (default to that)
+o Add INIT patch (default to that)
+* Pick Kbd Break Point by MIDI controller
 * Try mantine (mantine.dev)
 * Edit current program params and name
 * Send/receive full voice/bank sysex.

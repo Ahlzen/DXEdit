@@ -65,7 +65,12 @@ export default function App()
   });
 
   // Formatters
-  function formatMidiChannel(ch: number) { return String(ch+1); }
+  function formatMidiChannel(ch: number) : string { return String(ch+1); }
+  function formatSemitones(n: number) : string { return `±${n} semi`; }
+  function formatTranspose(n: number) : string {
+    // transpose (24=C3)
+    return String(n); // TODO: Find out how DX7 displays this
+  }
 
   return (
     <>
@@ -122,7 +127,8 @@ export default function App()
         title="Range:"
         selectedValue={perfParams.pitchBendRange}
         maxValue={12}
-        onValueChanged={(v) => handlePerformanceParamChanged('pitchBendRange', v)} />
+        onValueChanged={(v) => handlePerformanceParamChanged('pitchBendRange', v)}
+        valueFormatter={formatSemitones} />
       <Slider
         title="Step:"
         selectedValue={perfParams.pitchBendStep}
@@ -251,8 +257,9 @@ export default function App()
           <Slider
             title="Transpose:"
             selectedValue={voiceParams.getValue('Transpose')}
-            maxValue={99}
-            onValueChanged={(v) => handleVoiceParamChanged('Transpose', v)} />
+            maxValue={48}
+            onValueChanged={(v) => handleVoiceParamChanged('Transpose', v)}
+            valueFormatter={formatTranspose} />
         </div>
 
       </div>

@@ -17,6 +17,26 @@ export default function OpEditor(props: {
     };
   }
 
+  // Formatters
+  function formatBreakpoint(n: number) : string {
+    // (0=A-1, 1=A#-1, 2=B-1, 3=C0, ... 39=C3)
+    const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
+    return `${n} (${notes[n%12]}${Math.floor((n-3)/12)})`;
+  }
+  function formatCoarseFreq(n: number) : string {
+    // TODO: check that this is correct
+    // TODO: also check if changes by Osc Mode (fixed/ratio)
+    return String(n === 0 ? 0.5 : n);
+  }
+  function formatFineFreq(n: number) : string {
+    // TODO: check that this is correct
+    // TODO: also check if changes by Osc Mode (fixed/ratio)
+    return `1.${String(n).padStart(2, '0')}`;
+  }
+
+  // TODO: Not sure if the INIT patch detune is right
+
+
   return (
   <div className="opEditor">
     <Slider
@@ -33,12 +53,14 @@ export default function OpEditor(props: {
       title='Coarse:'
       selectedValue={getVal(18)}
       maxValue={33}
-      onValueChanged={setVal(18)} />
+      onValueChanged={setVal(18)}
+      valueFormatter={formatCoarseFreq} />
     <Slider
       title='Fine:'
       selectedValue={getVal(19)}
       maxValue={99}
-      onValueChanged={setVal(19)} />
+      onValueChanged={setVal(19)}
+      valueFormatter={formatFineFreq} />
     <Slider
       title='Detune:'
       selectedValue={getVal(20)}
@@ -55,7 +77,8 @@ export default function OpEditor(props: {
       title='Break pt:'
       selectedValue={getVal(8)}
       maxValue={99}
-      onValueChanged={setVal(8)} />
+      onValueChanged={setVal(8)}
+      valueFormatter={formatBreakpoint} />
     <Slider
       title='L Depth:'
       selectedValue={getVal(9)}
