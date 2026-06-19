@@ -21,7 +21,7 @@ export default function OpEditor(props: {
   function formatBreakpoint(n: number) : string {
     // (0=A-1, 1=A#-1, 2=B-1, 3=C0, ... 39=C3)
     const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
-    return `${n} (${notes[n%12]}${Math.floor((n-3)/12)})`;
+    return `${notes[n%12]}${Math.floor((n-3)/12)}`;
   }
   function formatCoarseFreq(n: number) : string {
     // TODO: check that this is correct

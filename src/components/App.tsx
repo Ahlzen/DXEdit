@@ -68,8 +68,11 @@ export default function App()
   function formatMidiChannel(ch: number) : string { return String(ch+1); }
   function formatSemitones(n: number) : string { return `±${n} semi`; }
   function formatTranspose(n: number) : string {
-    // transpose (24=C3)
-    return String(n); // TODO: Find out how DX7 displays this
+    // DX7 shows as "MIDDLE C = C 3" (0=C1, 24=C3, 48=C5)
+    const oct = Math.floor(n / 12) + 1;
+    const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+    const note = notes[n%12];
+    return `Mid C = ${note} ${oct}`;
   }
   function formatAlgorithm(n: number): string { return String(n+1); }
 
