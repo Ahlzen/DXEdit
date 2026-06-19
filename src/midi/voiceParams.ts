@@ -57,14 +57,13 @@ export let egTypeOffsets : {[key in egType]: number} = {
 export class voiceParamData {
   private data: Uint8Array;
 
-  //constructor();
   constructor(data: Uint8Array | null = null) {
     if (data) {
       this.data = new Uint8Array(data);
     }
     else {
-      // TODO: fill with init patch data
-      this.data = new Uint8Array(154);
+      // Use init patch data
+      this.data = voiceParamData.getInitParams();
     }
   }
 
@@ -111,11 +110,116 @@ export class voiceParamData {
     return value;
   }
 
-  static getInitPatch(): voiceParamData {
-    let initData = new Uint8Array([
-      // TODO
+  private static getInitParams(): Uint8Array {
+    return new Uint8Array([
+      // These are the values set by the
+      // "VOICE INIT" feature of the DX7 mk1
 
-    ])
+      // OP6
+      99,99,99,99, // EG Rate 1-4
+      99,99,99,0,  // EG Level 1-4
+      0, // Kbd level scale break point (0=A-1, 39=C3)
+      0, 0, // Kbd level scale L/R depth
+      0, 0,// Kbd level scale L/R curve (-LIN)
+      0, // Kbd rate scaling
+      0, // Amp mod sensitivity
+      0, // Key vel sensitivity
+      0, // Level
+      0, // Osc mode (0=ratio)
+      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      0, // detune
+
+      // OP5
+      99,99,99,99, // EG Rate 1-4
+      99,99,99,0,  // EG Level 1-4
+      0, // Kbd level scale break point (0=A-1, 39=C3)
+      0, 0, // Kbd level scale L/R depth
+      0, 0,// Kbd level scale L/R curve (-LIN)
+      0, // Kbd rate scaling
+      0, // Amp mod sensitivity
+      0, // Key vel sensitivity
+      0, // Level
+      0, // Osc mode (0=ratio)
+      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      0, // detune
+
+      // OP4
+      99,99,99,99, // EG Rate 1-4
+      99,99,99,0,  // EG Level 1-4
+      0, // Kbd level scale break point (0=A-1, 39=C3)
+      0, 0, // Kbd level scale L/R depth
+      0, 0,// Kbd level scale L/R curve (-LIN)
+      0, // Kbd rate scaling
+      0, // Amp mod sensitivity
+      0, // Key vel sensitivity
+      0, // Level
+      0, // Osc mode (0=ratio)
+      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      0, // detune
+
+      // OP3
+      99,99,99,99, // EG Rate 1-4
+      99,99,99,0,  // EG Level 1-4
+      0, // Kbd level scale break point (0=A-1, 39=C3)
+      0, 0, // Kbd level scale L/R depth
+      0, 0,// Kbd level scale L/R curve (-LIN)
+      0, // Kbd rate scaling
+      0, // Amp mod sensitivity
+      0, // Key vel sensitivity
+      0, // Level
+      0, // Osc mode (0=ratio)
+      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      0, // detune
+
+      // OP2
+      99,99,99,99, // EG Rate 1-4
+      99,99,99,0,  // EG Level 1-4
+      0, // Kbd level scale break point (0=A-1, 39=C3)
+      0, 0, // Kbd level scale L/R depth
+      0, 0,// Kbd level scale L/R curve (-LIN)
+      0, // Kbd rate scaling
+      0, // Amp mod sensitivity
+      0, // Key vel sensitivity
+      0, // Level
+      0, // Osc mode (0=ratio)
+      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      0, // detune
+
+      // OP1
+      99,99,99,99, // EG Rate 1-4
+      99,99,99,0,  // EG Level 1-4
+      0, // Kbd level scale break point (0=A-1, 39=C3)
+      0, 0, // Kbd level scale L/R depth
+      0, 0,// Kbd level scale L/R curve (-LIN)
+      0, // Kbd rate scaling
+      0, // Amp mod sensitivity
+      0, // Key vel sensitivity
+      99, // Level
+      0, // Osc mode (0=ratio)
+      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      0, // detune
+
+      // Pitch EG
+      99,99,99,99, // EG Rate 1-4
+      50,50,50,50,  // EG Level 1-4
+      
+      // Common
+      0, // Algorithm (#1)
+      0, // Feedback
+      1, // Oscillator sync
+      35, // LFO speed
+      0, // LFO delay
+      0, // LFO pitch mod depth
+      0, // LFO amp mod depth
+      1, // LFO sync
+      0, // LFO waveform (0=triangle)
+      3, // pitch mod sensitivity
+      24, // transpose (24=C3)
+
+      // Voice name
+      // 10 char ASCII: "INIT      "
+      73,78,73,84,32,32,32,32,32,32,
+    ]);
   }
 }
 

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Preferences } from '../preferences';
 import './App.css';
 
-// MIDI
+// MIDI / DX7 sysex
 import { WebMidi } from '../midi/webmidi'
 import type { performanceParam, performanceValues } from '../midi/performanceParams.ts'
 import { performanceParamSpecs } from '../midi/performanceParams.ts';
@@ -16,7 +16,6 @@ import Slider from './Slider.tsx';
 import PerformanceControlEditor from './PerformanceControlEditor.tsx';
 import EnvelopeEditor from './EnvelopeEditor.tsx';
 import OpEditor from './OpEditor.tsx';
-import { toHexString } from '../utils.ts';
 
 
 export default function App()
@@ -56,7 +55,6 @@ export default function App()
   const [currentOp, setCurrentOp] = useState<opNumber>('op1');
 
   useEffect(() => {
-    console.log("App: useEffect()");
     if (!midi.current.isInitialized) {
       midi.current.initialize(true,
         () => {
