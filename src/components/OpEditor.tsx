@@ -24,14 +24,40 @@ export default function OpEditor(props: {
     return `${notes[n%12]}${Math.floor((n-3)/12)}`;
   }
   function formatCoarseFreq(n: number) : string {
-    // TODO: check that this is correct
-    // TODO: also check if changes by Osc Mode (fixed/ratio)
-    return String(n === 0 ? 0.5 : n);
+    const isFixedFreq : boolean = getVal(17) == 1;
+    if (isFixedFreq) {
+      switch (n % 4) { // low 2 bits determine range:
+        case 0: return "1-10 Hz";
+        case 1: return "10-100 Hz";
+        case 2: return "100-1k Hz";
+        case 3:
+        default: return "1k-10k Hz";
+      }
+    }
+    else {
+      return n === 0 ? "0.5" : String(n) + ".0";
+    }
   }
   function formatFineFreq(n: number) : string {
-    // TODO: check that this is correct
-    // TODO: also check if changes by Osc Mode (fixed/ratio)
-    return `1.${String(n).padStart(2, '0')}`;
+    const isFixedFreq : boolean = getVal(17) == 1;
+    if (isFixedFreq) {
+      // Freq(n) = coarseFactor * (10^0.01)^n
+      let coarseFactor = 0;
+      let decimals = 3;
+      switch (getVal(18) % 4) {
+        case 0: coarseFactor = 1; decimals = 3; break;
+        case 1: coarseFactor = 10; decimals = 2; break;
+        case 2: coarseFactor = 100; decimals = 1; break;
+        case 3: coarseFactor = 1000; decimals = 0; break;
+      }
+      const base = Math.pow(10, 0.01);
+      const fineFactor = Math.pow(base, n);
+      const freq = coarseFactor * fineFactor;
+      return String(freq.toFixed(decimals));
+    }
+    else {
+      return `1.${String(n).padStart(2, '0')}`;
+    }
   }
 
   // TODO: Not sure if the INIT patch detune is right
