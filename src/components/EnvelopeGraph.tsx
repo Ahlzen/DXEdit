@@ -1,4 +1,4 @@
-import { egTypeOffsets, type egType, type voiceParamData } from "../midi/voiceParams";
+import { egTypeOffsets, voiceParamData, type egType } from "../midi/voiceParams";
 
 export default function EnvelopeGraph(props: {
   width: number,
@@ -48,6 +48,15 @@ export default function EnvelopeGraph(props: {
 
   // format SVG coordinates
   let linePoints = x.map((_, i) => x[i] + ',' + y[i]).join(' ');
+  let vertexPoints = [];
+  for (let i = 1; i < x.length-1; i++) {
+    vertexPoints.push(<circle cx={x[i]} cy={y[i]} r={2} stroke='#0cf' stroke-width={2} />);
+  }
+  let polyPoints =
+    x[0] + ',' + yBase + ' ' +
+    x.map((_, i) => x[i] + ',' + y[i]).join(' ') +
+    ' ' + x[7] + ',' + yBase + ' ';
+
 
   return (
     <svg className="envGraph" width={props.width} height={props.height}>
@@ -57,13 +66,13 @@ export default function EnvelopeGraph(props: {
       <line x1={margin} y1={yBase} x2={margin+eWidth} y2={yBase} 
         style={{fill:'none', stroke:'#444', strokeWidth:1.5}} />
       <line x1={margin} y1={yBase-0.25*eHeight} x2={margin+eWidth} y2={yBase-0.25*eHeight} 
-        style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1.5}} />
+        style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1}} />
       <line x1={margin} y1={yBase-0.5*eHeight} x2={margin+eWidth} y2={yBase-0.5*eHeight} 
-        style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1.5}} />
+        style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1}} />
       <line x1={margin} y1={yBase-0.75*eHeight} x2={margin+eWidth} y2={yBase-0.75*eHeight} 
-        style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1.5}} />
+        style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1}} />
       <line x1={margin} y1={yBase-eHeight} x2={margin+eWidth} y2={yBase-eHeight} 
-        style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1.5}} />
+        style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1}} />
 
       {/* Key down/up (vertical lines) */}
       <line x1={x[1]} y1={yBase} x2={x[1]} y2={margin} 
@@ -71,10 +80,12 @@ export default function EnvelopeGraph(props: {
       <line x1={x[5]} y1={yBase} x2={x[5]} y2={margin} 
         style={{fill:'none', stroke:'#046', strokeWidth:1.5}} />
       
-      {/* Envelope line */}
+      {/* Envelope fill/line + vertices */}
+      <polygon points={polyPoints}
+        style={{fill:'#0cf2', stroke:'none'}} />
       <polyline points={linePoints}
         style={{fill:'none', stroke:'#0cf', strokeWidth:1.5}} />
-
+      {vertexPoints}
 
     </svg>
   );
