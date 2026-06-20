@@ -81,3 +81,7 @@ input[type="range"] {
   flex-direction: row;
   gap: 0.5em;
 }
+
+.envGraph {
+  margin-top: 0.5em;
+}

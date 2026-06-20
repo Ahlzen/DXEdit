@@ -1,4 +1,5 @@
 import { egTypeOffsets, type egType, type voiceParamData } from "../midi/voiceParams";
+import EnvelopeGraph from "./EnvelopeGraph";
 import Slider from "./Slider";
 
 export default function EnvelopeEditor(props: {
@@ -60,7 +61,13 @@ export default function EnvelopeEditor(props: {
         selectedValue={getVal(7)}
         maxValue={99}
         onValueChanged={setVal(7)} />
+      <EnvelopeGraph
+        width={300}
+        height={100}
+        data={props.data}
+        eg={props.eg} />
     </div>
+
     // TODO: Add envelope shape (canvas)
     // TODO: Show values in actual units (dB, seconds)
   )
