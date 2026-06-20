@@ -12,8 +12,6 @@ export default function EnvelopeGraph(props: {
         egTypeOffsets[props.eg] + o);
 
   const margin = 8;
-
-
   
   let x: number[] = Array<number>(8);
   let y: number[] = Array<number>(8);
@@ -48,16 +46,13 @@ export default function EnvelopeGraph(props: {
 
   // format SVG coordinates
   let linePoints = x.map((_, i) => x[i] + ',' + y[i]).join(' ');
+  let polyPoints = x[0] + ',' + yBase + ' ' +
+    linePoints + ' ' + x[7] + ',' + yBase + ' ';
   let vertexPoints = [];
   for (let i = 1; i < x.length-1; i++) {
     vertexPoints.push(<circle cx={x[i]} cy={y[i]} r={2} stroke='#0cf' stroke-width={2} />);
   }
-  let polyPoints =
-    x[0] + ',' + yBase + ' ' +
-    x.map((_, i) => x[i] + ',' + y[i]).join(' ') +
-    ' ' + x[7] + ',' + yBase + ' ';
-
-
+  
   return (
     <svg className="envGraph" width={props.width} height={props.height}>
       <rect x="0" y="0" width={props.width} height={props.height} rx={margin} ry={margin} fill="black" />
