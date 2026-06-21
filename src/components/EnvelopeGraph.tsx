@@ -11,7 +11,6 @@ export default function EnvelopeGraph(props: {
   let getVal = (o: number) =>
       props.data.getValueByOffset(
         egTypeOffsets[props.eg] + o);
-
   const margin = 8;
   
   let x: number[] = Array<number>(8);
@@ -36,6 +35,8 @@ export default function EnvelopeGraph(props: {
   let levels = [getVal(4), getVal(5), getVal(6), getVal(7)];
   let yScale = eHeight / 100;
   let yBase = props.height-margin;
+  let yCentre = props.height * 0.5;
+  let yOrigin = props.eg === 'pitch' ? props.height * 0.5 : yBase;
   y[0] = yBase - yScale*levels[3]; // L4 during key off
   y[1] = y[0];
   y[2] = yBase - yScale*levels[0]; // L1 (attack level)
@@ -47,8 +48,8 @@ export default function EnvelopeGraph(props: {
 
   // format SVG coordinates
   let linePoints = x.map((_, i) => x[i] + ',' + y[i]).join(' ');
-  let polyPoints = x[0] + ',' + yBase + ' ' +
-    linePoints + ' ' + x[7] + ',' + yBase + ' ';
+  let polyPoints = x[0] + ',' + yOrigin + ' ' +
+    linePoints + ' ' + x[7] + ',' + yOrigin + ' ';
   let vertexPoints = [];
   for (let i = 1; i < x.length-1; i++) {
     vertexPoints.push(<circle cx={x[i]} cy={y[i]} r={2} stroke='#0cf' stroke-width={2} />);
@@ -83,7 +84,7 @@ export default function EnvelopeGraph(props: {
       
       {/* Horizontal axis + quarter-level guide lines */}
       <line x1={margin} y1={yBase} x2={margin+eWidth} y2={yBase} 
-        style={{fill:'none', stroke:'#444', strokeWidth:1.5}} />
+        style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1}} />
       <line x1={margin} y1={yBase-0.25*eHeight} x2={margin+eWidth} y2={yBase-0.25*eHeight} 
         style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1}} />
       <line x1={margin} y1={yBase-0.5*eHeight} x2={margin+eWidth} y2={yBase-0.5*eHeight} 
@@ -92,6 +93,9 @@ export default function EnvelopeGraph(props: {
         style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1}} />
       <line x1={margin} y1={yBase-eHeight} x2={margin+eWidth} y2={yBase-eHeight} 
         style={{fill:'none', stroke:'#444', strokeDasharray:'2,2', strokeWidth:1}} />
+      {/* Base/centerline */}
+      <line x1={margin} y1={yOrigin} x2={margin+eWidth} y2={yOrigin} 
+        style={{fill:'none', stroke:'#444', strokeWidth:1.5}} />
 
       {/* Key down/up (vertical lines) */}
       <line x1={x[1]} y1={yBase} x2={x[1]} y2={margin} 
@@ -101,7 +105,7 @@ export default function EnvelopeGraph(props: {
       
       {/* Envelope fill/line + vertices */}
       <polygon points={polyPoints}
-        style={{fill:'#0cf2', stroke:'none'}} />
+        style={{fill:'#0cf3', stroke:'none'}} />
       <polyline points={linePoints}
         style={{fill:'none', stroke:'#0cf', strokeWidth:1.5}} />
       {vertexPoints}
