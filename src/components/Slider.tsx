@@ -9,12 +9,24 @@ export default function Slider(props: {
   selectedValue: number,
   maxValue: number,
   onValueChanged: (value: number) => void,
-  valueFormatter?: formatter
+  valueFormatter?: formatter,
+  onHoverChanged?: (hover: boolean) => void
 }){
   const formatter = props.valueFormatter || defaultFormatter;
 
+  let handleMouseEnter = () => {
+    if (props.onHoverChanged)
+      props.onHoverChanged(true);
+  }
+  let handleMouseLeave = () => {
+    if (props.onHoverChanged)
+      props.onHoverChanged(false);
+  }
+
   return (
-    <div className="slider">
+    <div className="slider"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}>
       <label>{props.title}
         <input
           type="range"

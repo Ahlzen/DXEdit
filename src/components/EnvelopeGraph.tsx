@@ -5,6 +5,7 @@ export default function EnvelopeGraph(props: {
   height: number,
   data: voiceParamData,
   eg: egType,
+  highlightSegment: number|undefined,
 })
 {
   let getVal = (o: number) =>
@@ -52,6 +53,29 @@ export default function EnvelopeGraph(props: {
   for (let i = 1; i < x.length-1; i++) {
     vertexPoints.push(<circle cx={x[i]} cy={y[i]} r={2} stroke='#0cf' stroke-width={2} />);
   }
+
+  // highlighted points/segments
+  let hSegments = [];
+  let hPoints = [];
+  if (props.highlightSegment !== undefined) {
+    console.log('Highlighting: ' + props.highlightSegment);
+    let s: number[] = [];
+    let p: number[] = [];
+    switch (props.highlightSegment) {
+      case 0: s = [1]; p = [1,2]; break;
+      case 1: s = [2]; p = [2,3]; break;
+      case 2: s = [3]; p = [3,4]; break;
+      case 3: s = [5]; p = [5,6]; break;
+      case 4: p = [2]; break;
+      case 5: p = [3]; break;
+      case 6: p = [4,5]; break;
+      case 7: p = [1,6]; break;
+    }
+    for (let i = 0; i < p.length; i++)
+      hPoints.push(<circle cx={x[p[i]]} cy={y[p[i]]} r={2} stroke='#cff' stroke-width={3} />);
+    for (let i = 0; i < s.length; i++)
+      hSegments.push(<line x1={x[s[i]]} y1={y[s[i]]} x2={x[s[i]+1]} y2={y[s[i]+1]} stroke='#cff' stroke-width={3} />);
+  }
   
   return (
     <svg className="envGraph" width={props.width} height={props.height}>
@@ -81,6 +105,10 @@ export default function EnvelopeGraph(props: {
       <polyline points={linePoints}
         style={{fill:'none', stroke:'#0cf', strokeWidth:1.5}} />
       {vertexPoints}
+
+      {/* Highlighted points/segments */}
+      {hSegments}
+      {hPoints}
 
     </svg>
   );

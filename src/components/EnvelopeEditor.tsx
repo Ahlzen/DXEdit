@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { egTypeOffsets, type egType, type voiceParamData } from "../midi/voiceParams";
 import EnvelopeGraph from "./EnvelopeGraph";
 import Slider from "./Slider";
@@ -8,6 +9,9 @@ export default function EnvelopeEditor(props: {
   eg: egType,
   onValueChanged: (offset: number, value: number) => void })
 {
+  // Highlighted envelope parameter (0-7)
+  let [highlight, setHighlight] = useState<number|undefined>(undefined);
+
   let getVal = (o: number) =>
     props.data.getValueByOffset(
       egTypeOffsets[props.eg] + o);
@@ -17,6 +21,11 @@ export default function EnvelopeEditor(props: {
     };
   }
 
+  let handleHoverChanged =
+    function(hover: boolean, offset: number) {
+      setHighlight(hover ? offset : undefined);
+  }
+
   return (
     <div className="envelopeEditor">
       <h3>{props.title}</h3>
@@ -24,51 +33,58 @@ export default function EnvelopeEditor(props: {
         title="Rate 1:"
         selectedValue={getVal(0)}
         maxValue={99}
-        onValueChanged={setVal(0)} />
+        onValueChanged={setVal(0)}
+        onHoverChanged={(h) => handleHoverChanged(h, 0)} />
       <Slider
         title="Rate 2:"
         selectedValue={getVal(1)}
         maxValue={99}
-        onValueChanged={setVal(1)} />
+        onValueChanged={setVal(1)}
+        onHoverChanged={(h) => handleHoverChanged(h, 1)} />
       <Slider
         title="Rate 3:"
         selectedValue={getVal(2)}
         maxValue={99}
-        onValueChanged={setVal(2)} />
+        onValueChanged={setVal(2)}
+        onHoverChanged={(h) => handleHoverChanged(h, 2)} />
       <Slider
         title="Rate 4:"
         selectedValue={getVal(3)}
         maxValue={99}
-        onValueChanged={setVal(3)} />
+        onValueChanged={setVal(3)}
+        onHoverChanged={(h) => handleHoverChanged(h, 3)} />
 
       <Slider
         title="Level 1:"
         selectedValue={getVal(4)}
         maxValue={99}
-        onValueChanged={setVal(4)} />
+        onValueChanged={setVal(4)}
+        onHoverChanged={(h) => handleHoverChanged(h, 4)} />
       <Slider
         title="Level 2:"
         selectedValue={getVal(5)}
         maxValue={99}
-        onValueChanged={setVal(5)} />
+        onValueChanged={setVal(5)}
+        onHoverChanged={(h) => handleHoverChanged(h, 5)} />
       <Slider
         title="Level 3:"
         selectedValue={getVal(6)}
         maxValue={99}
-        onValueChanged={setVal(6)} />
+        onValueChanged={setVal(6)}
+        onHoverChanged={(h) => handleHoverChanged(h, 6)} />
       <Slider
         title="Level 4:"
         selectedValue={getVal(7)}
         maxValue={99}
-        onValueChanged={setVal(7)} />
+        onValueChanged={setVal(7)}
+        onHoverChanged={(h) => handleHoverChanged(h, 7)} />
+
       <EnvelopeGraph
         width={300}
         height={100}
         data={props.data}
-        eg={props.eg} />
+        eg={props.eg}
+        highlightSegment={highlight} />
     </div>
-
-    // TODO: Add envelope shape (canvas)
-    // TODO: Show values in actual units (dB, seconds)
   )
 }

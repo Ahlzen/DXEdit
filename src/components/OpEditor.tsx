@@ -9,6 +9,8 @@ export default function OpEditor(props: {
   op: opNumber,
   onValueChanged: (offset: number, value: number) => void})
 {
+  ///// State update
+
   let getVal = (o: number) =>
       props.data.getValueByOffset(opOffsets[props.op] + o);
   let setVal = function(o: number) : ((n: number) => void) {
@@ -17,7 +19,8 @@ export default function OpEditor(props: {
     };
   }
 
-  // Formatters
+  ///// Formatters
+
   function formatBreakpoint(n: number) : string {
     // (0=A-1, 1=A#-1, 2=B-1, 3=C0, ... 39=C3)
     const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
@@ -62,6 +65,15 @@ export default function OpEditor(props: {
   function formatDetune(n: number) : string {
     return String(n-7);
   }
+
+  // ///// Event handlers
+
+  // function handleEnvelopeHoverChanged(offset: number|null)
+  // {
+
+  // }
+
+  ///// UI
 
   return (
   <div className="opEditor">

@@ -11,7 +11,7 @@ o Save MIDI settings
 o Port midi.js to TS
 o Remove minValue support (not needed)
 * Envelope Editor
-  - Show envelope shape (canvas)
+  o Show envelope shape (canvas)
   - Show values in actual units (dB, seconds)
   - Support Rate/Level, ADSR, AR envelopes
 o Add INIT patch (default to that)
