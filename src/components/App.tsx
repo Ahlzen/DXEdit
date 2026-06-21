@@ -15,6 +15,7 @@ import RadioGroup from './RadioGroup.tsx';
 import Slider from './Slider.tsx';
 import PerformanceControlEditor from './PerformanceControlEditor.tsx';
 import OpEditor from './OpEditor.tsx';
+import EnvelopeEditor from './EnvelopeEditor.tsx';
 
 
 export default function App()
@@ -185,11 +186,7 @@ export default function App()
     <fieldset className='panel'>
       <legend>Voice Parameters</legend>
 
-
-
       <div className="voiceEditor">
-
-        
 
         <div className='commonEditor'>
           <h3>Common</h3>
@@ -254,6 +251,11 @@ export default function App()
             maxValue={48}
             onValueChanged={(v) => handleVoiceParamChanged('Transpose', v)}
             valueFormatter={formatTranspose} />
+
+          <EnvelopeEditor title="Pitch Envelope"
+            data={voiceParams}
+            eg='pitch'
+            onValueChanged={handleOpParamChanged} />
         </div>
 
         <div className='opsEditor'>

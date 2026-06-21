@@ -106,7 +106,7 @@ export default function OpEditor(props: {
       onValueChanged={setVal(20)}
       valueFormatter={formatDetune} />
     
-    <EnvelopeEditor title="Envelope"
+    <EnvelopeEditor title="OP Envelope"
       data={props.data}
       eg={props.op}
       onValueChanged={props.onValueChanged} />
