@@ -7,7 +7,8 @@ import { WebMidi } from '../midi/webmidi'
 import { type performanceParam, type performanceValues,
   performanceParamSpecs, getInitPerformanceParams } from '../midi/performanceParams.ts';
 import { type voiceParam, type egType, type opNumber,
-  voiceParamData, voiceParamSpecs, egTypeOffsets } from '../midi/voiceParams';
+  voiceParamData, voiceParamSpecs, egTypeOffsets, 
+  type voiceParamSpec} from '../midi/voiceParams';
 
 // Components
 import MidiPortSelector from './MidiPortSelector.tsx';
@@ -255,7 +256,7 @@ export default function App()
           <EnvelopeEditor title="Pitch Envelope"
             data={voiceParams}
             eg='pitch'
-            onValueChanged={handleOpParamChanged} />
+            onValueChanged={handleVoiceParamChanged} />
         </div>
 
         <div className='opsEditor'>
@@ -276,7 +277,7 @@ export default function App()
           </div>
           
           <OpEditor op={currentOp} data={voiceParams}
-            onValueChanged={handleOpParamChanged} />
+            onValueChanged={handleVoiceParamChanged} />
         </div>
 
       </div>
@@ -357,36 +358,16 @@ export default function App()
   }
 
   function handleVoiceParamChanged(
-    parameter: voiceParam,
+    parameter: voiceParam | number,
     value: number)
   {
     console.log(`App: handleVoiceParamChanged(): ${parameter} ${value}`);
-    let offset = voiceParamSpecs[parameter].offset;
+    let offset: number = typeof parameter === 'number' ?
+      parameter : voiceParamSpecs[parameter].offset;
     sendParameterChangeSysex('voice', offset, value)
-    setVoiceParams(voiceParams.setValue(parameter, value));
-  }
-
-  function handleEgParamChanged(
-    envelope: egType,
-    offset: number,
-    value: number)
-  {
-    // send sysex
-    let egOffset = egTypeOffsets[envelope];
-    let parameterNumber = egOffset + offset;
-    sendParameterChangeSysex('voice', parameterNumber, value);
-
-    // update state
-    let egData = voiceParams.getEgData(envelope);
-    egData[offset] = value;
-    let newVoiceParams = voiceParams.setEgData(envelope, egData);
-    setVoiceParams(newVoiceParams);
-  }
-
-  function handleOpParamChanged(offset: number, value: number) {
-    sendParameterChangeSysex('voice', offset, value);
     setVoiceParams(voiceParams.setValueByOffset(offset, value));
   }
+
 
   function sendParameterChangeSysex(
     type: 'voice' | 'function',

@@ -6,17 +6,21 @@
 o Ensure WebMIDI works with FF linux (snap or deb)
 o List and select midi ports, send and receive midi
 o Edit performance parameters
-* Send sysex only on release (sliders)
 o Save MIDI settings
 o Port midi.js to TS
 o Remove minValue support (not needed)
-* Envelope Editor
-  o Show envelope shape (canvas)
-  - Show values in actual units (dB, seconds)
-  - Support Rate/Level, ADSR, AR envelopes
+o Env Editor: Show envelope shape (canvas)
+
 o Add INIT patch (default to that)
-* Pick Kbd Break Point by MIDI controller
+* Factor DX7 logic out of App.tsx
+* Config: Add instructions for setting up DX7 (and other devices)
+* Voice Editor: Add "Send/Sync" feature to send all voice params to DX7
 * Try mantine (mantine.dev)
+* Send sysex only on release (sliders) -> Mantine?
+* Pick Kbd Break Point by MIDI controller
+* Visualize LFO, Keyboard Level Scaling
+* Env Editor: Show values in actual units (dB, seconds)
+* Env Editor: Support Rate/Level, ADSR, AR envelopes
 * Edit current program params and name
 * Send/receive full voice/bank sysex.
 * Send individual programs.
