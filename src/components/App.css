@@ -59,18 +59,14 @@ input[type="range"] {
   font-weight: bold;
   margin-bottom: 0;
   margin-top: 1em;
-  /* border-top: 1px solid #432; */
 }
 
 .opSelectors { margin-top: 0.5em; margin-bottom: 0.5em;}
-.opSelectors input[type="radio"] {
-  border: 1px solid green;
-  color: red;
-}
 .opSelectors label {
   font-weight: bold;
   margin-right: 0.3em;
   padding: 0.1em 0.6em 0.1em 0;
+  margin-bottom: 2em;
   background-color: black;
   border: 1px solid #654;
   border-radius: 5px;
@@ -80,6 +76,9 @@ input[type="range"] {
   display: flex;
   flex-direction: row;
   gap: 0.5em;
+}
+.voiceEditor > div {
+  width: 50%;
 }
 
 .envGraph {

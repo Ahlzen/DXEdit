@@ -185,26 +185,11 @@ export default function App()
     <fieldset className='panel'>
       <legend>Voice Parameters</legend>
 
-      <div className="opSelectors">
-      {['op1','op2','op3','op4','op5','op6'].map(function (o,i) {
-        return (
-          <label key={o}>
-          <input type="radio" value={o} name="op"
-            defaultChecked={currentOp === o} 
-            onChange={() => setCurrentOp(o as opNumber)}/>
-          OP{i+1}
-        </label>
-        );
-      })}
-      </div>
+
 
       <div className="voiceEditor">
 
-        <div className='opsEditor'>
-          
-          <OpEditor op={currentOp} data={voiceParams}
-            onValueChanged={handleOpParamChanged} />
-        </div>
+        
 
         <div className='commonEditor'>
           <h3>Common</h3>
@@ -224,36 +209,40 @@ export default function App()
             options={{ 0: "Off", 1: "On" }}
             selectedValue={voiceParams.getValue('Oscillator Sync')}
             onValueChanged={(v) => handleVoiceParamChanged('Oscillator Sync', v)} />
+
+          <h3>LFO</h3>
           <Slider
-            title="LFO Speed:"
+            title="Speed:"
             selectedValue={voiceParams.getValue('LFO Speed')}
             maxValue={99}
             onValueChanged={(v) => handleVoiceParamChanged('LFO Speed', v)} />
           <Slider
-            title="LFO Delay:"
+            title="Delay:"
             selectedValue={voiceParams.getValue('LFO Delay')}
             maxValue={99}
             onValueChanged={(v) => handleVoiceParamChanged('LFO Delay', v)} />
           <Slider
-            title="LFO Pitch Mod:"
+            title="Pitch Mod:"
             selectedValue={voiceParams.getValue('LFO Pitch Mod Depth')}
             maxValue={99}
             onValueChanged={(v) => handleVoiceParamChanged('LFO Pitch Mod Depth', v)} />
           <Slider
-            title="LFO Amp Mod:"
+            title="Amp Mod:"
             selectedValue={voiceParams.getValue('LFO Amp Mod Depth')}
             maxValue={99}
             onValueChanged={(v) => handleVoiceParamChanged('LFO Amp Mod Depth', v)} />
           <RadioGroup
-            title="LFO Sync:"
+            title="Sync:"
             options={{ 0: "Off", 1: "On" }}
             selectedValue={voiceParams.getValue('LFO Sync')}
             onValueChanged={(v) => handleVoiceParamChanged('LFO Sync', v)} />
           <RadioGroup
-            title="LFO Wave:"
+            title="Wave:"
             options={{ 0: "Tri", 1: "Saw Dn", 2: "Saw Up", 3: "Square", 4: "Sine", 5: "S&H" }}
             selectedValue={voiceParams.getValue('LFO Waveform')}
             onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', v)} />
+          
+          <br/>
           <Slider
             title="Pitch Mod Sens:"
             selectedValue={voiceParams.getValue('Pitch Mod Sensitivity')}
@@ -265,6 +254,27 @@ export default function App()
             maxValue={48}
             onValueChanged={(v) => handleVoiceParamChanged('Transpose', v)}
             valueFormatter={formatTranspose} />
+        </div>
+
+        <div className='opsEditor'>
+
+        <div className="opSelectors">
+          {['op1','op2','op3','op4','op5','op6'].map(function (o,i) {
+            return (
+              <div style={{display:'inline-block', marginBottom:'0.6em'}}>
+                <label key={o}>
+                <input type="radio" value={o} name="op"
+                  defaultChecked={currentOp === o} 
+                  onChange={() => setCurrentOp(o as opNumber)}/>
+                OP{i+1}
+                </label>
+              </div>
+            );
+          })}
+          </div>
+          
+          <OpEditor op={currentOp} data={voiceParams}
+            onValueChanged={handleOpParamChanged} />
         </div>
 
       </div>
