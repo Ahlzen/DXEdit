@@ -1,6 +1,9 @@
+import '@mantine/core/styles.css';
+import { MantineProvider } from '@mantine/core';
+
 import { useState, useRef, useEffect } from 'react';
 import { Preferences } from '../preferences';
-import './App.css';
+//import './App.css';
 
 // MIDI / DX7 sysex
 import { WebMidi } from '../midi/webmidi'
@@ -79,7 +82,7 @@ export default function App()
   function formatAlgorithm(n: number): string { return String(n+1); }
 
   return (
-    <>
+    <MantineProvider>
     <h1>DX/TX Editor</h1>
     <fieldset className="panel">
       <legend>Config</legend>
@@ -282,7 +285,7 @@ export default function App()
 
       </div>
     </fieldset>
-    </>
+    </MantineProvider>
   );
 
 
