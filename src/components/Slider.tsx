@@ -1,10 +1,12 @@
+import { Slider, Text, Group } from '@mantine/core';
+
 type formatter = (value: number) => string;
 
 const defaultFormatter = function(val: number) {
    return String(val);
 }
 
-export default function Slider(props: {
+export default function DXESlider(props: {
   title: string,
   selectedValue: number,
   maxValue: number,
@@ -27,15 +29,40 @@ export default function Slider(props: {
     <div className="slider"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}>
-      <label>{props.title}
-        <input
-          type="range"
-          value={props.selectedValue}
-          name={props.title}
-          max={props.maxValue}
-          onChange={(e) => props.onValueChanged(Number(e.target.value))} />
-        <span className="value">{formatter(props.selectedValue)}</span>
-      </label>
+
+    <Group>
+
+      <Text style={{minWidth: '8rem'}}>{props.title}</Text>
+
+
+      <Slider
+        title={props.title}
+        value={props.selectedValue}
+        min={0}
+        max={props.maxValue}
+        w='10rem'
+        label={formatter}
+        onChange={(e) => props.onValueChanged(Number(e))} />
+      
+      <Text size='sm'><b>{formatter(props.selectedValue)}</b></Text>
+
+
+  </Group>
     </div>
   )
 };
+
+
+// <div className="slider"
+//   onMouseEnter={handleMouseEnter}
+//   onMouseLeave={handleMouseLeave}>
+//   <label>{props.title}
+//     <input
+//       type="range"
+//       value={props.selectedValue}
+//       name={props.title}
+//       max={props.maxValue}
+//       onChange={(e) => props.onValueChanged(Number(e.target.value))} />
+//     <span className="value">{formatter(props.selectedValue)}</span>
+//   </label>
+// </div>

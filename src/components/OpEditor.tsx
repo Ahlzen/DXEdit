@@ -1,7 +1,7 @@
 import { type opNumber, type voiceParamData, opOffsets } from "../midi/voiceParams";
 
 import EnvelopeEditor from "./EnvelopeEditor";
-import Slider from "./Slider";
+import DXESlider from "./Slider";
 import RadioGroup from "./RadioGroup";
 
 export default function OpEditor(props: {
@@ -77,7 +77,7 @@ export default function OpEditor(props: {
 
   return (
   <div className="opEditor">
-    <Slider
+    <DXESlider
       title='Level:'
       selectedValue={getVal(16)}
       maxValue={99}
@@ -87,19 +87,19 @@ export default function OpEditor(props: {
       options={{0: 'Ratio', 1: 'Fixed'}}
       selectedValue={getVal(17)}
       onValueChanged={setVal(17)} />
-    <Slider
+    <DXESlider
       title='Coarse:'
       selectedValue={getVal(18)}
       maxValue={33}
       onValueChanged={setVal(18)}
       valueFormatter={formatCoarseFreq} />
-    <Slider
+    <DXESlider
       title='Fine:'
       selectedValue={getVal(19)}
       maxValue={99}
       onValueChanged={setVal(19)}
       valueFormatter={formatFineFreq} />
-    <Slider
+    <DXESlider
       title='Detune:'
       selectedValue={getVal(20)}
       maxValue={14}
@@ -112,13 +112,13 @@ export default function OpEditor(props: {
       onValueChanged={props.onValueChanged} />
     
     <h3>Kbd level scaling</h3>
-    <Slider
+    <DXESlider
       title='Break pt:'
       selectedValue={getVal(8)}
       maxValue={99}
       onValueChanged={setVal(8)}
       valueFormatter={formatBreakpoint} />
-    <Slider
+    <DXESlider
       title='L Depth:'
       selectedValue={getVal(9)}
       maxValue={99}
@@ -128,7 +128,7 @@ export default function OpEditor(props: {
       options={{0: '-Lin', 1: '-Exp', 2: '+Exp', 3: '+Lin'}}
       selectedValue={getVal(11)}
       onValueChanged={setVal(11)} />
-    <Slider
+    <DXESlider
       title='R Depth:'
       selectedValue={getVal(10)}
       maxValue={99}
@@ -140,17 +140,17 @@ export default function OpEditor(props: {
       onValueChanged={setVal(12)} />
     <br/>
 
-    <Slider
+    <DXESlider
       title='Kbd rate sc:'
       selectedValue={getVal(13)}
       maxValue={7}
       onValueChanged={setVal(13)} />
-    <Slider
+    <DXESlider
       title='Kbd mod sens:'
       selectedValue={getVal(14)}
       maxValue={3}
       onValueChanged={setVal(14)} />
-    <Slider
+    <DXESlider
       title='Kbd vel sens:'
       selectedValue={getVal(15)}
       maxValue={7}

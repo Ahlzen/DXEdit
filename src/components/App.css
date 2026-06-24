@@ -1,4 +1,8 @@
 body {
+  padding: 1rem;
+}
+
+/* body {
   color: #ecb;
   background-color: #282420;
   padding: 10px;
@@ -83,4 +87,4 @@ input[type="range"] {
 
 .envGraph {
   margin-top: 0.5em;
-}
+} */

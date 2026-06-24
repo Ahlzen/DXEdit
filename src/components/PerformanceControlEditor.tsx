@@ -1,4 +1,4 @@
-import Slider from './Slider.tsx';
+import DXESlider from './Slider.tsx';
 import CheckBoxGroup from './CheckBoxGroup.tsx';
 
 export default function PerformanceControlEditor(props: {
@@ -11,7 +11,7 @@ export default function PerformanceControlEditor(props: {
   return (
     <div className='performanceControlEditor'>
       <h3>{props.title}</h3>
-      <Slider
+      <DXESlider
         title="Range:"
         selectedValue={props.rangeValue}
         maxValue={99}

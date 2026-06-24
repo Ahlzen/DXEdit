@@ -1,9 +1,9 @@
 import '@mantine/core/styles.css';
-import { MantineProvider } from '@mantine/core';
+import { createTheme, MantineProvider, Button, Select, Stack } from '@mantine/core';
 
 import { useState, useRef, useEffect } from 'react';
 import { Preferences } from '../preferences';
-//import './App.css';
+import './App.css';
 
 // MIDI / DX7 sysex
 import { WebMidi } from '../midi/webmidi'
@@ -14,9 +14,9 @@ import { type voiceParam, type egType, type opNumber,
   type voiceParamSpec} from '../midi/voiceParams';
 
 // Components
-import MidiPortSelector from './MidiPortSelector.tsx';
+import DXEMidiPortSelector from './MidiPortSelector.tsx';
 import RadioGroup from './RadioGroup.tsx';
-import Slider from './Slider.tsx';
+import DXESlider from './Slider.tsx';
 import PerformanceControlEditor from './PerformanceControlEditor.tsx';
 import OpEditor from './OpEditor.tsx';
 import EnvelopeEditor from './EnvelopeEditor.tsx';
@@ -81,39 +81,70 @@ export default function App()
   }
   function formatAlgorithm(n: number): string { return String(n+1); }
 
+  // Mantine theme
+  const theme = createTheme({
+    focusRing: 'always',
+    scale: 1.0,
+    fontSmoothing: true,
+    defaultRadius: 'sm',
+    cursorType: 'pointer',
+  });
+
   return (
-    <MantineProvider>
+    <MantineProvider
+      theme={theme}
+      defaultColorScheme='dark'
+      classNamesPrefix='mantine'
+      >
+
+    {/* <Select data={["Option 1", "option 2", "option 3"]} /> */}
+
     <h1>DX/TX Editor</h1>
-    <fieldset className="panel">
-      <legend>Config</legend>
-      <MidiPortSelector
-        title="DX7 MIDI Input:"
+    {/* <fieldset className="panel">
+      <legend>Config</legend> */}
+
+      <Stack style={{width: '25rem'}} align='stretch'>
+
+      <DXEMidiPortSelector
+        title="MIDI Input"
+        description='From MIDI Out of DX/TX.'
         portNames={midiInPortNames}
         selectedPortName={midiIn}
         onPortChanged={handleMidiInChanged} />
-      <MidiPortSelector 
-        title="DX7 MIDI Output:"
+      <DXEMidiPortSelector 
+        title="MIDI Output"
+        description='To MIDI In of DX/TX.'
         portNames={midiOutPortNames}
         selectedPortName={midiOut}
         onPortChanged={handleMidiOutChanged} />
-      <MidiPortSelector
-        title="Controller Input (optional):"
+      <DXEMidiPortSelector
+        title="Controller Input"
+        description='Optional. Input from this port is sent to MIDI Output.'
         portNames={midiInPortNames}
         selectedPortName={controllerIn}
         onPortChanged={handleControllerInChanged} />
-      <Slider
-        title="MIDI Channel:"
+      <DXESlider
+        title="MIDI Channel"
         selectedValue={midiChannel}
         maxValue={15}
         onValueChanged={setMidiChannel}
         valueFormatter={formatMidiChannel} />
-    </fieldset>
+
+      </Stack>
+    {/* </fieldset> */}
+
+    
+
+    <hr/>
 
     <fieldset className="panel">
       <legend>MIDI Test</legend>
-      <button onClick={handleSendNoteOnOff}>
+      {/* <button onClick={handleSendNoteOnOff}>
         Send Note On / Note Off
-      </button>
+      </button> */}
+      <Button onClick={handleSendNoteOnOff}>
+        Send Note On / Note Off
+      </Button>
       <br/> 
       <label>Patch name:
         <input type="text"
@@ -132,20 +163,20 @@ export default function App()
         onValueChanged={(v) => handlePerformanceParamChanged('monoMode', v)} />
       
       <h3>Pitch Bend</h3>
-      <Slider
+      <DXESlider
         title="Range:"
         selectedValue={perfParams.pitchBendRange}
         maxValue={12}
         onValueChanged={(v) => handlePerformanceParamChanged('pitchBendRange', v)}
         valueFormatter={formatSemitones} />
-      <Slider
+      <DXESlider
         title="Step:"
         selectedValue={perfParams.pitchBendStep}
         maxValue={12}
         onValueChanged={(v) => handlePerformanceParamChanged('pitchBendStep', v)} />
 
       <h3>Portamento</h3>
-      <Slider
+      <DXESlider
         title="Time:"
         selectedValue={perfParams.portamentoTime}
         maxValue={99}
@@ -194,13 +225,13 @@ export default function App()
 
         <div className='commonEditor'>
           <h3>Common</h3>
-          <Slider
+          <DXESlider
             title="Algorithm:"
             selectedValue={voiceParams.getValue('Algorithm')}
             maxValue={31}
             onValueChanged={(v) => handleVoiceParamChanged('Algorithm', v)}
             valueFormatter={formatAlgorithm} />
-          <Slider
+          <DXESlider
             title="Feedback:"
             selectedValue={voiceParams.getValue('Feedback')}
             maxValue={7}
@@ -212,22 +243,22 @@ export default function App()
             onValueChanged={(v) => handleVoiceParamChanged('Oscillator Sync', v)} />
 
           <h3>LFO</h3>
-          <Slider
+          <DXESlider
             title="Speed:"
             selectedValue={voiceParams.getValue('LFO Speed')}
             maxValue={99}
             onValueChanged={(v) => handleVoiceParamChanged('LFO Speed', v)} />
-          <Slider
+          <DXESlider
             title="Delay:"
             selectedValue={voiceParams.getValue('LFO Delay')}
             maxValue={99}
             onValueChanged={(v) => handleVoiceParamChanged('LFO Delay', v)} />
-          <Slider
+          <DXESlider
             title="Pitch Mod:"
             selectedValue={voiceParams.getValue('LFO Pitch Mod Depth')}
             maxValue={99}
             onValueChanged={(v) => handleVoiceParamChanged('LFO Pitch Mod Depth', v)} />
-          <Slider
+          <DXESlider
             title="Amp Mod:"
             selectedValue={voiceParams.getValue('LFO Amp Mod Depth')}
             maxValue={99}
@@ -244,12 +275,12 @@ export default function App()
             onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', v)} />
           
           <br/>
-          <Slider
+          <DXESlider
             title="Pitch Mod Sens:"
             selectedValue={voiceParams.getValue('Pitch Mod Sensitivity')}
             maxValue={7}
             onValueChanged={(v) => handleVoiceParamChanged('Pitch Mod Sensitivity', v)} />
-          <Slider
+          <DXESlider
             title="Transpose:"
             selectedValue={voiceParams.getValue('Transpose')}
             maxValue={48}
