@@ -1,3 +1,5 @@
+import { Text, Group, Checkbox } from '@mantine/core';
+
 export default function CheckBoxGroup(props: {
   title: string,
   options: {}, // value: name. Values must be "flags" (1,2,4,8,16...)
@@ -19,19 +21,16 @@ export default function CheckBoxGroup(props: {
 
   return (
     <div className="checkboxGroup">
-      <label>{props.title}
+      <Group>
+        <Text style={{minWidth: '8rem'}}>{props.title}</Text>
         {Object.entries(props.options).map(([value, name]) => (
-          <label key={value}>
-            <input
-              type="checkbox"
-              value={value}
-              name={props.title}
-              checked={(props.selectedValue & value) > 0}
-              onChange={(e) => handleOnChange(e.target.checked, Number(e.target.value))} />
-              {name}
-          </label>
+          <Checkbox
+            value={value}
+            label={name}
+            checked={(props.selectedValue & value) > 0}
+            onChange={(e) => handleOnChange(e.target.checked, Number(e.target.value))} />
         ))}
-      </label>
+      </Group>
     </div>
   )
 }

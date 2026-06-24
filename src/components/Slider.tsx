@@ -29,25 +29,18 @@ export default function DXESlider(props: {
     <div className="slider"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}>
-
-    <Group>
-
-      <Text style={{minWidth: '8rem'}}>{props.title}</Text>
-
-
-      <Slider
-        title={props.title}
-        value={props.selectedValue}
-        min={0}
-        max={props.maxValue}
-        w='10rem'
-        label={formatter}
-        onChange={(e) => props.onValueChanged(Number(e))} />
-      
-      <Text size='sm'><b>{formatter(props.selectedValue)}</b></Text>
-
-
-  </Group>
-    </div>
+      <Group>
+        <Text style={{minWidth: '8rem'}}>{props.title}</Text>
+        <Slider
+          title={props.title}
+          value={props.selectedValue}
+          min={0}
+          max={props.maxValue}
+          w='10rem'
+          label={formatter}
+          onChange={(e) => props.onValueChanged(Number(e))} />
+        <Text size='sm'><b>{formatter(props.selectedValue)}</b></Text>
+    </Group>
+  </div>
   )
 };
