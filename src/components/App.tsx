@@ -1,5 +1,6 @@
 import '@mantine/core/styles.css';
-import { createTheme, MantineProvider, Button, Select, Stack } from '@mantine/core';
+import { createTheme, MantineProvider, Button, Stack, Group, TextInput, Tabs } from '@mantine/core';
+import { GearIcon, SlidersIcon, FadersHorizontalIcon, PianoKeysIcon, ImageIcon } from '@phosphor-icons/react';
 
 import { useState, useRef, useEffect } from 'react';
 import { Preferences } from '../preferences';
@@ -94,66 +95,236 @@ export default function App()
     <MantineProvider
       theme={theme}
       defaultColorScheme='dark'
-      classNamesPrefix='mantine'
-      >
+      classNamesPrefix='mantine'>
 
-    {/* <Select data={["Option 1", "option 2", "option 3"]} /> */}
+    <Tabs defaultValue="configuration">
 
-    <h1>DX/TX Editor</h1>
-    {/* <fieldset className="panel">
-      <legend>Config</legend> */}
+      <Tabs.List>
+        <Tabs.Tab value="configuration" leftSection={<GearIcon size={16} />}>
+          Configuration
+        </Tabs.Tab>
+        <Tabs.Tab value="performance" leftSection={<PianoKeysIcon size={16} />}>
+          Performance Parameters
+        </Tabs.Tab>
+        <Tabs.Tab value="edit" leftSection={<FadersHorizontalIcon size={16} />}>
+          Voice Editor
+        </Tabs.Tab>
+      </Tabs.List>
 
-      <Stack style={{width: '25rem'}} align='stretch'>
+      <Tabs.Panel value="configuration">
+        <Group justify='flex-start' align='top' gap='xl'>
 
-      <DXEMidiPortSelector
-        title="MIDI Input"
-        description='From MIDI Out of DX/TX.'
-        portNames={midiInPortNames}
-        selectedPortName={midiIn}
-        onPortChanged={handleMidiInChanged} />
-      <DXEMidiPortSelector 
-        title="MIDI Output"
-        description='To MIDI In of DX/TX.'
-        portNames={midiOutPortNames}
-        selectedPortName={midiOut}
-        onPortChanged={handleMidiOutChanged} />
-      <DXEMidiPortSelector
-        title="Controller Input"
-        description='Optional. Input from this port is sent to MIDI Output.'
-        portNames={midiInPortNames}
-        selectedPortName={controllerIn}
-        onPortChanged={handleControllerInChanged} />
-      <DXESlider
-        title="MIDI Channel"
-        selectedValue={midiChannel}
-        maxValue={15}
-        onValueChanged={setMidiChannel}
-        valueFormatter={formatMidiChannel} />
+          <Stack style={{width: '22rem'}} align='stretch'>
+            <h2>MIDI Configuration</h2>
+            <DXEMidiPortSelector
+              title="MIDI Input"
+              description='From MIDI Out of DX/TX.'
+              portNames={midiInPortNames}
+              selectedPortName={midiIn}
+              onPortChanged={handleMidiInChanged} />
+            <DXEMidiPortSelector 
+              title="MIDI Output"
+              description='To MIDI In of DX/TX.'
+              portNames={midiOutPortNames}
+              selectedPortName={midiOut}
+              onPortChanged={handleMidiOutChanged} />
+            <DXEMidiPortSelector
+              title="Controller Input"
+              description='Optional. Input from this port is sent to MIDI Output.'
+              portNames={midiInPortNames}
+              selectedPortName={controllerIn}
+              onPortChanged={handleControllerInChanged} />
+            <DXESlider
+              title="MIDI Channel"
+              selectedValue={midiChannel}
+              maxValue={15}
+              onValueChanged={setMidiChannel}
+              valueFormatter={formatMidiChannel} />
+          </Stack>
 
-      </Stack>
-    {/* </fieldset> */}
+          <Stack>
+            <h2>MIDI Test</h2>
+            <Button onClick={handleSendNoteOnOff}>
+              Send Note On / Note Off
+            </Button>
+            <TextInput
+              label="Patch Name"
+              description="Max 10 characters supported on DX."
+              placeholder="max 10 chars"
+              onChange={(e) => {handleUpdatePatchName(e.currentTarget.value)}} />
+          </Stack>
+
+        </Group>
+      </Tabs.Panel>
+
+      <Tabs.Panel value="performance">
+        <h2>Performance Parameters</h2>
+
+        <RadioGroup
+          title="Voice mode:"
+          options={{ 0: "Poly", 1: "Mono" }}
+          selectedValue={perfParams.monoMode}
+          onValueChanged={(v) => handlePerformanceParamChanged('monoMode', v)} />
+        
+        <h3>Pitch Bend</h3>
+        <DXESlider
+          title="Range:"
+          selectedValue={perfParams.pitchBendRange}
+          maxValue={12}
+          onValueChanged={(v) => handlePerformanceParamChanged('pitchBendRange', v)}
+          valueFormatter={formatSemitones} />
+        <DXESlider
+          title="Step:"
+          selectedValue={perfParams.pitchBendStep}
+          maxValue={12}
+          onValueChanged={(v) => handlePerformanceParamChanged('pitchBendStep', v)} />
+
+        <h3>Portamento</h3>
+        <DXESlider
+          title="Time:"
+          selectedValue={perfParams.portamentoTime}
+          maxValue={99}
+          onValueChanged={(v) => handlePerformanceParamChanged('portamentoTime', v)} />
+        <RadioGroup
+          title='Mode:'
+          options={{0: 'Retain', 1: 'Follow'}}
+          selectedValue={perfParams.portamentoMode}
+          onValueChanged={(v) => handlePerformanceParamChanged('portamentoMode', v)} />
+        <RadioGroup
+          title='Glissando:'
+          options={{0: 'Off', 1: 'On'}}
+          selectedValue={perfParams.glissando}
+          onValueChanged={(v) => handlePerformanceParamChanged('glissando', v)} />
+
+        <PerformanceControlEditor
+          title="Mod Wheel"
+          rangeValue={perfParams.modWheelRange}
+          onRangeChanged={(v) => handlePerformanceParamChanged('modWheelRange', v)}
+          assignValue={perfParams.modWheelAssign}
+          onAssignChanged={(v) => handlePerformanceParamChanged('modWheelAssign', v)} />
+        <PerformanceControlEditor
+          title="Aftertouch"
+          rangeValue={perfParams.aftertouchRange}
+          onRangeChanged={(v) => handlePerformanceParamChanged('aftertouchRange', v)}
+          assignValue={perfParams.aftertouchAssign}
+          onAssignChanged={(v) => handlePerformanceParamChanged('aftertouchAssign', v)} />
+        <PerformanceControlEditor
+          title="Foot Control"
+          rangeValue={perfParams.footControlRange}
+          onRangeChanged={(v) => handlePerformanceParamChanged('footControlRange', v)}
+          assignValue={perfParams.footControlAssign}
+          onAssignChanged={(v) => handlePerformanceParamChanged('footControlAssign', v)} />
+        <PerformanceControlEditor
+          title="Breath Control"
+          rangeValue={perfParams.breathControlRange}
+          onRangeChanged={(v) => handlePerformanceParamChanged('breathControlRange', v)}
+          assignValue={perfParams.breathControlAssign}
+          onAssignChanged={(v) => handlePerformanceParamChanged('breathControlAssign', v)} />
+      </Tabs.Panel>
+
+      <Tabs.Panel value="edit">
+        <h2>Voice Editor</h2>
+
+        <div className="voiceEditor">
+
+        <div className='commonEditor'>
+          <h3>Common</h3>
+          <DXESlider
+            title="Algorithm:"
+            selectedValue={voiceParams.getValue('Algorithm')}
+            maxValue={31}
+            onValueChanged={(v) => handleVoiceParamChanged('Algorithm', v)}
+            valueFormatter={formatAlgorithm} />
+          <DXESlider
+            title="Feedback:"
+            selectedValue={voiceParams.getValue('Feedback')}
+            maxValue={7}
+            onValueChanged={(v) => handleVoiceParamChanged('Feedback', v)} />
+          <RadioGroup
+            title="Osc Sync:"
+            options={{ 0: "Off", 1: "On" }}
+            selectedValue={voiceParams.getValue('Oscillator Sync')}
+            onValueChanged={(v) => handleVoiceParamChanged('Oscillator Sync', v)} />
+
+          <h3>LFO</h3>
+          <DXESlider
+            title="Speed:"
+            selectedValue={voiceParams.getValue('LFO Speed')}
+            maxValue={99}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Speed', v)} />
+          <DXESlider
+            title="Delay:"
+            selectedValue={voiceParams.getValue('LFO Delay')}
+            maxValue={99}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Delay', v)} />
+          <DXESlider
+            title="Pitch Mod:"
+            selectedValue={voiceParams.getValue('LFO Pitch Mod Depth')}
+            maxValue={99}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Pitch Mod Depth', v)} />
+          <DXESlider
+            title="Amp Mod:"
+            selectedValue={voiceParams.getValue('LFO Amp Mod Depth')}
+            maxValue={99}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Amp Mod Depth', v)} />
+          <RadioGroup
+            title="Sync:"
+            options={{ 0: "Off", 1: "On" }}
+            selectedValue={voiceParams.getValue('LFO Sync')}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Sync', v)} />
+          <RadioGroup
+            title="Wave:"
+            options={{ 0: "Tri", 1: "Saw Dn", 2: "Saw Up", 3: "Square", 4: "Sine", 5: "S&H" }}
+            selectedValue={voiceParams.getValue('LFO Waveform')}
+            onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', v)} />
+          
+          <br/>
+          <DXESlider
+            title="Pitch Mod Sens:"
+            selectedValue={voiceParams.getValue('Pitch Mod Sensitivity')}
+            maxValue={7}
+            onValueChanged={(v) => handleVoiceParamChanged('Pitch Mod Sensitivity', v)} />
+          <DXESlider
+            title="Transpose:"
+            selectedValue={voiceParams.getValue('Transpose')}
+            maxValue={48}
+            onValueChanged={(v) => handleVoiceParamChanged('Transpose', v)}
+            valueFormatter={formatTranspose} />
+
+          <EnvelopeEditor title="Pitch Envelope"
+            data={voiceParams}
+            eg='pitch'
+            onValueChanged={handleVoiceParamChanged} />
+        </div>
+
+        <div className='opsEditor'>
+
+          <div className="opSelectors">
+            {['op1','op2','op3','op4','op5','op6'].map(function (o,i) {
+              return (
+                <div style={{display:'inline-block', marginBottom:'0.6em'}}>
+                  <label key={o}>
+                  <input type="radio" value={o} name="op"
+                    defaultChecked={currentOp === o} 
+                    onChange={() => setCurrentOp(o as opNumber)}/>
+                  OP{i+1}
+                  </label>
+                </div>
+              );
+            })}
+            </div>
+            
+            <OpEditor op={currentOp} data={voiceParams}
+              onValueChanged={handleVoiceParamChanged} />
+          </div>
+
+        </div>
+      </Tabs.Panel>
+
+
 
     
-
-    <hr/>
-
-    <fieldset className="panel">
-      <legend>MIDI Test</legend>
-      {/* <button onClick={handleSendNoteOnOff}>
-        Send Note On / Note Off
-      </button> */}
-      <Button onClick={handleSendNoteOnOff}>
-        Send Note On / Note Off
-      </Button>
-      <br/> 
-      <label>Patch name:
-        <input type="text"
-          maxLength={10}
-          placeholder="max 10 chars"
-          onChange={(e) => {handleUpdatePatchName(e.target.value)}} />
-      </label>
-    </fieldset>
-
+{/* 
     <fieldset className="panel">
       <legend>Performance Parameters</legend>
       <RadioGroup
@@ -216,8 +387,8 @@ export default function App()
         onRangeChanged={(v) => handlePerformanceParamChanged('breathControlRange', v)}
         assignValue={perfParams.breathControlAssign}
         onAssignChanged={(v) => handlePerformanceParamChanged('breathControlAssign', v)} />
-    </fieldset>
-
+    </fieldset> */}
+{/* 
     <fieldset className='panel'>
       <legend>Voice Parameters</legend>
 
@@ -315,7 +486,11 @@ export default function App()
         </div>
 
       </div>
-    </fieldset>
+    </fieldset> */}
+
+
+    </Tabs>
+
     </MantineProvider>
   );
 

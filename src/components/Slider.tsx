@@ -51,18 +51,3 @@ export default function DXESlider(props: {
     </div>
   )
 };
-
-
-// <div className="slider"
-//   onMouseEnter={handleMouseEnter}
-//   onMouseLeave={handleMouseLeave}>
-//   <label>{props.title}
-//     <input
-//       type="range"
-//       value={props.selectedValue}
-//       name={props.title}
-//       max={props.maxValue}
-//       onChange={(e) => props.onValueChanged(Number(e.target.value))} />
-//     <span className="value">{formatter(props.selectedValue)}</span>
-//   </label>
-// </div>

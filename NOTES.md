@@ -27,6 +27,12 @@ o Add INIT patch (default to that)
 * Librarian features. Save and remix banks.
 * Cloud/share support.
 
+* Mantine / layout
+  * Create own icons for tabs etc.
+  * Fix color scheme
+  * Fix spacing, ensure works on various devices
+  * 
+
 
 ## Template
 
