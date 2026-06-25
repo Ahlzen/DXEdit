@@ -24,6 +24,7 @@ export default function DXEEnvelopeEditor(props: {
 
   let handleHoverChanged =
     function(hover: boolean, offset: number) {
+      console.log(`handleHoverChanged: ${hover} ${offset}`);
       setHighlight(hover ? offset : undefined);
   }
 
