@@ -1,6 +1,6 @@
 import { egTypeOffsets, voiceParamData, type egType } from "../midi/voiceParams";
 
-export default function EnvelopeGraph(props: {
+export default function DXEEnvelopeGraph(props: {
   width: number,
   height: number,
   data: voiceParamData,

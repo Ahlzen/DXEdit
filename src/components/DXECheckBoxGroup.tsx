@@ -1,6 +1,6 @@
 import { Text, Group, Checkbox } from '@mantine/core';
 
-export default function CheckBoxGroup(props: {
+export default function DXECheckBoxGroup(props: {
   title: string,
   options: {}, // value: name. Values must be "flags" (1,2,4,8,16...)
   selectedValue: number, // combined value of all checked flags

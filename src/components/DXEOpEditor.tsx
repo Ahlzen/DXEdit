@@ -1,10 +1,10 @@
 import { type opNumber, type voiceParamData, opOffsets } from "../midi/voiceParams";
 
-import EnvelopeEditor from "./EnvelopeEditor";
-import DXESlider from "./Slider";
-import RadioGroup from "./RadioGroup";
+import DXEEnvelopeEditor from "./DXEEnvelopeEditor";
+import DXESlider from "./DXESlider";
+import DXERadioGroup from "./DXERadioGroup";
 
-export default function OpEditor(props: {
+export default function DXEOpEditor(props: {
   data: voiceParamData,
   op: opNumber,
   onValueChanged: (offset: number, value: number) => void})
@@ -82,7 +82,7 @@ export default function OpEditor(props: {
       selectedValue={getVal(16)}
       maxValue={99}
       onValueChanged={setVal(16)} />
-    <RadioGroup
+    <DXERadioGroup
       title="Osc mode:"
       options={{0: 'Ratio', 1: 'Fixed'}}
       selectedValue={getVal(17)}
@@ -106,7 +106,7 @@ export default function OpEditor(props: {
       onValueChanged={setVal(20)}
       valueFormatter={formatDetune} />
     
-    <EnvelopeEditor title="OP Envelope"
+    <DXEEnvelopeEditor title="OP Envelope"
       data={props.data}
       eg={props.op}
       onValueChanged={props.onValueChanged} />
@@ -123,7 +123,7 @@ export default function OpEditor(props: {
       selectedValue={getVal(9)}
       maxValue={99}
       onValueChanged={setVal(9)} />
-    <RadioGroup
+    <DXERadioGroup
       title="L Curve:"
       options={{0: '-Lin', 1: '-Exp', 2: '+Exp', 3: '+Lin'}}
       selectedValue={getVal(11)}
@@ -133,7 +133,7 @@ export default function OpEditor(props: {
       selectedValue={getVal(10)}
       maxValue={99}
       onValueChanged={setVal(10)} />
-    <RadioGroup
+    <DXERadioGroup
       title="R Curve:"
       options={{0: '-Lin', 1: '-Exp', 2: '+Exp', 3: '+Lin'}}
       selectedValue={getVal(12)}

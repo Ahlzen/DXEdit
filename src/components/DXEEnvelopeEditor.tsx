@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { egTypeOffsets, type egType, type voiceParamData } from "../midi/voiceParams";
-import EnvelopeGraph from "./EnvelopeGraph";
-import DXESlider from "./Slider";
+import DXEEnvelopeGraph from "./DXEEnvelopeGraph";
+import DXESlider from "./DXESlider";
 
-export default function EnvelopeEditor(props: {
+export default function DXEEnvelopeEditor(props: {
   title: string,
   data: voiceParamData,
   eg: egType,
@@ -79,7 +79,7 @@ export default function EnvelopeEditor(props: {
         onValueChanged={setVal(7)}
         onHoverChanged={(h) => handleHoverChanged(h, 7)} />
 
-      <EnvelopeGraph
+      <DXEEnvelopeGraph
         width={300}
         height={100}
         data={props.data}

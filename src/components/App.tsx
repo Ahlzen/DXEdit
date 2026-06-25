@@ -1,5 +1,5 @@
 import '@mantine/core/styles.css';
-import { createTheme, MantineProvider, Button, Stack, Group, TextInput, Tabs } from '@mantine/core';
+import { createTheme, MantineProvider, Button, Stack, Group, TextInput, Tabs, Title } from '@mantine/core';
 import { GearIcon, SlidersIcon, FadersHorizontalIcon, PianoKeysIcon, ImageIcon } from '@phosphor-icons/react';
 
 import { useState, useRef, useEffect } from 'react';
@@ -15,12 +15,12 @@ import { type voiceParam, type egType, type opNumber,
   type voiceParamSpec} from '../midi/voiceParams';
 
 // Components
-import DXEMidiPortSelector from './MidiPortSelector.tsx';
-import RadioGroup from './RadioGroup.tsx';
-import DXESlider from './Slider.tsx';
-import PerformanceControlEditor from './PerformanceControlEditor.tsx';
-import OpEditor from './OpEditor.tsx';
-import EnvelopeEditor from './EnvelopeEditor.tsx';
+import DXEMidiPortSelector from './DXEMidiPortSelector.tsx';
+import DXERadioGroup from './DXERadioGroup.tsx';
+import DXESlider from './DXESlider.tsx';
+import DXEPerformanceControlEditor from './DXEPerformanceControlEditor.tsx';
+import DXEOpEditor from './DXEOpEditor.tsx';
+import DXEEnvelopeEditor from './DXEEnvelopeEditor.tsx';
 
 
 export default function App()
@@ -89,6 +89,26 @@ export default function App()
     fontSmoothing: true,
     defaultRadius: 'sm',
     cursorType: 'pointer',
+    spacing: {
+      // reduce spacing a bit compared to default
+      xs: '0.2rem',
+      sm: '0.5rem',
+      md: '0.7rem',
+      lg: '1.5rem',
+      xl: '2.5rem'
+    },
+    components: {
+      Stack: Stack.extend( {
+        defaultProps: {
+          gap: 'xs'
+        }
+      }),
+      Title: Title.extend({
+        defaultProps: {
+          mt: 'lg'
+        }
+      }),
+    },
   });
 
   return (
@@ -112,10 +132,10 @@ export default function App()
       </Tabs.List>
 
       <Tabs.Panel value="configuration">
-        <Group justify='flex-start' align='top' gap='xl'>
+        <Group justify='flex-start' align='top' gap='xl' grow={false}>
 
-          <Stack style={{width: '22rem'}} align='stretch'>
-            <h2>MIDI Configuration</h2>
+          <Stack align='stretch' gap='lg' mt='lg'>
+            <Title order={2}>MIDI Configuration</Title>
             <DXEMidiPortSelector
               title="MIDI Input"
               description='From MIDI Out of DX/TX.'
@@ -142,8 +162,8 @@ export default function App()
               valueFormatter={formatMidiChannel} />
           </Stack>
 
-          <Stack>
-            <h2>MIDI Test</h2>
+          <Stack gap='lg' mt='lg'>
+            <Title order={2}>MIDI Test</Title>
             <Button onClick={handleSendNoteOnOff}>
               Send Note On / Note Off
             </Button>
@@ -158,68 +178,76 @@ export default function App()
       </Tabs.Panel>
 
       <Tabs.Panel value="performance">
-        <h2>Performance Parameters</h2>
+        <Group justify='flex-start' align='top' gap='xl' grow={true}>
+          <Stack>
+            <h2>Performance Parameters</h2>
 
-        <RadioGroup
-          title="Voice mode:"
-          options={{ 0: "Poly", 1: "Mono" }}
-          selectedValue={perfParams.monoMode}
-          onValueChanged={(v) => handlePerformanceParamChanged('monoMode', v)} />
-        
-        <h3>Pitch Bend</h3>
-        <DXESlider
-          title="Range:"
-          selectedValue={perfParams.pitchBendRange}
-          maxValue={12}
-          onValueChanged={(v) => handlePerformanceParamChanged('pitchBendRange', v)}
-          valueFormatter={formatSemitones} />
-        <DXESlider
-          title="Step:"
-          selectedValue={perfParams.pitchBendStep}
-          maxValue={12}
-          onValueChanged={(v) => handlePerformanceParamChanged('pitchBendStep', v)} />
+            <DXERadioGroup
+              title="Voice mode:"
+              options={{ 0: "Poly", 1: "Mono" }}
+              selectedValue={perfParams.monoMode}
+              onValueChanged={(v) => handlePerformanceParamChanged('monoMode', v)} />
+            
+            {/* <h3>Pitch Bend</h3> */}
+            <Title order={3}>Pitch Bend</Title>
+            <DXESlider
+              title="Range:"
+              selectedValue={perfParams.pitchBendRange}
+              maxValue={12}
+              onValueChanged={(v) => handlePerformanceParamChanged('pitchBendRange', v)}
+              valueFormatter={formatSemitones} />
+            <DXESlider
+              title="Step:"
+              selectedValue={perfParams.pitchBendStep}
+              maxValue={12}
+              onValueChanged={(v) => handlePerformanceParamChanged('pitchBendStep', v)} />
 
-        <h3>Portamento</h3>
-        <DXESlider
-          title="Time:"
-          selectedValue={perfParams.portamentoTime}
-          maxValue={99}
-          onValueChanged={(v) => handlePerformanceParamChanged('portamentoTime', v)} />
-        <RadioGroup
-          title='Mode:'
-          options={{0: 'Retain', 1: 'Follow'}}
-          selectedValue={perfParams.portamentoMode}
-          onValueChanged={(v) => handlePerformanceParamChanged('portamentoMode', v)} />
-        <RadioGroup
-          title='Glissando:'
-          options={{0: 'Off', 1: 'On'}}
-          selectedValue={perfParams.glissando}
-          onValueChanged={(v) => handlePerformanceParamChanged('glissando', v)} />
+            {/* <h3>Portamento</h3> */}
+            <Title order={3}>Portamento</Title>
+            <DXESlider
+              title="Time:"
+              selectedValue={perfParams.portamentoTime}
+              maxValue={99}
+              onValueChanged={(v) => handlePerformanceParamChanged('portamentoTime', v)} />
+            <DXERadioGroup
+              title='Mode:'
+              options={{0: 'Retain', 1: 'Follow'}}
+              selectedValue={perfParams.portamentoMode}
+              onValueChanged={(v) => handlePerformanceParamChanged('portamentoMode', v)} />
+            <DXERadioGroup
+              title='Glissando:'
+              options={{0: 'Off', 1: 'On'}}
+              selectedValue={perfParams.glissando}
+              onValueChanged={(v) => handlePerformanceParamChanged('glissando', v)} />
+          </Stack>
 
-        <PerformanceControlEditor
-          title="Mod Wheel"
-          rangeValue={perfParams.modWheelRange}
-          onRangeChanged={(v) => handlePerformanceParamChanged('modWheelRange', v)}
-          assignValue={perfParams.modWheelAssign}
-          onAssignChanged={(v) => handlePerformanceParamChanged('modWheelAssign', v)} />
-        <PerformanceControlEditor
-          title="Aftertouch"
-          rangeValue={perfParams.aftertouchRange}
-          onRangeChanged={(v) => handlePerformanceParamChanged('aftertouchRange', v)}
-          assignValue={perfParams.aftertouchAssign}
-          onAssignChanged={(v) => handlePerformanceParamChanged('aftertouchAssign', v)} />
-        <PerformanceControlEditor
-          title="Foot Control"
-          rangeValue={perfParams.footControlRange}
-          onRangeChanged={(v) => handlePerformanceParamChanged('footControlRange', v)}
-          assignValue={perfParams.footControlAssign}
-          onAssignChanged={(v) => handlePerformanceParamChanged('footControlAssign', v)} />
-        <PerformanceControlEditor
-          title="Breath Control"
-          rangeValue={perfParams.breathControlRange}
-          onRangeChanged={(v) => handlePerformanceParamChanged('breathControlRange', v)}
-          assignValue={perfParams.breathControlAssign}
-          onAssignChanged={(v) => handlePerformanceParamChanged('breathControlAssign', v)} />
+          <Stack>
+            <DXEPerformanceControlEditor
+              title="Mod Wheel"
+              rangeValue={perfParams.modWheelRange}
+              onRangeChanged={(v) => handlePerformanceParamChanged('modWheelRange', v)}
+              assignValue={perfParams.modWheelAssign}
+              onAssignChanged={(v) => handlePerformanceParamChanged('modWheelAssign', v)} />
+            <DXEPerformanceControlEditor
+              title="Aftertouch"
+              rangeValue={perfParams.aftertouchRange}
+              onRangeChanged={(v) => handlePerformanceParamChanged('aftertouchRange', v)}
+              assignValue={perfParams.aftertouchAssign}
+              onAssignChanged={(v) => handlePerformanceParamChanged('aftertouchAssign', v)} />
+            <DXEPerformanceControlEditor
+              title="Foot Control"
+              rangeValue={perfParams.footControlRange}
+              onRangeChanged={(v) => handlePerformanceParamChanged('footControlRange', v)}
+              assignValue={perfParams.footControlAssign}
+              onAssignChanged={(v) => handlePerformanceParamChanged('footControlAssign', v)} />
+            <DXEPerformanceControlEditor
+              title="Breath Control"
+              rangeValue={perfParams.breathControlRange}
+              onRangeChanged={(v) => handlePerformanceParamChanged('breathControlRange', v)}
+              assignValue={perfParams.breathControlAssign}
+              onAssignChanged={(v) => handlePerformanceParamChanged('breathControlAssign', v)} />
+          </Stack>
+        </Group>
       </Tabs.Panel>
 
       <Tabs.Panel value="edit">
@@ -240,7 +268,7 @@ export default function App()
             selectedValue={voiceParams.getValue('Feedback')}
             maxValue={7}
             onValueChanged={(v) => handleVoiceParamChanged('Feedback', v)} />
-          <RadioGroup
+          <DXERadioGroup
             title="Osc Sync:"
             options={{ 0: "Off", 1: "On" }}
             selectedValue={voiceParams.getValue('Oscillator Sync')}
@@ -267,12 +295,12 @@ export default function App()
             selectedValue={voiceParams.getValue('LFO Amp Mod Depth')}
             maxValue={99}
             onValueChanged={(v) => handleVoiceParamChanged('LFO Amp Mod Depth', v)} />
-          <RadioGroup
+          <DXERadioGroup
             title="Sync:"
             options={{ 0: "Off", 1: "On" }}
             selectedValue={voiceParams.getValue('LFO Sync')}
             onValueChanged={(v) => handleVoiceParamChanged('LFO Sync', v)} />
-          <RadioGroup
+          <DXERadioGroup
             title="Wave:"
             options={{ 0: "Tri", 1: "Saw Dn", 2: "Saw Up", 3: "Square", 4: "Sine", 5: "S&H" }}
             selectedValue={voiceParams.getValue('LFO Waveform')}
@@ -291,7 +319,7 @@ export default function App()
             onValueChanged={(v) => handleVoiceParamChanged('Transpose', v)}
             valueFormatter={formatTranspose} />
 
-          <EnvelopeEditor title="Pitch Envelope"
+          <DXEEnvelopeEditor title="Pitch Envelope"
             data={voiceParams}
             eg='pitch'
             onValueChanged={handleVoiceParamChanged} />
@@ -314,7 +342,7 @@ export default function App()
             })}
             </div>
             
-            <OpEditor op={currentOp} data={voiceParams}
+            <DXEOpEditor op={currentOp} data={voiceParams}
               onValueChanged={handleVoiceParamChanged} />
           </div>
 

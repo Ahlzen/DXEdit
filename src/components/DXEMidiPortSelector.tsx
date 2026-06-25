@@ -25,14 +25,3 @@ export default function DXEMidiPortSelector(props: {
       value={props.selectedPortName ?? noneValue} />
   );
 }
-
-
-
-// <div className="midi-port-selector" style={{maxWidth: '20rem'}}>
-//       <label>{props.title}
-//       <Select
-//         onChange={(val, opt) => handlePortChanged(val || noneValue)}
-//         data={options}
-//         value={props.selectedPortName ?? noneValue} />
-//       </label>
-//     </div>

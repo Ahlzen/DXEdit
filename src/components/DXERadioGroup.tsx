@@ -1,6 +1,6 @@
 import { Text, Group, Radio } from '@mantine/core';
 
-export default function RadioGroup(props: {
+export default function DXERadioGroup(props: {
   title: string,
   options: {}, // value: name
   selectedValue: number|null,
