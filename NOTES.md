@@ -13,6 +13,7 @@ o Env Editor: Show envelope shape (canvas)
 
 o Add INIT patch (default to that)
 * Factor DX7 logic out of App.tsx
+* Move Patch Name to Voice Editor. Add All-notes-off and Panic to Config tab.
 * Config: Add instructions for setting up DX7 (and other devices)
 * Add help/descriptions to controls (tooltips?)
 * Voice Editor: Add "Send/Sync" feature to send all voice params to DX7
