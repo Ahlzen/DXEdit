@@ -54,3 +54,9 @@ DX7: Disable memory protection
 7. [-1]
 8. MEMORY PROTECT INTERNAL OFF
 
+
+## Troubleshooting
+
+### List MIDI devices on Linux
+
+amidi -l
