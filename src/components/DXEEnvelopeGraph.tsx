@@ -59,7 +59,6 @@ export default function DXEEnvelopeGraph(props: {
   let hSegments = [];
   let hPoints = [];
   if (props.highlightSegment !== undefined) {
-    console.log('Highlighting: ' + props.highlightSegment);
     let s: number[] = [];
     let p: number[] = [];
     switch (props.highlightSegment) {

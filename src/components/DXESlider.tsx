@@ -26,9 +26,9 @@ export default function DXESlider(props: {
   }
 
   return (
-    // <div className="slider"
-    //   onMouseEnter={handleMouseEnter}
-    //   onMouseLeave={handleMouseLeave}>
+    <div className="slider"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}>
       <Group>
         <Text style={{minWidth: '8rem'}}>{props.title}</Text>
         <Slider
@@ -40,7 +40,7 @@ export default function DXESlider(props: {
           label={formatter}
           onChange={(e) => props.onValueChanged(Number(e))} />
         <Text size='sm'><b>{formatter(props.selectedValue)}</b></Text>
-    </Group>
-  // </div>
+      </Group>
+    </div>
   )
 };
