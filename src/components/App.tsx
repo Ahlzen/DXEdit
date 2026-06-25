@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
-import { createTheme, MantineProvider, Button, Stack, Group, TextInput, Tabs, Title } from '@mantine/core';
-import { GearIcon, SlidersIcon, FadersHorizontalIcon, PianoKeysIcon, ImageIcon } from '@phosphor-icons/react';
+import { createTheme, MantineProvider, Button, Stack, Group, TextInput, Tabs, Title, Radio } from '@mantine/core';
+import { GearIcon, FadersHorizontalIcon, PianoKeysIcon } from '@phosphor-icons/react';
 
 import { useState, useRef, useEffect } from 'react';
 import { Preferences } from '../preferences';
@@ -180,7 +180,7 @@ export default function App()
       <Tabs.Panel value="performance">
         <Group justify='flex-start' align='top' gap='xl' grow={true}>
           <Stack>
-            <h2>Performance Parameters</h2>
+            <Title order={2}>Performance Parameters</Title>
 
             <DXERadioGroup
               title="Voice mode:"
@@ -251,271 +251,99 @@ export default function App()
       </Tabs.Panel>
 
       <Tabs.Panel value="edit">
-        <h2>Voice Editor</h2>
 
-        <div className="voiceEditor">
+        <Group justify='flex-start' align='top' gap='xl' grow={true}>
 
-        <div className='commonEditor'>
-          <h3>Common</h3>
-          <DXESlider
-            title="Algorithm:"
-            selectedValue={voiceParams.getValue('Algorithm')}
-            maxValue={31}
-            onValueChanged={(v) => handleVoiceParamChanged('Algorithm', v)}
-            valueFormatter={formatAlgorithm} />
-          <DXESlider
-            title="Feedback:"
-            selectedValue={voiceParams.getValue('Feedback')}
-            maxValue={7}
-            onValueChanged={(v) => handleVoiceParamChanged('Feedback', v)} />
-          <DXERadioGroup
-            title="Osc Sync:"
-            options={{ 0: "Off", 1: "On" }}
-            selectedValue={voiceParams.getValue('Oscillator Sync')}
-            onValueChanged={(v) => handleVoiceParamChanged('Oscillator Sync', v)} />
+          <Stack className='commonEditor'>
+            <Title order={2}>Common</Title>
+            <DXESlider
+              title="Algorithm:"
+              selectedValue={voiceParams.getValue('Algorithm')}
+              maxValue={31}
+              onValueChanged={(v) => handleVoiceParamChanged('Algorithm', v)}
+              valueFormatter={formatAlgorithm} />
+            <DXESlider
+              title="Feedback:"
+              selectedValue={voiceParams.getValue('Feedback')}
+              maxValue={7}
+              onValueChanged={(v) => handleVoiceParamChanged('Feedback', v)} />
+            <DXERadioGroup
+              title="Osc Sync:"
+              options={{ 0: "Off", 1: "On" }}
+              selectedValue={voiceParams.getValue('Oscillator Sync')}
+              onValueChanged={(v) => handleVoiceParamChanged('Oscillator Sync', v)} />
 
-          <h3>LFO</h3>
-          <DXESlider
-            title="Speed:"
-            selectedValue={voiceParams.getValue('LFO Speed')}
-            maxValue={99}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Speed', v)} />
-          <DXESlider
-            title="Delay:"
-            selectedValue={voiceParams.getValue('LFO Delay')}
-            maxValue={99}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Delay', v)} />
-          <DXESlider
-            title="Pitch Mod:"
-            selectedValue={voiceParams.getValue('LFO Pitch Mod Depth')}
-            maxValue={99}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Pitch Mod Depth', v)} />
-          <DXESlider
-            title="Amp Mod:"
-            selectedValue={voiceParams.getValue('LFO Amp Mod Depth')}
-            maxValue={99}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Amp Mod Depth', v)} />
-          <DXERadioGroup
-            title="Sync:"
-            options={{ 0: "Off", 1: "On" }}
-            selectedValue={voiceParams.getValue('LFO Sync')}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Sync', v)} />
-          <DXERadioGroup
-            title="Wave:"
-            options={{ 0: "Tri", 1: "Saw Dn", 2: "Saw Up", 3: "Square", 4: "Sine", 5: "S&H" }}
-            selectedValue={voiceParams.getValue('LFO Waveform')}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', v)} />
-          
-          <br/>
-          <DXESlider
-            title="Pitch Mod Sens:"
-            selectedValue={voiceParams.getValue('Pitch Mod Sensitivity')}
-            maxValue={7}
-            onValueChanged={(v) => handleVoiceParamChanged('Pitch Mod Sensitivity', v)} />
-          <DXESlider
-            title="Transpose:"
-            selectedValue={voiceParams.getValue('Transpose')}
-            maxValue={48}
-            onValueChanged={(v) => handleVoiceParamChanged('Transpose', v)}
-            valueFormatter={formatTranspose} />
+            <Title order={3}>LFO</Title>
+            <DXESlider
+              title="Speed:"
+              selectedValue={voiceParams.getValue('LFO Speed')}
+              maxValue={99}
+              onValueChanged={(v) => handleVoiceParamChanged('LFO Speed', v)} />
+            <DXESlider
+              title="Delay:"
+              selectedValue={voiceParams.getValue('LFO Delay')}
+              maxValue={99}
+              onValueChanged={(v) => handleVoiceParamChanged('LFO Delay', v)} />
+            <DXESlider
+              title="Pitch mod:"
+              selectedValue={voiceParams.getValue('LFO Pitch Mod Depth')}
+              maxValue={99}
+              onValueChanged={(v) => handleVoiceParamChanged('LFO Pitch Mod Depth', v)} />
+            <DXESlider
+              title="Amp mod:"
+              selectedValue={voiceParams.getValue('LFO Amp Mod Depth')}
+              maxValue={99}
+              onValueChanged={(v) => handleVoiceParamChanged('LFO Amp Mod Depth', v)} />
+            <DXERadioGroup
+              title="Sync:"
+              options={{ 0: "Off", 1: "On" }}
+              selectedValue={voiceParams.getValue('LFO Sync')}
+              onValueChanged={(v) => handleVoiceParamChanged('LFO Sync', v)} />
+            <DXERadioGroup
+              title="Wave:"
+              options={{ 0: "Tri", 1: "Saw Dn", 2: "Saw Up", 3: "Square", 4: "Sine", 5: "S&H" }}
+              selectedValue={voiceParams.getValue('LFO Waveform')}
+              onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', v)} />
+            
+            <br/>
+            <DXESlider
+              title="Pitch mod sens:"
+              selectedValue={voiceParams.getValue('Pitch Mod Sensitivity')}
+              maxValue={7}
+              onValueChanged={(v) => handleVoiceParamChanged('Pitch Mod Sensitivity', v)} />
+            <DXESlider
+              title="Transpose:"
+              selectedValue={voiceParams.getValue('Transpose')}
+              maxValue={48}
+              onValueChanged={(v) => handleVoiceParamChanged('Transpose', v)}
+              valueFormatter={formatTranspose} />
 
-          <DXEEnvelopeEditor title="Pitch Envelope"
-            data={voiceParams}
-            eg='pitch'
-            onValueChanged={handleVoiceParamChanged} />
-        </div>
+            <DXEEnvelopeEditor title="Pitch Envelope"
+              data={voiceParams}
+              eg='pitch'
+              onValueChanged={handleVoiceParamChanged} />
+          </Stack>
 
-        <div className='opsEditor'>
-
-          <div className="opSelectors">
+          <Stack className='opsEditor'>
+            <Title order={2}>Operators</Title>
+            <Group className="opSelectors" mt='md' mb='md'>
             {['op1','op2','op3','op4','op5','op6'].map(function (o,i) {
               return (
-                <div style={{display:'inline-block', marginBottom:'0.6em'}}>
-                  <label key={o}>
-                  <input type="radio" value={o} name="op"
-                    defaultChecked={currentOp === o} 
-                    onChange={() => setCurrentOp(o as opNumber)}/>
-                  OP{i+1}
-                  </label>
-                </div>
+                <Radio
+                  value={o}
+                  label={'OP'+(i+1)}
+                  checked={currentOp === o} 
+                  onChange={() => setCurrentOp(o as opNumber)} />
               );
             })}
-            </div>
+            </Group>
             
             <DXEOpEditor op={currentOp} data={voiceParams}
               onValueChanged={handleVoiceParamChanged} />
-          </div>
+          </Stack>
 
-        </div>
+        </Group>
       </Tabs.Panel>
-
-
-
-    
-{/* 
-    <fieldset className="panel">
-      <legend>Performance Parameters</legend>
-      <RadioGroup
-        title="Voice mode:"
-        options={{ 0: "Poly", 1: "Mono" }}
-        selectedValue={perfParams.monoMode}
-        onValueChanged={(v) => handlePerformanceParamChanged('monoMode', v)} />
-      
-      <h3>Pitch Bend</h3>
-      <DXESlider
-        title="Range:"
-        selectedValue={perfParams.pitchBendRange}
-        maxValue={12}
-        onValueChanged={(v) => handlePerformanceParamChanged('pitchBendRange', v)}
-        valueFormatter={formatSemitones} />
-      <DXESlider
-        title="Step:"
-        selectedValue={perfParams.pitchBendStep}
-        maxValue={12}
-        onValueChanged={(v) => handlePerformanceParamChanged('pitchBendStep', v)} />
-
-      <h3>Portamento</h3>
-      <DXESlider
-        title="Time:"
-        selectedValue={perfParams.portamentoTime}
-        maxValue={99}
-        onValueChanged={(v) => handlePerformanceParamChanged('portamentoTime', v)} />
-      <RadioGroup
-        title='Mode:'
-        options={{0: 'Retain', 1: 'Follow'}}
-        selectedValue={perfParams.portamentoMode}
-        onValueChanged={(v) => handlePerformanceParamChanged('portamentoMode', v)} />
-      <RadioGroup
-        title='Glissando:'
-        options={{0: 'Off', 1: 'On'}}
-        selectedValue={perfParams.glissando}
-        onValueChanged={(v) => handlePerformanceParamChanged('glissando', v)} />
-
-      <PerformanceControlEditor
-        title="Mod Wheel"
-        rangeValue={perfParams.modWheelRange}
-        onRangeChanged={(v) => handlePerformanceParamChanged('modWheelRange', v)}
-        assignValue={perfParams.modWheelAssign}
-        onAssignChanged={(v) => handlePerformanceParamChanged('modWheelAssign', v)} />
-      <PerformanceControlEditor
-        title="Aftertouch"
-        rangeValue={perfParams.aftertouchRange}
-        onRangeChanged={(v) => handlePerformanceParamChanged('aftertouchRange', v)}
-        assignValue={perfParams.aftertouchAssign}
-        onAssignChanged={(v) => handlePerformanceParamChanged('aftertouchAssign', v)} />
-      <PerformanceControlEditor
-        title="Foot Control"
-        rangeValue={perfParams.footControlRange}
-        onRangeChanged={(v) => handlePerformanceParamChanged('footControlRange', v)}
-        assignValue={perfParams.footControlAssign}
-        onAssignChanged={(v) => handlePerformanceParamChanged('footControlAssign', v)} />
-      <PerformanceControlEditor
-        title="Breath Control"
-        rangeValue={perfParams.breathControlRange}
-        onRangeChanged={(v) => handlePerformanceParamChanged('breathControlRange', v)}
-        assignValue={perfParams.breathControlAssign}
-        onAssignChanged={(v) => handlePerformanceParamChanged('breathControlAssign', v)} />
-    </fieldset> */}
-{/* 
-    <fieldset className='panel'>
-      <legend>Voice Parameters</legend>
-
-      <div className="voiceEditor">
-
-        <div className='commonEditor'>
-          <h3>Common</h3>
-          <DXESlider
-            title="Algorithm:"
-            selectedValue={voiceParams.getValue('Algorithm')}
-            maxValue={31}
-            onValueChanged={(v) => handleVoiceParamChanged('Algorithm', v)}
-            valueFormatter={formatAlgorithm} />
-          <DXESlider
-            title="Feedback:"
-            selectedValue={voiceParams.getValue('Feedback')}
-            maxValue={7}
-            onValueChanged={(v) => handleVoiceParamChanged('Feedback', v)} />
-          <RadioGroup
-            title="Osc Sync:"
-            options={{ 0: "Off", 1: "On" }}
-            selectedValue={voiceParams.getValue('Oscillator Sync')}
-            onValueChanged={(v) => handleVoiceParamChanged('Oscillator Sync', v)} />
-
-          <h3>LFO</h3>
-          <DXESlider
-            title="Speed:"
-            selectedValue={voiceParams.getValue('LFO Speed')}
-            maxValue={99}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Speed', v)} />
-          <DXESlider
-            title="Delay:"
-            selectedValue={voiceParams.getValue('LFO Delay')}
-            maxValue={99}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Delay', v)} />
-          <DXESlider
-            title="Pitch Mod:"
-            selectedValue={voiceParams.getValue('LFO Pitch Mod Depth')}
-            maxValue={99}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Pitch Mod Depth', v)} />
-          <DXESlider
-            title="Amp Mod:"
-            selectedValue={voiceParams.getValue('LFO Amp Mod Depth')}
-            maxValue={99}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Amp Mod Depth', v)} />
-          <RadioGroup
-            title="Sync:"
-            options={{ 0: "Off", 1: "On" }}
-            selectedValue={voiceParams.getValue('LFO Sync')}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Sync', v)} />
-          <RadioGroup
-            title="Wave:"
-            options={{ 0: "Tri", 1: "Saw Dn", 2: "Saw Up", 3: "Square", 4: "Sine", 5: "S&H" }}
-            selectedValue={voiceParams.getValue('LFO Waveform')}
-            onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', v)} />
-          
-          <br/>
-          <DXESlider
-            title="Pitch Mod Sens:"
-            selectedValue={voiceParams.getValue('Pitch Mod Sensitivity')}
-            maxValue={7}
-            onValueChanged={(v) => handleVoiceParamChanged('Pitch Mod Sensitivity', v)} />
-          <DXESlider
-            title="Transpose:"
-            selectedValue={voiceParams.getValue('Transpose')}
-            maxValue={48}
-            onValueChanged={(v) => handleVoiceParamChanged('Transpose', v)}
-            valueFormatter={formatTranspose} />
-
-          <EnvelopeEditor title="Pitch Envelope"
-            data={voiceParams}
-            eg='pitch'
-            onValueChanged={handleVoiceParamChanged} />
-        </div>
-
-        <div className='opsEditor'>
-
-        <div className="opSelectors">
-          {['op1','op2','op3','op4','op5','op6'].map(function (o,i) {
-            return (
-              <div style={{display:'inline-block', marginBottom:'0.6em'}}>
-                <label key={o}>
-                <input type="radio" value={o} name="op"
-                  defaultChecked={currentOp === o} 
-                  onChange={() => setCurrentOp(o as opNumber)}/>
-                OP{i+1}
-                </label>
-              </div>
-            );
-          })}
-          </div>
-          
-          <OpEditor op={currentOp} data={voiceParams}
-            onValueChanged={handleVoiceParamChanged} />
-        </div>
-
-      </div>
-    </fieldset> */}
-
 
     </Tabs>
 

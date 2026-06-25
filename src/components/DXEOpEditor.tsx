@@ -24,7 +24,7 @@ export default function DXEOpEditor(props: {
   function formatBreakpoint(n: number) : string {
     // (0=A-1, 1=A#-1, 2=B-1, 3=C0, ... 39=C3)
     const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
-    return `${notes[n%12]}${Math.floor((n-3)/12)}`;
+    return `${notes[n%12]} ${Math.floor((n-3)/12)}`;
   }
   function formatCoarseFreq(n: number) : string {
     const isFixedFreq : boolean = getVal(17) == 1;
@@ -66,12 +66,6 @@ export default function DXEOpEditor(props: {
     return String(n-7);
   }
 
-  // ///// Event handlers
-
-  // function handleEnvelopeHoverChanged(offset: number|null)
-  // {
-
-  // }
 
   ///// UI
 
@@ -111,13 +105,7 @@ export default function DXEOpEditor(props: {
       eg={props.op}
       onValueChanged={props.onValueChanged} />
     
-    <h3>Kbd level scaling</h3>
-    <DXESlider
-      title='Break pt:'
-      selectedValue={getVal(8)}
-      maxValue={99}
-      onValueChanged={setVal(8)}
-      valueFormatter={formatBreakpoint} />
+    <h3>Keyboard Level Scaling</h3>
     <DXESlider
       title='L Depth:'
       selectedValue={getVal(9)}
@@ -128,6 +116,12 @@ export default function DXEOpEditor(props: {
       options={{0: '-Lin', 1: '-Exp', 2: '+Exp', 3: '+Lin'}}
       selectedValue={getVal(11)}
       onValueChanged={setVal(11)} />
+    <DXESlider
+      title='Break pt:'
+      selectedValue={getVal(8)}
+      maxValue={99}
+      onValueChanged={setVal(8)}
+      valueFormatter={formatBreakpoint} />
     <DXESlider
       title='R Depth:'
       selectedValue={getVal(10)}

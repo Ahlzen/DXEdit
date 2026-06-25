@@ -1,3 +1,4 @@
+import { Title, Stack } from '@mantine/core';
 import { useState } from "react";
 import { egTypeOffsets, type egType, type voiceParamData } from "../midi/voiceParams";
 import DXEEnvelopeGraph from "./DXEEnvelopeGraph";
@@ -27,8 +28,9 @@ export default function DXEEnvelopeEditor(props: {
   }
 
   return (
-    <div className="envelopeEditor">
-      <h3>{props.title}</h3>
+    <Stack className="envelopeEditor">
+
+      <Title order={3}>{props.title}</Title>
       <DXESlider
         title="Rate 1:"
         selectedValue={getVal(0)}
@@ -85,6 +87,6 @@ export default function DXEEnvelopeEditor(props: {
         data={props.data}
         eg={props.eg}
         highlightSegment={highlight} />
-    </div>
+    </Stack>
   )
 }

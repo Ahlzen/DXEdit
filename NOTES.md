@@ -14,6 +14,7 @@ o Env Editor: Show envelope shape (canvas)
 o Add INIT patch (default to that)
 * Factor DX7 logic out of App.tsx
 * Config: Add instructions for setting up DX7 (and other devices)
+* Add help/descriptions to controls (tooltips?)
 * Voice Editor: Add "Send/Sync" feature to send all voice params to DX7
 * Try mantine (mantine.dev)
 * Send sysex only on release (sliders) -> Mantine?
