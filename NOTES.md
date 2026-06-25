@@ -1,7 +1,6 @@
 # DX Edit
 
 
-
 ## TODO
 
 o Ensure WebMIDI works with FF linux (snap or deb)
@@ -32,7 +31,6 @@ o Add INIT patch (default to that)
 * Send individual programs.
 * Librarian features. Save and remix banks.
 * Cloud/share support.
-
 
 
 ## Setup and Requirements
