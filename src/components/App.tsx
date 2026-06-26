@@ -167,11 +167,14 @@ export default function App()
             <Button onClick={handleSendNoteOnOff}>
               Send Note On / Note Off
             </Button>
-            <TextInput
-              label="Patch Name"
-              description="Max 10 characters supported on DX."
-              placeholder="max 10 chars"
-              onChange={(e) => {handleUpdatePatchName(e.currentTarget.value)}} />
+            
+
+            <Title order={2}>Utility</Title>
+            <Button onClick={handleAllNotesOff}>
+              All Notes Off
+            </Button>
+            
+            
           </Stack>
 
         </Group>
@@ -256,6 +259,11 @@ export default function App()
 
           <Stack className='commonEditor'>
             <Title order={2}>Common</Title>
+            <TextInput
+              label="Patch Name"
+              description="Max 10 characters supported on DX."
+              placeholder="max 10 chars"
+              onChange={(e) => {handleUpdatePatchName(e.currentTarget.value)}} />
             <DXESlider
               title="Algorithm:"
               selectedValue={voiceParams.getValue('Algorithm')}
@@ -385,6 +393,13 @@ export default function App()
         console.log("Sending Note Off...");
         midi.current.sendMessage([0x80 + midiChannel, 60, 0]);
       }, 1000); // Send Note Off after 1 second
+    }
+  }
+
+  function handleAllNotesOff() {
+    if (midi.current) {
+      console.log("Sending All Notes Off...");
+      midi.current.sendMessage([0xB0 + midiChannel, 127, 0]); // all sounds off, poly mode
     }
   }
 
