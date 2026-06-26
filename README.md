@@ -1,6 +1,6 @@
 # DX Edit
 
-Editor and utility for Yamaha DX and TX series synthesizers.
+Browser based editor and utility for Yamaha DX and TX series synthesizers.
 
 Work in progress.
 

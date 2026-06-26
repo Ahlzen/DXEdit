@@ -1,5 +1,5 @@
 import '@mantine/core/styles.css';
-import { createTheme, MantineProvider, Button, Stack, Group, TextInput, Tabs, Title, Radio } from '@mantine/core';
+import { createTheme, MantineProvider, Button, Stack, Group, TextInput, Tabs, Title, Radio, Space, Text } from '@mantine/core';
 import { GearIcon, FadersHorizontalIcon, PianoKeysIcon } from '@phosphor-icons/react';
 
 import { useState, useRef, useEffect } from 'react';
@@ -21,6 +21,8 @@ import DXESlider from './DXESlider.tsx';
 import DXEPerformanceControlEditor from './DXEPerformanceControlEditor.tsx';
 import DXEOpEditor from './DXEOpEditor.tsx';
 import DXEEnvelopeEditor from './DXEEnvelopeEditor.tsx';
+
+import { version } from '../../package.json';
 
 
 export default function App()
@@ -160,6 +162,10 @@ export default function App()
               maxValue={15}
               onValueChanged={setMidiChannel}
               valueFormatter={formatMidiChannel} />
+
+            <Space h='lg' />
+
+            <Text size='sm'>DX Edit {version}</Text>
           </Stack>
 
           <Stack gap='lg' mt='lg'>
