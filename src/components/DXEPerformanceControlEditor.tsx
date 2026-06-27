@@ -14,12 +14,12 @@ export default function DXEPerformanceControlEditor(props: {
     <Stack className='performanceControlEditor'>
       <Title order={3}>{props.title}</Title>
       <DXESlider
-        title="Range:"
+        title="Range"
         selectedValue={props.rangeValue}
         maxValue={99}
         onValueChanged={props.onRangeChanged} />
       <DXECheckBoxGroup
-        title="Assign:"
+        title="Assign"
         options={{'Pitch': 1, 'Amp': 2, 'EG Bias': 4}}
         selectedValue={props.assignValue}
         onValueChanged={props.onAssignChanged} />
