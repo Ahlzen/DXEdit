@@ -35,6 +35,8 @@ o Add All-notes-off to Config tab.
 ## Changelog
 
 
+* Layout fixes
+* Minor code cleanup and refactoring
 
 ### v0.1.0
 

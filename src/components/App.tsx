@@ -264,11 +264,13 @@ export default function App()
 
           <Stack className='commonEditor'>
             <Title order={2}>Common</Title>
+            
             <TextInput
               label="Patch Name"
-              description="Max 10 characters supported on DX."
               placeholder="max 10 chars"
               onChange={(e) => {handleUpdatePatchName(e.currentTarget.value)}} />
+            <Space h='md'/>
+
             <DXESlider
               title="Algorithm:"
               selectedValue={voiceParams.getValue('Algorithm')}
