@@ -78,7 +78,7 @@ export default function DXEOpEditor(props: {
       onValueChanged={setVal(16)} />
     <DXERadioGroup
       title="Osc mode:"
-      options={{0: 'Ratio', 1: 'Fixed'}}
+      options={{'Ratio': 0, 'Fixed': 1}}
       selectedValue={getVal(17)}
       onValueChanged={setVal(17)} />
     <DXESlider
@@ -113,7 +113,7 @@ export default function DXEOpEditor(props: {
       onValueChanged={setVal(9)} />
     <DXERadioGroup
       title="L Curve:"
-      options={{0: '-Lin', 1: '-Exp', 2: '+Exp', 3: '+Lin'}}
+      options={{'-Lin': 0, '-Exp': 1, '+Exp': 2, '+Lin': 3}}
       selectedValue={getVal(11)}
       onValueChanged={setVal(11)} />
     <DXESlider
@@ -129,7 +129,7 @@ export default function DXEOpEditor(props: {
       onValueChanged={setVal(10)} />
     <DXERadioGroup
       title="R Curve:"
-      options={{0: '-Lin', 1: '-Exp', 2: '+Exp', 3: '+Lin'}}
+      options={{'-Lin': 0, '-Exp': 1, '+Exp': 2, '+Lin': 3}}
       selectedValue={getVal(12)}
       onValueChanged={setVal(12)} />
     <br/>

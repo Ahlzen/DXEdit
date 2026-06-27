@@ -1,3 +1,5 @@
+# DX Edit
+
 ## TODO
 
 o Ensure WebMIDI works with FF linux (snap or deb)
@@ -29,3 +31,22 @@ o Add All-notes-off to Config tab.
 * Send individual programs.
 * Librarian features. Save and remix banks.
 * Cloud/share support.
+
+## Changelog
+
+
+
+### v0.1.0
+
+Initial release.
+2026-06-26
+
+* Selectable MIDI ports (in/out/controller)
+* MIDI note test
+* All notes off
+* Performance editor supporting all of the
+  DX7 performance parameters.
+* Voice editor supporting all DX7 voice parameters
+  - OP and Pitch EG (envelope) visualization
+  - Displays "friendly" parameter values
+  - Calculates and displays OP frequencies in fixed mode

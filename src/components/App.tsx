@@ -10,9 +10,8 @@ import './App.css';
 import { WebMidi } from '../midi/webmidi'
 import { type performanceParam, type performanceValues,
   performanceParamSpecs, getInitPerformanceParams } from '../midi/performanceParams.ts';
-import { type voiceParam, type egType, type opNumber,
-  voiceParamData, voiceParamSpecs, egTypeOffsets, 
-  type voiceParamSpec} from '../midi/voiceParams';
+import { type voiceParam, type opNumber,
+  voiceParamData, voiceParamSpecs } from '../midi/voiceParams';
 
 // Components
 import DXEMidiPortSelector from './DXEMidiPortSelector.tsx';
@@ -193,7 +192,7 @@ export default function App()
 
             <DXERadioGroup
               title="Voice mode:"
-              options={{ 0: "Poly", 1: "Mono" }}
+              options={{ "Poly": 0, "Mono": 1 }}
               selectedValue={perfParams.monoMode}
               onValueChanged={(v) => handlePerformanceParamChanged('monoMode', v)} />
             
@@ -220,12 +219,12 @@ export default function App()
               onValueChanged={(v) => handlePerformanceParamChanged('portamentoTime', v)} />
             <DXERadioGroup
               title='Mode:'
-              options={{0: 'Retain', 1: 'Follow'}}
+              options={{'Retain': 0, 'Follow': 1}}
               selectedValue={perfParams.portamentoMode}
               onValueChanged={(v) => handlePerformanceParamChanged('portamentoMode', v)} />
             <DXERadioGroup
               title='Glissando:'
-              options={{0: 'Off', 1: 'On'}}
+              options={{'Off': 0, 'On': 1}}
               selectedValue={perfParams.glissando}
               onValueChanged={(v) => handlePerformanceParamChanged('glissando', v)} />
           </Stack>
@@ -283,7 +282,7 @@ export default function App()
               onValueChanged={(v) => handleVoiceParamChanged('Feedback', v)} />
             <DXERadioGroup
               title="Osc Sync:"
-              options={{ 0: "Off", 1: "On" }}
+              options={{ "Off": 0, "On": 1 }}
               selectedValue={voiceParams.getValue('Oscillator Sync')}
               onValueChanged={(v) => handleVoiceParamChanged('Oscillator Sync', v)} />
 
@@ -310,12 +309,12 @@ export default function App()
               onValueChanged={(v) => handleVoiceParamChanged('LFO Amp Mod Depth', v)} />
             <DXERadioGroup
               title="Sync:"
-              options={{ 0: "Off", 1: "On" }}
+              options={{ "Off": 0, "On": 1 }}
               selectedValue={voiceParams.getValue('LFO Sync')}
               onValueChanged={(v) => handleVoiceParamChanged('LFO Sync', v)} />
             <DXERadioGroup
               title="Wave:"
-              options={{ 0: "Tri", 1: "Saw Dn", 2: "Saw Up", 3: "Square", 4: "Sine", 5: "S&H" }}
+              options={{ "Tri": 0, "Saw Dn": 1, "Saw Up": 2, "Square": 3, "Sine": 4, "S&H": 5 }}
               selectedValue={voiceParams.getValue('LFO Waveform')}
               onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', v)} />
             
@@ -491,9 +490,10 @@ export default function App()
     }
   }
 
-  function handleControllerIn(data: Uint8Array)
+  //function handleControllerIn(data: Uint8Array)
+  function handleControllerIn(_data: Uint8Array)
   {
-    //console.log("Received (c): [" + toHexString(data) + "]");
+    //console.log("Controller in: [" + toHexString(data) + "]");
   }
 
 

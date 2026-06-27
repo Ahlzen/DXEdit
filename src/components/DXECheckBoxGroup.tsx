@@ -1,8 +1,12 @@
 import { Text, Group, Checkbox } from '@mantine/core';
 
+type checkBoxOptions = {
+  [value: string]: number,
+};
+
 export default function DXECheckBoxGroup(props: {
   title: string,
-  options: {}, // value: name. Values must be "flags" (1,2,4,8,16...)
+  options: checkBoxOptions, // Values must be "flags" (1,2,4,8,16...)
   selectedValue: number, // combined value of all checked flags
   onValueChanged: (value: number) => void})
 {
@@ -23,7 +27,7 @@ export default function DXECheckBoxGroup(props: {
     <div className="checkboxGroup">
       <Group>
         <Text style={{minWidth: '8rem'}}>{props.title}</Text>
-        {Object.entries(props.options).map(([value, name]) => (
+        {Object.entries(props.options).map(([name, value]) => (
           <Checkbox
             value={value}
             label={name}

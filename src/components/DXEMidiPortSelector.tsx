@@ -20,7 +20,7 @@ export default function DXEMidiPortSelector(props: {
       size='sm'
       label={props.title}
       description={props.description}
-      onChange={(val, opt) => handlePortChanged(val || noneValue)}
+      onChange={(val, _opt) => handlePortChanged(val || noneValue)}
       data={options}
       value={props.selectedPortName ?? noneValue} />
   );

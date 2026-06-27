@@ -1,19 +1,23 @@
 import { Text, Group, Radio } from '@mantine/core';
 
+type radioOptions = {
+  [value: string]: number,
+};
+
 export default function DXERadioGroup(props: {
   title: string,
-  options: {}, // value: name
+  options: radioOptions,
   selectedValue: number|null,
   onValueChanged: (value: number) => void})
 {
   return (
     <Group className='radioGroup'>
       <Text style={{minWidth: '8rem'}}>{props.title}</Text>
-      {Object.entries(props.options).map(([value, name]) => (
+      {Object.entries(props.options).map(([name, value]) => (
           <Radio
             value={value}
             label={name}
-            checked={props.selectedValue === Number(value)}
+            checked={props.selectedValue === value}
             onChange={(e) => props.onValueChanged(Number(e.target.value))} />
       ))} 
     </Group>

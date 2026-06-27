@@ -12,7 +12,6 @@ export default function DXEPerformanceControlEditor(props: {
 {
   return (
     <Stack className='performanceControlEditor'>
-      {/* <h3>{props.title}</h3> */}
       <Title order={3}>{props.title}</Title>
       <DXESlider
         title="Range:"
@@ -21,7 +20,7 @@ export default function DXEPerformanceControlEditor(props: {
         onValueChanged={props.onRangeChanged} />
       <DXECheckBoxGroup
         title="Assign:"
-        options={{1: 'Pitch', 2: 'Amp', 4: 'EG Bias'}}
+        options={{'Pitch': 1, 'Amp': 2, 'EG Bias': 4}}
         selectedValue={props.assignValue}
         onValueChanged={props.onAssignChanged} />
     </Stack>

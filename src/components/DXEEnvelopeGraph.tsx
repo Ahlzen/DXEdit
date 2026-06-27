@@ -35,7 +35,6 @@ export default function DXEEnvelopeGraph(props: {
   let levels = [getVal(4), getVal(5), getVal(6), getVal(7)];
   let yScale = eHeight / 100;
   let yBase = props.height-margin;
-  let yCentre = props.height * 0.5;
   let yOrigin = props.eg === 'pitch' ? props.height * 0.5 : yBase;
   y[0] = yBase - yScale*levels[3]; // L4 during key off
   y[1] = y[0];
