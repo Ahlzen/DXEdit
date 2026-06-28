@@ -37,6 +37,9 @@
 ## Changelog
 
 
+### v0.1.2
+
+2026-06-28
 
 * Editing "Voice Name" now works correctly
 
