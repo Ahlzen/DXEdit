@@ -37,6 +37,13 @@
 ## Changelog
 
 
+### v0.2.0
+
+* Added "Init Voice (reset to default)" feature
+  in Voice Editor
+* Added "Send All to Device (synchronize)" feature
+  in Voice Editor
+
 ### v0.1.2
 
 2026-06-28

@@ -68,6 +68,15 @@ export class voiceParamData
     }
   }
 
+  getRawData() : Uint8Array {
+    return new Uint8Array(this.data); // return copy of internal buffer
+  }
+  getChecksumByte() : number {
+    let sum = this.data.reduce((x,y) => x+y, 0);
+    sum &= 0x7f;
+    return (128 - sum) & 0x7f; // low 7 bits of 2s complement
+  }
+
   getValue(param: voiceParam) : number {
     return this.getValueByOffset(voiceParamSpecs[param].offset);
   }

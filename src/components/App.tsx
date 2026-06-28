@@ -261,6 +261,13 @@ export default function App()
 
       <Tabs.Panel value="edit">
 
+        
+        <Group gap='md' mt='md'>
+          <Button onClick={handleInitVoice}>Init Voice (reset to default)</Button>
+          <Button onClick={handleSendAll}>Send All to Device (synchronize)</Button>
+        </Group>
+
+
         <Group justify='flex-start' align='top' gap='xl' grow={true}>
 
           <Stack className='commonEditor'>
@@ -269,7 +276,6 @@ export default function App()
             <Group>
               <Text style={{minWidth: '8rem'}}>Patch name</Text>
               <TextInput
-                //label="Patch Name"
                 value={voiceParams.getVoiceName()}
                 placeholder="max 10 chars"
                 maxLength={10}
@@ -395,6 +401,24 @@ export default function App()
     midi.current.useControllerIn(portName);
     setControllerIn(portName);
     prefs.current.setPrefs('controllerIn', portName);
+  }
+
+  function handleInitVoice() {
+    setVoiceParams(new voiceParamData()); // defaults to init voice
+  }
+
+  function handleSendAll() {
+    // Send a 1-voice bulk data sysex
+    const sysexMessage = [
+        midi.current.START_OF_SYSEX, 
+        midi.current.YAMAHA_MANUFACTURER_ID,
+        midi.current.SUB_STATUS_BULK + midiChannel,
+        midi.current.BULK_FORMAT_SINGLE_VOICE,
+        0x01, 0x1b, // byte count MSB, LSB
+        ...voiceParams.getRawData(),
+        voiceParams.getChecksumByte(),
+        midi.current.END_OF_SYSEX];
+      midi.current.sendMessage(sysexMessage);
   }
 
   // For testing
