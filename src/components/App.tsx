@@ -419,9 +419,10 @@ export default function App()
   }
 
   function handleUpdateVoiceName(voiceName: string) {
-    console.log("App: handleUpdatePatchName()");
-    voiceParams.setVoiceName(voiceName);
-    const voiceNameBytes = voiceParams.getVoiceNameData();
+    console.log("App: handleUpdatePatchName(): " + voiceName);
+    let newVoiceParams = voiceParams.setVoiceName(voiceName);
+    setVoiceParams(newVoiceParams);
+    const voiceNameBytes = newVoiceParams.getVoiceNameData();
     for (let i = 0; i < voiceNameLength; i++) {
       // DX7 Parameter Change sysex (one character at a time)
       // Parameter # 145-154 are Voice Name Char 1-10

@@ -103,15 +103,17 @@ export class voiceParamData
     return this.data.subarray(
       voiceNameOffset, voiceNameOffset + voiceNameLength)
   }
-  setVoiceName(voiceName: string) {
+  setVoiceName(voiceName: string) : voiceParamData {
     // TODO: Translate to uppercase?
     // TODO: Docs say ASCII. Verify what characters are allowed.
     const padded = voiceName
       .slice(0, voiceNameLength) // max 10 chars
       .padEnd(voiceNameLength, " "); // space-pad if less
+    let newData = new voiceParamData(this.data);
     for (let i = 0; i < voiceNameLength; i++) {
-        this.data[voiceNameOffset + i] = padded.charCodeAt(i);
+        newData.data[voiceNameOffset + i] = padded.charCodeAt(i);
     }
+    return newData;
   }
 
   getOpParam(oo: opNumber, offset: number) : number {
