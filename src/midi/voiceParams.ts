@@ -31,6 +31,10 @@ export let voiceParamSpecs : {[name in voiceParam]: voiceParamSpec} = {
   // NOTE: The rest are accessed separately
 };
 
+export const voiceNameOffset = 145; // start of voice name data
+export const voiceNameLength = 10;
+
+
 export type opNumber = 'op1' | 'op2' | 'op3' | 'op4' | 'op5' | 'op6';
 export type egType = opNumber | 'pitch';
 
@@ -44,17 +48,14 @@ export let opOffsets : {[key in opNumber]: number} = {
 };
 
 export let egTypeOffsets : {[key in egType]: number} = {
-  'op1': 105,
-  'op2': 84,
-  'op3': 63,
-  'op4': 42,
-  'op5': 21,
-  'op6': 0,
   'pitch': 126,
+  ...opOffsets, // OP data starts with EG, so we can re-use these here
 };
 
 // immutable
-export class voiceParamData {
+export class voiceParamData
+{
+  // Raw voice data (single-voice bulk data format, 155 bytes)
   private data: Uint8Array;
 
   constructor(data: Uint8Array | null = null) {
@@ -93,6 +94,24 @@ export class voiceParamData {
     let newData = new voiceParamData(this.data);
     newData.data.set(data, egTypeOffsets[type]);
     return newData;
+  }
+
+  getVoiceName() : string {
+    return String.fromCharCode(...this.getVoiceNameData()).trimEnd();
+  }
+  getVoiceNameData() : Uint8Array {
+    return this.data.subarray(
+      voiceNameOffset, voiceNameOffset + voiceNameLength)
+  }
+  setVoiceName(voiceName: string) {
+    // TODO: Translate to uppercase?
+    // TODO: Docs say ASCII. Verify what characters are allowed.
+    const padded = voiceName
+      .slice(0, voiceNameLength) // max 10 chars
+      .padEnd(voiceNameLength, " "); // space-pad if less
+    for (let i = 0; i < voiceNameLength; i++) {
+        this.data[voiceNameOffset + i] = padded.charCodeAt(i);
+    }
   }
 
   getOpParam(oo: opNumber, offset: number) : number {
@@ -216,9 +235,8 @@ export class voiceParamData {
       3, // pitch mod sensitivity
       24, // transpose (24=C3)
 
-      // Voice name
-      // 10 char ASCII: "INIT      "
-      73,78,73,84,32,32,32,32,32,32,
+      // Voice name (10 char ASCII, space padded)
+      73,78,73,84,32,86,79,73,67,69, // "INIT VOICE"
     ]);
   }
 }

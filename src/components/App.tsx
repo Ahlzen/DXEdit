@@ -11,7 +11,8 @@ import { WebMidi } from '../midi/webmidi'
 import { type performanceParam, type performanceValues,
   performanceParamSpecs, getInitPerformanceParams } from '../midi/performanceParams.ts';
 import { type voiceParam, type opNumber,
-  voiceParamData, voiceParamSpecs } from '../midi/voiceParams';
+  voiceParamData, voiceParamSpecs, 
+  voiceNameLength} from '../midi/voiceParams';
 
 // Components
 import DXEMidiPortSelector from './DXEMidiPortSelector.tsx';
@@ -265,10 +266,17 @@ export default function App()
           <Stack className='commonEditor'>
             <Title order={2}>Common</Title>
             
-            <TextInput
-              label="Patch Name"
-              placeholder="max 10 chars"
-              onChange={(e) => {handleUpdatePatchName(e.currentTarget.value)}} />
+            <Group>
+              <Text style={{minWidth: '8rem'}}>Patch name</Text>
+              <TextInput
+                //label="Patch Name"
+                value={voiceParams.getVoiceName()}
+                placeholder="max 10 chars"
+                maxLength={10}
+                style={{width:'10rem'}}
+                onChange={(e) => {handleUpdateVoiceName(e.currentTarget.value)}} />
+            </Group>
+            
             <Space h='md'/>
 
             <DXESlider
@@ -410,16 +418,14 @@ export default function App()
     }
   }
 
-  function handleUpdatePatchName(patchName: string) {
+  function handleUpdateVoiceName(voiceName: string) {
     console.log("App: handleUpdatePatchName()");
-    patchName = patchName.toUpperCase(); // TODO: Verify valid chars for DX7
-    const patchNameBytes = Array
-      .from(patchName)
-      .map(char => char.charCodeAt(0));
-    for (let i = 0; i < 10; i++) {
-      let ascii = patchNameBytes[i] || 32;
-      // DX7 Parameter Change sysex
+    voiceParams.setVoiceName(voiceName);
+    const voiceNameBytes = voiceParams.getVoiceNameData();
+    for (let i = 0; i < voiceNameLength; i++) {
+      // DX7 Parameter Change sysex (one character at a time)
       // Parameter # 145-154 are Voice Name Char 1-10
+      let ascii = voiceNameBytes[i] || 32;
       const sysexMessage = [
         midi.current.START_OF_SYSEX, 
         midi.current.YAMAHA_MANUFACTURER_ID,
