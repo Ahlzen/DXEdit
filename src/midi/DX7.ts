@@ -27,7 +27,7 @@ export function formatAlgorithm(n: number): string { return String(n+1); }
 
 ///// SysEx message builders
 
-export function formatOneVoiceBulkSysex(
+export function buildOneVoiceBulkSysex(
   voiceParams: VoiceParamData, midiChannel: number) : number[] {
   return [
     START_OF_SYSEX, 
@@ -40,7 +40,7 @@ export function formatOneVoiceBulkSysex(
     END_OF_SYSEX];
 }
 
-export function formatVoiceNameChangeSysex(
+export function buildVoiceNameChangeSysex(
   voiceParams: VoiceParamData, midiChannel: number) : number[] {
   let data = [];
   const voiceNameBytes = voiceParams.getVoiceNameData();
@@ -60,7 +60,7 @@ export function formatVoiceNameChangeSysex(
   return data;
 }
 
-export function formatParameterChangeSysex(
+export function buildParameterChangeSysex(
   type: 'voice' | 'function',
   parameterNumber: number,
   parameterValue: number,
@@ -84,7 +84,7 @@ export function formatParameterChangeSysex(
 
 ///// Misc
 
-export function formatAllNotesOff(midiChannel: number) : number[] {
+export function buildAllNotesOffMessage(midiChannel: number) : number[] {
   // Control Change: all sounds off, poly mode
   return [0xB0 + midiChannel, 127, 0]
 }

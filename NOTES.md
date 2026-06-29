@@ -14,7 +14,7 @@
 - [x] Move Patch Name to Voice Editor.
 - [x] Add All-notes-off to Config tab.
 - [x] Voice Editor: Add "Send/Sync" feature to send all voice params to DX7
-- [ ] Factor DX7 logic out of App.tsx
+- [x] Factor DX7 logic out of App.tsx
 - [ ] Send sysex only on release (sliders) -> Mantine?
 - [ ] Check: Only valid ASCII chars in voice name
 - [ ] Check: voiceParamData.constructor: validate string length
