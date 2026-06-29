@@ -16,6 +16,7 @@ export default function DXERadioGroup(props: {
       {Object.entries(props.options).map(([name, value]) => (
           <Radio
             value={value}
+            key={value}
             label={name}
             checked={props.selectedValue === value}
             onChange={(e) => props.onValueChanged(Number(e.target.value))} />

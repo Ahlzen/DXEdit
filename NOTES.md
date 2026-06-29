@@ -47,6 +47,7 @@ New features
 
 Internal
 * Factored out DX7-specific code
+* Cleaned up some React warnings
 
 ### v0.1.2
 

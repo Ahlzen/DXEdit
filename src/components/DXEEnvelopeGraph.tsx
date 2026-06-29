@@ -51,7 +51,7 @@ export default function DXEEnvelopeGraph(props: {
     linePoints + ' ' + x[7] + ',' + yOrigin + ' ';
   let vertexPoints = [];
   for (let i = 1; i < x.length-1; i++) {
-    vertexPoints.push(<circle cx={x[i]} cy={y[i]} r={2} stroke='#0cf' stroke-width={2} />);
+    vertexPoints.push(<circle cx={x[i]} cy={y[i]} r={2} stroke='#0cf' strokeWidth={2} key={i} />);
   }
 
   // highlighted points/segments
@@ -73,7 +73,7 @@ export default function DXEEnvelopeGraph(props: {
     for (let i = 0; i < p.length; i++)
       hPoints.push(<circle cx={x[p[i]]} cy={y[p[i]]} r={2} stroke='#cff' stroke-width={3} />);
     for (let i = 0; i < s.length; i++)
-      hSegments.push(<line x1={x[s[i]]} y1={y[s[i]]} x2={x[s[i]+1]} y2={y[s[i]+1]} stroke='#cff' stroke-width={3} />);
+      hSegments.push(<line x1={x[s[i]]} y1={y[s[i]]} x2={x[s[i]+1]} y2={y[s[i]+1]} stroke='#cff' strokeWidth={3} />);
   }
   
   return (

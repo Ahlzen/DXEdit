@@ -30,6 +30,7 @@ export default function DXECheckBoxGroup(props: {
         {Object.entries(props.options).map(([name, value]) => (
           <Checkbox
             value={value}
+            key={value}
             label={name}
             checked={(props.selectedValue & value) > 0}
             onChange={(e) => handleOnChange(e.target.checked, Number(e.target.value))} />

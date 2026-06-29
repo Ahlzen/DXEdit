@@ -352,6 +352,7 @@ export default function App()
               return (
                 <Radio
                   value={o}
+                  key={o}
                   label={'OP'+(i+1)}
                   checked={currentOp === o} 
                   onChange={() => setCurrentOp(o as opNumber)} />
