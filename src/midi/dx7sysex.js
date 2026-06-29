@@ -1,5 +1,8 @@
 'use strict';
 
+// NOTE: Not currently in use. From a different project of mine.
+// Included for reference.
+
 dxtool.sysex = (function() {
   var my = {};
 

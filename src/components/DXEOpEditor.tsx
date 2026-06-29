@@ -1,11 +1,11 @@
-import { type opNumber, type voiceParamData, opOffsets } from "../midi/voiceParams";
+import { type opNumber, type VoiceParamData, opOffsets } from "../midi/VoiceParamData";
 
 import DXEEnvelopeEditor from "./DXEEnvelopeEditor";
 import DXESlider from "./DXESlider";
 import DXERadioGroup from "./DXERadioGroup";
 
 export default function DXEOpEditor(props: {
-  data: voiceParamData,
+  data: VoiceParamData,
   op: opNumber,
   onValueChanged: (offset: number, value: number) => void})
 {

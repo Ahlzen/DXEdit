@@ -7,12 +7,12 @@ import { Preferences } from '../preferences';
 import './App.css';
 
 // MIDI / DX7 sysex
-import { WebMidi } from '../midi/webmidi'
+import { WebMidi, START_OF_SYSEX, END_OF_SYSEX } from '../midi/WebMidi.ts'
+import { formatSemitones, formatTranspose, formatAlgorithm } from '../midi/DX7.ts';
 import { type performanceParam, type performanceValues,
-  performanceParamSpecs, getInitPerformanceParams } from '../midi/performanceParams.ts';
+  performanceParamSpecs, getInitPerformanceParams } from '../midi/PerformanceParamData.ts';
 import { type voiceParam, type opNumber,
-  voiceParamData, voiceParamSpecs, 
-  voiceNameLength} from '../midi/voiceParams';
+  VoiceParamData, voiceParamSpecs } from '../midi/VoiceParamData.ts';
 
 // Components
 import DXEMidiPortSelector from './DXEMidiPortSelector.tsx';
@@ -23,6 +23,7 @@ import DXEOpEditor from './DXEOpEditor.tsx';
 import DXEEnvelopeEditor from './DXEEnvelopeEditor.tsx';
 
 import { version } from '../../package.json';
+import { formatAllNotesOff, formatOneVoiceBulkSysex, formatParameterChangeSysex, formatVoiceNameChangeSysex } from '../midi/DX7.ts';
 
 
 export default function App()
@@ -44,7 +45,7 @@ export default function App()
   const [perfParams, setPerfParams] = useState<performanceValues>(
     getInitPerformanceParams());
   const [voiceParams, setVoiceParams] =
-    useState<voiceParamData>(new voiceParamData());
+    useState<VoiceParamData>(new VoiceParamData());
   const [currentOp, setCurrentOp] = useState<opNumber>('op1');
 
   useEffect(() => {
@@ -74,16 +75,7 @@ export default function App()
 
   // Formatters
   function formatMidiChannel(ch: number) : string { return String(ch+1); }
-  function formatSemitones(n: number) : string { return `±${n} semi`; }
-  function formatTranspose(n: number) : string {
-    // DX7 shows as "MIDDLE C = C 3" (0=C1, 24=C3, 48=C5)
-    const oct = Math.floor(n / 12) + 1;
-    const notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-    const note = notes[n%12];
-    return `Mid C = ${note} ${oct}`;
-  }
-  function formatAlgorithm(n: number): string { return String(n+1); }
-
+  
   // Mantine theme
   const theme = createTheme({
     focusRing: 'always',
@@ -404,21 +396,12 @@ export default function App()
   }
 
   function handleInitVoice() {
-    setVoiceParams(new voiceParamData()); // defaults to init voice
+    setVoiceParams(new VoiceParamData()); // defaults to init voice
   }
 
   function handleSendAll() {
-    // Send a 1-voice bulk data sysex
-    const sysexMessage = [
-        midi.current.START_OF_SYSEX, 
-        midi.current.YAMAHA_MANUFACTURER_ID,
-        midi.current.SUB_STATUS_BULK + midiChannel,
-        midi.current.BULK_FORMAT_SINGLE_VOICE,
-        0x01, 0x1b, // byte count MSB, LSB
-        ...voiceParams.getRawData(),
-        voiceParams.getChecksumByte(),
-        midi.current.END_OF_SYSEX];
-      midi.current.sendMessage(sysexMessage);
+    const sysexData = formatOneVoiceBulkSysex(voiceParams, midiChannel);
+    midi.current.sendMessage(sysexData);
   }
 
   // For testing
@@ -438,7 +421,7 @@ export default function App()
   function handleAllNotesOff() {
     if (midi.current) {
       console.log("Sending All Notes Off...");
-      midi.current.sendMessage([0xB0 + midiChannel, 127, 0]); // all sounds off, poly mode
+      midi.current.sendMessage(formatAllNotesOff(midiChannel)); 
     }
   }
 
@@ -446,21 +429,8 @@ export default function App()
     console.log("App: handleUpdatePatchName(): " + voiceName);
     let newVoiceParams = voiceParams.setVoiceName(voiceName);
     setVoiceParams(newVoiceParams);
-    const voiceNameBytes = newVoiceParams.getVoiceNameData();
-    for (let i = 0; i < voiceNameLength; i++) {
-      // DX7 Parameter Change sysex (one character at a time)
-      // Parameter # 145-154 are Voice Name Char 1-10
-      let ascii = voiceNameBytes[i] || 32;
-      const sysexMessage = [
-        midi.current.START_OF_SYSEX, 
-        midi.current.YAMAHA_MANUFACTURER_ID,
-        midi.current.SUB_STATUS_PARAMETER + midiChannel,
-        midi.current.PARAMETER_GROUP_VOICE + 0x01, // parameter bit 8
-        17+i, // parameter bit 7..1: 145-128=17
-        ascii, // ASCII char
-        midi.current.END_OF_SYSEX];
-      midi.current.sendMessage(sysexMessage);
-    }      
+    const sysexData = formatVoiceNameChangeSysex(newVoiceParams, midiChannel);
+    midi.current.sendMessage(sysexData);
   }
 
   function handlePerformanceParamChanged(
@@ -492,19 +462,8 @@ export default function App()
     parameterNumber: number,
     parameterValue: number)
   {
-    const sysexData = [
-      midi.current.START_OF_SYSEX, 
-      midi.current.YAMAHA_MANUFACTURER_ID,
-      midi.current.SUB_STATUS_PARAMETER + midiChannel,
-      // Parameter group# + high bit of parameter number
-      (type === 'voice' ? 
-        midi.current.PARAMETER_GROUP_VOICE :
-        midi.current.PARAMETER_GROUP_FUNCTION) +
-        (parameterNumber > 127 ? 1 : 0),
-      // parameter number (remaining bits)
-      parameterNumber & 127,
-      parameterValue,
-      midi.current.END_OF_SYSEX];
+    const sysexData = formatParameterChangeSysex(
+      type, parameterNumber, parameterValue, midiChannel);
     midi.current.sendMessage(sysexData);
   }
 
@@ -516,8 +475,8 @@ export default function App()
     //console.log("Received: [" + toHexString(data) + "]");
     if (data.length === 0) return;
 
-    if (data[0] === midi.current.START_OF_SYSEX &&
-      data.at(-1) === midi.current.END_OF_SYSEX)
+    if (data[0] === START_OF_SYSEX &&
+      data.at(-1) === END_OF_SYSEX)
     {
       console.log(`Received sysex: ${data.length} bytes.`);
     }

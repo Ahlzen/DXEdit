@@ -1,12 +1,12 @@
 import { Title, Stack } from '@mantine/core';
 import { useState } from "react";
-import { egTypeOffsets, type egType, type voiceParamData } from "../midi/voiceParams";
+import { egTypeOffsets, type egType, type VoiceParamData } from "../midi/VoiceParamData";
 import DXEEnvelopeGraph from "./DXEEnvelopeGraph";
 import DXESlider from "./DXESlider";
 
 export default function DXEEnvelopeEditor(props: {
   title: string,
-  data: voiceParamData,
+  data: VoiceParamData,
   eg: egType,
   onValueChanged: (offset: number, value: number) => void })
 {

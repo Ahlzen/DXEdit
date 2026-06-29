@@ -1,5 +1,10 @@
 import { toHexString } from "../utils";
 
+export const START_OF_SYSEX: number = 0xF0;
+export const END_OF_SYSEX: number = 0xF7;
+export const YAMAHA_MANUFACTURER_ID = 0x43;
+
+
 export class WebMidi
 {
   ///// Internal state
@@ -28,16 +33,6 @@ export class WebMidi
   // Enable for more debug output
   private verbose: boolean = true;
 
-	START_OF_SYSEX = 0xF0;
-	END_OF_SYSEX = 0xF7;
-	YAMAHA_MANUFACTURER_ID = 0x43;
-  // TODO: factor out. these are DX7 specific:
-	SUB_STATUS_BULK = 0x00;
-	SUB_STATUS_PARAMETER = 0x10; // 0x01 << 4
-	BULK_FORMAT_SINGLE_VOICE = 0x00;
-	BULK_FORMAT_32VOICES = 0x09;
-	PARAMETER_GROUP_VOICE = 0x00;
-	PARAMETER_GROUP_FUNCTION = 0x08; // 0x02 << 2
 
 
   ///// Initialization

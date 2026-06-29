@@ -13,7 +13,7 @@
 - [x] Try mantine (mantine.dev)
 - [x] Move Patch Name to Voice Editor.
 - [x] Add All-notes-off to Config tab.
-- [ ] Voice Editor: Add "Send/Sync" feature to send all voice params to DX7
+- [x] Voice Editor: Add "Send/Sync" feature to send all voice params to DX7
 - [ ] Factor DX7 logic out of App.tsx
 - [ ] Send sysex only on release (sliders) -> Mantine?
 - [ ] Check: Only valid ASCII chars in voice name
@@ -39,10 +39,14 @@
 
 ### v0.2.0
 
+New features
 * Added "Init Voice (reset to default)" feature
   in Voice Editor
 * Added "Send All to Device (synchronize)" feature
   in Voice Editor
+
+Internal
+* Factored out DX7-specific code
 
 ### v0.1.2
 

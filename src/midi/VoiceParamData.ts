@@ -34,6 +34,7 @@ export let voiceParamSpecs : {[name in voiceParam]: voiceParamSpec} = {
 export const voiceNameOffset = 145; // start of voice name data
 export const voiceNameLength = 10;
 
+export const voiceParamDataLength = 155;
 
 export type opNumber = 'op1' | 'op2' | 'op3' | 'op4' | 'op5' | 'op6';
 export type egType = opNumber | 'pitch';
@@ -53,18 +54,19 @@ export let egTypeOffsets : {[key in egType]: number} = {
 };
 
 // immutable
-export class voiceParamData
+export class VoiceParamData
 {
   // Raw voice data (single-voice bulk data format, 155 bytes)
   private data: Uint8Array;
 
   constructor(data: Uint8Array | null = null) {
     if (data) {
+      console.assert(data.length === voiceParamDataLength);
       this.data = new Uint8Array(data);
     }
     else {
       // Use init patch data
-      this.data = voiceParamData.getInitParams();
+      this.data = VoiceParamData.getInitParams();
     }
   }
 
@@ -80,7 +82,7 @@ export class voiceParamData
   getValue(param: voiceParam) : number {
     return this.getValueByOffset(voiceParamSpecs[param].offset);
   }
-  setValue(param: voiceParam, value: number) : voiceParamData {
+  setValue(param: voiceParam, value: number) : VoiceParamData {
     let specs = voiceParamSpecs[param];
     value = this.clamp(value, 0, specs.maxValue);
     return this.setValueByOffset(specs.offset, value);
@@ -89,8 +91,8 @@ export class voiceParamData
   getValueByOffset(offset: number) : number {
     return this.data[offset];
   }
-  setValueByOffset(offset: number, value: number) : voiceParamData {
-    let newData = new voiceParamData(this.data);
+  setValueByOffset(offset: number, value: number) : VoiceParamData {
+    let newData = new VoiceParamData(this.data);
     newData.data[offset] = value;
     return newData;
   }
@@ -98,9 +100,9 @@ export class voiceParamData
   getEgData(type: egType) : Uint8Array {
     return this.data.slice(egTypeOffsets[type], 8);
   }
-  setEgData(type: egType, data: Uint8Array) : voiceParamData {
+  setEgData(type: egType, data: Uint8Array) : VoiceParamData {
     console.assert(data.length === 8, 'EG data must be 8 bytes');
-    let newData = new voiceParamData(this.data);
+    let newData = new VoiceParamData(this.data);
     newData.data.set(data, egTypeOffsets[type]);
     return newData;
   }
@@ -112,13 +114,13 @@ export class voiceParamData
     return this.data.subarray(
       voiceNameOffset, voiceNameOffset + voiceNameLength)
   }
-  setVoiceName(voiceName: string) : voiceParamData {
+  setVoiceName(voiceName: string) : VoiceParamData {
     // TODO: Translate to uppercase?
     // TODO: Docs say ASCII. Verify what characters are allowed.
     const padded = voiceName
       .slice(0, voiceNameLength) // max 10 chars
       .padEnd(voiceNameLength, " "); // space-pad if less
-    let newData = new voiceParamData(this.data);
+    let newData = new VoiceParamData(this.data);
     for (let i = 0; i < voiceNameLength; i++) {
         newData.data[voiceNameOffset + i] = padded.charCodeAt(i);
     }
@@ -129,7 +131,7 @@ export class voiceParamData
     return this.data[opOffsets[oo]+offset];
   }
   setOpParam(op: opNumber, offset: number, value: number) {
-    let newData = new voiceParamData(this.data);
+    let newData = new VoiceParamData(this.data);
     this.data[opOffsets[op]+offset] = value;
     return newData;
   }
@@ -141,7 +143,7 @@ export class voiceParamData
   }
 
   private static getInitParams(): Uint8Array {
-    return new Uint8Array([
+    let data = new Uint8Array([
       // These are the values set by the
       // "VOICE INIT" feature of the DX7 mk1
 
@@ -249,6 +251,11 @@ export class voiceParamData
       // Voice name (10 char ASCII, space padded)
       73,78,73,84,32,86,79,73,67,69, // "INIT VOICE"
     ]);
+
+    // verify we didn't miss any bytes
+    console.assert(data.length === voiceParamDataLength);
+    
+    return data;
   }
 }
 
