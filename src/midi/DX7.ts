@@ -6,7 +6,7 @@ import { VoiceParamData, voiceNameLength } from './VoiceParamData.ts';
 const SUB_STATUS_BULK = 0x00;
 const SUB_STATUS_PARAMETER = 0x10; // 0x01 << 4
 const BULK_FORMAT_SINGLE_VOICE = 0x00;
-const BULK_FORMAT_32VOICES = 0x09;
+//const BULK_FORMAT_32VOICES = 0x09;
 const PARAMETER_GROUP_VOICE = 0x00;
 const PARAMETER_GROUP_FUNCTION = 0x08; // 0x02 << 2
 
