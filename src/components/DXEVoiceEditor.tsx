@@ -33,7 +33,6 @@ export function DXEVoiceEditor(props: {
       <Button onClick={handleSendAll}>Send All to Device (synchronize)</Button>
     </Group>
 
-
     <Group justify='flex-start' align='top' gap='xl' grow={true}>
 
       <Stack className='commonEditor'>
@@ -55,62 +54,62 @@ export function DXEVoiceEditor(props: {
           title="Algorithm"
           selectedValue={props.voiceParams.getValue('Algorithm')}
           maxValue={31}
-          onValueChanged={(v) => handleVoiceParamChanged('Algorithm', v)}
+          onValueChanged={(v,ce) => handleVoiceParamChanged('Algorithm', v, ce)}
           valueFormatter={formatAlgorithm} />
         <DXESlider
           title="Feedback"
           selectedValue={props.voiceParams.getValue('Feedback')}
           maxValue={7}
-          onValueChanged={(v) => handleVoiceParamChanged('Feedback', v)} />
+          onValueChanged={(v,ce) => handleVoiceParamChanged('Feedback', v, ce)} />
         <DXERadioGroup
           title="Osc Sync"
           options={{ "Off": 0, "On": 1 }}
           selectedValue={props.voiceParams.getValue('Oscillator Sync')}
-          onValueChanged={(v) => handleVoiceParamChanged('Oscillator Sync', v)} />
+          onValueChanged={(v) => handleVoiceParamChanged('Oscillator Sync', v, true)} />
 
         <Title order={3}>LFO</Title>
         <DXESlider
           title="Speed"
           selectedValue={props.voiceParams.getValue('LFO Speed')}
           maxValue={99}
-          onValueChanged={(v) => handleVoiceParamChanged('LFO Speed', v)} />
+          onValueChanged={(v,ce) => handleVoiceParamChanged('LFO Speed', v, ce)} />
         <DXESlider
           title="Delay"
           selectedValue={props.voiceParams.getValue('LFO Delay')}
           maxValue={99}
-          onValueChanged={(v) => handleVoiceParamChanged('LFO Delay', v)} />
+          onValueChanged={(v,ce) => handleVoiceParamChanged('LFO Delay', v, ce)} />
         <DXESlider
           title="Pitch mod"
           selectedValue={props.voiceParams.getValue('LFO Pitch Mod Depth')}
           maxValue={99}
-          onValueChanged={(v) => handleVoiceParamChanged('LFO Pitch Mod Depth', v)} />
+          onValueChanged={(v,ce) => handleVoiceParamChanged('LFO Pitch Mod Depth', v, ce)} />
         <DXESlider
           title="Amp mod"
           selectedValue={props.voiceParams.getValue('LFO Amp Mod Depth')}
           maxValue={99}
-          onValueChanged={(v) => handleVoiceParamChanged('LFO Amp Mod Depth', v)} />
+          onValueChanged={(v,ce) => handleVoiceParamChanged('LFO Amp Mod Depth', v, ce)} />
         <DXERadioGroup
           title="Sync"
           options={{ "Off": 0, "On": 1 }}
           selectedValue={props.voiceParams.getValue('LFO Sync')}
-          onValueChanged={(v) => handleVoiceParamChanged('LFO Sync', v)} />
+          onValueChanged={(v) => handleVoiceParamChanged('LFO Sync', v, true)} />
         <DXERadioGroup
           title="Wave"
           options={{ "Tri": 0, "Saw Dn": 1, "Saw Up": 2, "Square": 3, "Sine": 4, "S&H": 5 }}
           selectedValue={props.voiceParams.getValue('LFO Waveform')}
-          onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', v)} />
+          onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', v, true)} />
         
         <br/>
         <DXESlider
           title="Pitch mod sens"
           selectedValue={props.voiceParams.getValue('Pitch Mod Sensitivity')}
           maxValue={7}
-          onValueChanged={(v) => handleVoiceParamChanged('Pitch Mod Sensitivity', v)} />
+          onValueChanged={(v,ce) => handleVoiceParamChanged('Pitch Mod Sensitivity', v, ce)} />
         <DXESlider
           title="Transpose"
           selectedValue={props.voiceParams.getValue('Transpose')}
           maxValue={48}
-          onValueChanged={(v) => handleVoiceParamChanged('Transpose', v)}
+          onValueChanged={(v,ce) => handleVoiceParamChanged('Transpose', v, ce)}
           valueFormatter={formatTranspose} />
 
         <DXEEnvelopeEditor title="Pitch Envelope"
@@ -164,17 +163,23 @@ export function DXEVoiceEditor(props: {
 
   function handleVoiceParamChanged(
     parameter: voiceParam | number,
-    value: number)
+    value: number,
+    isChangeEnd: boolean)
   {
-    console.log(`App: handleVoiceParamChanged(): ${parameter} ${value}`);
+    console.log(`DXEVoiceEditor: handleVoiceParamChanged(): ${parameter} ${value}`);
     let offset: number = typeof parameter === 'number' ?
       parameter : voiceParamSpecs[parameter].offset;
     
-    const sysexData = buildParameterChangeSysex(
-      'voice', offset, value, props.midiChannel);
-    props.midi.sendMessage(sysexData);
-
+    // Update state / UI
     const newVoiceParams = props.voiceParams.setValueByOffset(offset, value);
     props.onVoiceParamsChanged(newVoiceParams);
+
+    // Only send sysex on "change end", since too frequent parameter
+    // changes lead to annoying interruptions and dropouts on the DX7.
+    if (isChangeEnd) {
+      const sysexData = buildParameterChangeSysex(
+        'voice', offset, value, props.midiChannel);
+      props.midi.sendMessage(sysexData);
+    }
   }
 }

@@ -10,7 +10,7 @@ export default function DXESlider(props: {
   title: string,
   selectedValue: number,
   maxValue: number,
-  onValueChanged: (value: number) => void,
+  onValueChanged: (value: number, isChangeEnd: boolean) => void,
   valueFormatter?: formatter,
   onHoverChanged?: (hover: boolean) => void
 }){
@@ -38,7 +38,8 @@ export default function DXESlider(props: {
           max={props.maxValue}
           w='10rem'
           label={formatter}
-          onChange={(e) => props.onValueChanged(Number(e))} />
+          onChange={(e) => props.onValueChanged(Number(e), false)}
+          onChangeEnd={(e) => props.onValueChanged(Number(e), true)} />
         <Text size='sm'><b>{formatter(props.selectedValue)}</b></Text>
       </Group>
     </div>

@@ -8,7 +8,7 @@ export default function DXEEnvelopeEditor(props: {
   title: string,
   data: VoiceParamData,
   eg: egType,
-  onValueChanged: (offset: number, value: number) => void })
+  onValueChanged: (offset: number, value: number, isChangeEnd: boolean) => void })
 {
   // Highlighted envelope parameter (0-7)
   let [highlight, setHighlight] = useState<number|undefined>(undefined);
@@ -16,9 +16,9 @@ export default function DXEEnvelopeEditor(props: {
   let getVal = (o: number) =>
     props.data.getValueByOffset(
       egTypeOffsets[props.eg] + o);
-  let setVal = function(o: number) : ((n: number) => void) {
-    return function(v) {
-      props.onValueChanged(egTypeOffsets[props.eg]+o, v)
+  let setVal = function(o: number) : ((n: number, isChangeEnd: boolean) => void) {
+    return function(v: number, isChangeEnd: boolean) {
+      props.onValueChanged(egTypeOffsets[props.eg]+o, v, isChangeEnd);
     };
   }
 

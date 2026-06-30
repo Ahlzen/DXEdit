@@ -7,15 +7,20 @@ import DXERadioGroup from "./DXERadioGroup";
 export default function DXEOpEditor(props: {
   data: VoiceParamData,
   op: opNumber,
-  onValueChanged: (offset: number, value: number) => void})
+  onValueChanged: (offset: number, value: number, isChangeEnd: boolean) => void})
 {
   ///// State update
 
   let getVal = (o: number) =>
       props.data.getValueByOffset(opOffsets[props.op] + o);
-  let setVal = function(o: number) : ((n: number) => void) {
-    return function(v) {
-      props.onValueChanged(opOffsets[props.op]+o, v)
+  let setVal = function(o: number) : ((n: number, isChangeEnd: boolean) => void) {
+    return function(v: number, isChangeEnd: boolean) {
+      props.onValueChanged(opOffsets[props.op]+o, v, isChangeEnd);
+    };
+  }
+  let setValAsChangeEnd = function(o: number) : ((n: number) => void) {
+    return function(v: number) {
+      props.onValueChanged(opOffsets[props.op]+o, v, true);
     };
   }
 
@@ -80,7 +85,7 @@ export default function DXEOpEditor(props: {
       title="Osc mode"
       options={{'Ratio': 0, 'Fixed': 1}}
       selectedValue={getVal(17)}
-      onValueChanged={setVal(17)} />
+      onValueChanged={setValAsChangeEnd(17)} />
     <DXESlider
       title='Coarse'
       selectedValue={getVal(18)}
@@ -115,7 +120,7 @@ export default function DXEOpEditor(props: {
       title="L Curve"
       options={{'-Lin': 0, '-Exp': 1, '+Exp': 2, '+Lin': 3}}
       selectedValue={getVal(11)}
-      onValueChanged={setVal(11)} />
+      onValueChanged={setValAsChangeEnd(11)} />
     <DXESlider
       title='Break pt'
       selectedValue={getVal(8)}
@@ -131,7 +136,7 @@ export default function DXEOpEditor(props: {
       title="R Curve"
       options={{'-Lin': 0, '-Exp': 1, '+Exp': 2, '+Lin': 3}}
       selectedValue={getVal(12)}
-      onValueChanged={setVal(12)} />
+      onValueChanged={setValAsChangeEnd(12)} />
     <br/>
 
     <DXESlider

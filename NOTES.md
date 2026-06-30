@@ -15,7 +15,7 @@
 - [x] Add All-notes-off to Config tab.
 - [x] Voice Editor: Add "Send/Sync" feature to send all voice params to DX7
 - [x] Factor DX7 logic out of App.tsx
-- [ ] Send sysex only on release (sliders) -> Mantine?
+- [x] Send sysex only on release (sliders)
 - [ ] Check: Only valid ASCII chars in voice name
 - [ ] Check: voiceParamData.constructor: validate string length
 - [ ] Config: Add instructions for setting up DX7 (and other devices)
@@ -39,11 +39,13 @@
 
 ### v0.2.0
 
-New features
-* Added "Init Voice (reset to default)" feature
-  in Voice Editor
-* Added "Send All to Device (synchronize)" feature
-  in Voice Editor
+New/Improved Features
+* Sysex is sent only when you finish dragging a slider (or move it
+  with the keyboard). This is because too frequent parameter changes
+  overwhelms the DX7 and leads to annoying dropouts.
+  UI is still updated continously.
+* Added "Init Voice (reset to default)" feature in Voice Editor
+* Added "Send All to Device (synchronize)" feature in Voice Editor
 
 Internal
 * Factored out DX7-specific code

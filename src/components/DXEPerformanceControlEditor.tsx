@@ -6,7 +6,7 @@ import DXECheckBoxGroup from './DXECheckBoxGroup.tsx';
 export default function DXEPerformanceControlEditor(props: {
   title: string,
   rangeValue: number,
-  onRangeChanged: (value: number) => void,
+  onRangeChanged: (value: number, isChangeEnd: boolean) => void,
   assignValue: number,
   onAssignChanged: (value: number) => void})
 {
@@ -17,7 +17,7 @@ export default function DXEPerformanceControlEditor(props: {
         title="Range"
         selectedValue={props.rangeValue}
         maxValue={99}
-        onValueChanged={props.onRangeChanged} />
+        onValueChanged={(v, ce) => props.onRangeChanged(v, ce)} />
       <DXECheckBoxGroup
         title="Assign"
         options={{'Pitch': 1, 'Amp': 2, 'EG Bias': 4}}
