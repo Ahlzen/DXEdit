@@ -95,6 +95,8 @@ export default function App()
       defaultColorScheme='dark'
       classNamesPrefix='mantine'>
 
+    <title>DX Edit</title>
+
     <Tabs defaultValue="configuration">
 
       <Tabs.List>
