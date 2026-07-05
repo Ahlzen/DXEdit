@@ -53,10 +53,17 @@ export let egTypeOffsets : {[key in egType]: number} = {
   ...opOffsets, // OP data starts with EG, so we can re-use these here
 };
 
-// immutable
+/**
+ * Immutable class representing the parameters of a single DX7 voice.
+ * The internal data is stored in the same format as the DX7 single-voice bulk data.
+ * This class provides methods for getting and setting parameters,
+ * initialization, and utility methods.
+ */
 export class VoiceParamData
 {
-  // Raw voice data (single-voice bulk data format, 155 bytes)
+  /**
+   * Raw voice data (single-voice bulk data format, 155 bytes)
+   */
   private data: Uint8Array;
 
   constructor(data: Uint8Array | null = null) {
@@ -67,6 +74,8 @@ export class VoiceParamData
       // Use init patch data
       this.data = VoiceParamData.getInitParams();
     }
+
+    // Verify that we have the right number of bytes
     console.assert(this.data.length === voiceParamDataLength);
   }
 
@@ -143,10 +152,13 @@ export class VoiceParamData
     return value;
   }
 
+  /**
+   * Returns the values set by the "VOICE INIT" feature
+   * of the DX7 (mk1).
+   */
   private static getInitParams(): Uint8Array {
     let data = new Uint8Array([
-      // These are the values set by the
-      // "VOICE INIT" feature of the DX7 mk1
+      // 
 
       // OP6
       99,99,99,99, // EG Rate 1-4
@@ -159,7 +171,7 @@ export class VoiceParamData
       0, // Key vel sensitivity
       0, // Level
       0, // Osc mode (0=ratio)
-      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      1, 0, // Freq coarse (1=1.00) / fine (0=1.00)
       7, // detune (7=no detune)
 
       // OP5
@@ -173,7 +185,7 @@ export class VoiceParamData
       0, // Key vel sensitivity
       0, // Level
       0, // Osc mode (0=ratio)
-      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      1, 0, // Freq coarse (1=1.00) / fine (0=1.00)
       7, // detune (7=no detune)
 
       // OP4
@@ -187,7 +199,7 @@ export class VoiceParamData
       0, // Key vel sensitivity
       0, // Level
       0, // Osc mode (0=ratio)
-      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      1, 0, // Freq coarse (1=1.00) / fine (0=1.00)
       7, // detune (7=no detune)
 
       // OP3
@@ -201,7 +213,7 @@ export class VoiceParamData
       0, // Key vel sensitivity
       0, // Level
       0, // Osc mode (0=ratio)
-      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      1, 0, // Freq coarse (1=1.00) / fine (0=1.00)
       7, // detune (7=no detune)
 
       // OP2
@@ -215,7 +227,7 @@ export class VoiceParamData
       0, // Key vel sensitivity
       0, // Level
       0, // Osc mode (0=ratio)
-      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      1, 0, // Freq coarse (1=1.00) / fine (0=1.00)
       7, // detune (7=no detune)
 
       // OP1
@@ -229,7 +241,7 @@ export class VoiceParamData
       0, // Key vel sensitivity
       99, // Level
       0, // Osc mode (0=ratio)
-      1, 0, // Freq coarse (1=1.00?) / fine (0=1.00?)
+      1, 0, // Freq coarse (1=1.00) / fine (0=1.00)
       7, // detune (7=no detune)
 
       // Pitch EG

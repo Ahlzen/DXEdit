@@ -1,6 +1,10 @@
 ## DX Edit Changelog
 
 
+
+* More internal cleanups.
+
+
 ### v0.2.0
 
 2026-06-30
@@ -18,11 +22,13 @@ Internal
 * Factored out DX7-specific code.
 * Cleaned up some React warnings.
 
+
 ### v0.1.2
 
 2026-06-28
 
 * Editing "Voice Name" now works correctly.
+
 
 ### v0.1.1
 
@@ -30,6 +36,7 @@ Internal
 
 * Layout fixes.
 * Minor code cleanup and refactoring.
+
 
 ### v0.1.0
 
