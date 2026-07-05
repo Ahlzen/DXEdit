@@ -115,8 +115,9 @@ export class VoiceParamData
       voiceNameOffset, voiceNameOffset + voiceNameLength)
   }
   setVoiceName(voiceName: string) : VoiceParamData {
-    // TODO: Translate to uppercase?
-    // TODO: Docs say ASCII. Verify what characters are allowed.
+    // NOTE: The DX7 panel offers a very limited character set
+    // (A-Z, 0-9, space, period and dash) but it appears 
+    // to accept any ASCII character in the voice name.
     const padded = voiceName
       .slice(0, voiceNameLength) // max 10 chars
       .padEnd(voiceNameLength, " "); // space-pad if less

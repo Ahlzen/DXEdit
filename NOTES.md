@@ -16,10 +16,9 @@
 - [x] Voice Editor: Add "Send/Sync" feature to send all voice params to DX7
 - [x] Factor DX7 logic out of App.tsx
 - [x] Send sysex only on release (sliders)
-- [ ] Responsive UI (Group)
-- [ ] Add proper readme, changelog, license, screenshots etc.
-- [ ] Check: Only valid ASCII chars in voice name
+- [x] Add proper readme, changelog, license, screenshots etc.
 - [ ] Check: voiceParamData.constructor: validate data length
+- [ ] Responsive UI (Group)
 - [ ] Add Algorithm structure depictions
 - [ ] Algorithm structure chart, showing levels, freq, feedback. Allow select/solo/mute.
 - [ ] Color code carriers/modulators (similar to OpSix)?
