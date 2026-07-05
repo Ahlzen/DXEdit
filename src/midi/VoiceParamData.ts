@@ -61,13 +61,13 @@ export class VoiceParamData
 
   constructor(data: Uint8Array | null = null) {
     if (data) {
-      console.assert(data.length === voiceParamDataLength);
       this.data = new Uint8Array(data);
     }
     else {
       // Use init patch data
       this.data = VoiceParamData.getInitParams();
     }
+    console.assert(this.data.length === voiceParamDataLength);
   }
 
   getRawData() : Uint8Array {
@@ -253,9 +253,6 @@ export class VoiceParamData
       73,78,73,84,32,86,79,73,67,69, // "INIT VOICE"
     ]);
 
-    // verify we didn't miss any bytes
-    console.assert(data.length === voiceParamDataLength);
-    
     return data;
   }
 }

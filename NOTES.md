@@ -17,7 +17,7 @@
 - [x] Factor DX7 logic out of App.tsx
 - [x] Send sysex only on release (sliders)
 - [x] Add proper readme, changelog, license, screenshots etc.
-- [ ] Check: voiceParamData.constructor: validate data length
+- [x] Check: voiceParamData.constructor: validate data length
 - [ ] Responsive UI (Group)
 - [ ] Add Algorithm structure depictions
 - [ ] Algorithm structure chart, showing levels, freq, feedback. Allow select/solo/mute.
