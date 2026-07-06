@@ -71,9 +71,9 @@ export default function DXEEnvelopeGraph(props: {
       case 7: p = [1,6]; break;
     }
     for (let i = 0; i < p.length; i++)
-      hPoints.push(<circle cx={x[p[i]]} cy={y[p[i]]} r={2} stroke='#cff' stroke-width={3} />);
+      hPoints.push(<circle cx={x[p[i]]} cy={y[p[i]]} r={2} stroke='#cff' strokeWidth={3} key={`hp-${p[i]}`} />);
     for (let i = 0; i < s.length; i++)
-      hSegments.push(<line x1={x[s[i]]} y1={y[s[i]]} x2={x[s[i]+1]} y2={y[s[i]+1]} stroke='#cff' strokeWidth={3} />);
+      hSegments.push(<line x1={x[s[i]]} y1={y[s[i]]} x2={x[s[i]+1]} y2={y[s[i]+1]} stroke='#cff' strokeWidth={3} key={`hs-${s[i]}`} />);
   }
   
   return (
