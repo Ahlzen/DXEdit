@@ -69,7 +69,7 @@ export default function DXEAlgorithmDiagram(props: {algNumber: number})
 
     // Draw feedback path
     // TODO: need more spacing as these can clash with other lines, such
-    // as in algorithm 15
+    // as in algorithm 15, 20
     if (op.feedbackFrom) {
       const fbOp = a[op.feedbackFrom];
       if (fbOp) {

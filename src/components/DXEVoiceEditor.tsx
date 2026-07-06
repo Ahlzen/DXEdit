@@ -61,7 +61,7 @@ export function DXEVoiceEditor(props: {
 
         {/* Test code */}
         {/* <div dangerouslySetInnerHTML={{ __html: getAlgorithmSvg(props.voiceParams.getValue('Algorithm')) }} /> */}
-        <DXEAlgorithmDiagram algNumber={props.voiceParams.getValue('Algorithm')} />
+        <DXEAlgorithmDiagram algNumber={props.voiceParams.getValue('Algorithm')+1} />
 
         <DXESlider
           title="Feedback"
