@@ -5,12 +5,14 @@ import DXESlider from './DXESlider.tsx';
 import DXEEnvelopeEditor from './DXEEnvelopeEditor.tsx';
 import DXEOpEditor from './DXEOpEditor.tsx';
 import DXERadioGroup from './DXERadioGroup.tsx';
+import DXEAlgorithmDiagram from './DXEAlgorithmDiagram.tsx';
 
 import { WebMidi } from '../midi/WebMidi.ts'
 import { formatTranspose, formatAlgorithm } from '../midi/DX7.ts';
 import type { voiceParam, opNumber } from '../midi/VoiceParamData.ts';
 import { VoiceParamData, voiceParamSpecs } from '../midi/VoiceParamData.ts';
 import { buildOneVoiceBulkSysex, buildParameterChangeSysex, buildVoiceNameChangeSysex } from '../midi/DX7.ts';
+
 
 export function DXEVoiceEditor(props: {
   midi: WebMidi,
@@ -56,6 +58,11 @@ export function DXEVoiceEditor(props: {
           maxValue={31}
           onValueChanged={(v,ce) => handleVoiceParamChanged('Algorithm', v, ce)}
           valueFormatter={formatAlgorithm} />
+
+        {/* Test code */}
+        {/* <div dangerouslySetInnerHTML={{ __html: getAlgorithmSvg(props.voiceParams.getValue('Algorithm')) }} /> */}
+        <DXEAlgorithmDiagram algNumber={props.voiceParams.getValue('Algorithm')} />
+
         <DXESlider
           title="Feedback"
           selectedValue={props.voiceParams.getValue('Feedback')}
