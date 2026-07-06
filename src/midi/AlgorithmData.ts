@@ -1,4 +1,4 @@
-export type algOp = {
+type operator = {
   modulatedBy: number[],
   feedbackFrom?: number,
 
@@ -7,9 +7,9 @@ export type algOp = {
   y: number, // from bottom
 };
 
-export type alg = {[key: number]: algOp};
+export type algorithm = {[key: number]: operator};
 
-export const algorithms : {[key: number]: alg} = {
+export const algorithms : {[key: number]: algorithm} = {
   1: {
       1: {modulatedBy: [2], x: 0, y: 0},
       2: {modulatedBy: [], x: 0, y: 1},

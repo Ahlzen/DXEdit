@@ -1,4 +1,4 @@
-import { type algOp, type alg, algorithms } from '../midi/AlgorithmData';
+import { type algorithm, algorithms } from '../midi/AlgorithmData';
 
 export default function DXEAlgorithmDiagram(props: {algNumber: number})
 {
@@ -9,7 +9,7 @@ export default function DXEAlgorithmDiagram(props: {algNumber: number})
   const hy = unitY/2;
   const fontSize = 14;
   
-  let a : alg = algorithms[props.algNumber];
+  const a : algorithm = algorithms[props.algNumber];
   if (!a) {
     return (
       <svg width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
