@@ -1,5 +1,8 @@
 import { type algorithm, algorithms } from '../midi/AlgorithmData';
 
+/**
+ * Component that renders an SVG diagram of the specified DX7 algorithm.
+ */
 export default function DXEAlgorithmDiagram(props: {algNumber: number})
 {
   const unitX = 40;
@@ -33,7 +36,7 @@ export default function DXEAlgorithmDiagram(props: {algNumber: number})
   const bgCarrier = '#604';
   const lineColor = '#ccc';
 
-  let opsSvg = [];
+  const opsSvg = [];
   for (const [opNumber, op] of Object.entries(a)) {
     const isCarrier = op.y === 0; // hack: carriers are always at the bottom
     const x = margin + op.x * (unitX+margin);
@@ -61,15 +64,15 @@ export default function DXEAlgorithmDiagram(props: {algNumber: number})
       }
     }
     if (isCarrier) {
-      // draw connector at bottom
-      opsSvg.push(<line x1={x+hx} y1={y+unitY} x2={x+hx} y2={height-margin} stroke="#ccc" key={`carrier-${opNumber}`}/>);
+      // Draw vertical connector at bottom
+      opsSvg.push(<line x1={x+hx} y1={y+unitY} x2={x+hx} y2={height-margin} stroke={lineColor} key={`carrier-${opNumber}`}/>);
       carrierXMin = Math.min(carrierXMin, x+hx);
       carrierXMax = Math.max(carrierXMax, x+hx);
     }
 
     // Draw feedback path
-    // TODO: need more spacing as these can clash with other lines, such
-    // as in algorithm 15, 20
+    // TODO: need more spacing in a few cases, as these can clash with other
+    // lines, such as in algorithm 15, 20
     if (op.feedbackFrom) {
       const fbOp = a[op.feedbackFrom];
       if (fbOp) {
@@ -78,15 +81,15 @@ export default function DXEAlgorithmDiagram(props: {algNumber: number})
         const y1 = y - margin/2;
         const y2 = height - margin - (margin + fbOp.y * (unitY+margin)) + margin/2;
         const y3 = y;
-        opsSvg.push(<line x1={x1} y1={y1} x2={x2} y2={y1} stroke="#ccc" key={`fb-lineA-${opNumber}-${op.feedbackFrom}`}/>);
-        opsSvg.push(<line x1={x2} y1={y1} x2={x2} y2={y2} stroke="#ccc" key={`fb-lineB-${opNumber}-${op.feedbackFrom}`}/>);
-        opsSvg.push(<line x1={x1} y1={y2} x2={x2} y2={y2} stroke="#ccc" key={`fb-lineC-${opNumber}-${op.feedbackFrom}`}/>);
-        opsSvg.push(<line x1={x1} y1={y1} x2={x1} y2={y3} stroke="#ccc" key={`fb-lineD-${opNumber}-${op.feedbackFrom}`}/>);
+        opsSvg.push(<line x1={x1} y1={y1} x2={x2} y2={y1} stroke={lineColor} key={`fb-lineA-${opNumber}-${op.feedbackFrom}`}/>);
+        opsSvg.push(<line x1={x2} y1={y1} x2={x2} y2={y2} stroke={lineColor} key={`fb-lineB-${opNumber}-${op.feedbackFrom}`}/>);
+        opsSvg.push(<line x1={x1} y1={y2} x2={x2} y2={y2} stroke={lineColor} key={`fb-lineC-${opNumber}-${op.feedbackFrom}`}/>);
+        opsSvg.push(<line x1={x1} y1={y1} x2={x1} y2={y3} stroke={lineColor} key={`fb-lineD-${opNumber}-${op.feedbackFrom}`}/>);
       }
     }
   }
   // Connect carrier lines at bottom
-  opsSvg.push(<line x1={carrierXMin} y1={height-margin} x2={carrierXMax} y2={height-margin} stroke="#ccc" key={`carrier-bottom`}/>);
+  opsSvg.push(<line x1={carrierXMin} y1={height-margin} x2={carrierXMax} y2={height-margin} stroke={lineColor} key={`carrier-bottom`}/>);
 
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>`;
