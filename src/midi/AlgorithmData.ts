@@ -25,6 +25,12 @@ type operator = {
   y: number, // units from bottom, 0-based
 };
 
+// Maximum dimensions (units) of any algorithm
+export const algorithmMaxDimensions = {
+  x: 6,
+  y: 4
+};
+
 /** 
  * An algorithm is a set of 6 operators, with the operator
  * number as key (1-based). 

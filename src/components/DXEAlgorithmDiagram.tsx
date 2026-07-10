@@ -1,9 +1,11 @@
-import { type algorithm, algorithms } from '../midi/AlgorithmData';
+import { type algorithm, algorithms, algorithmMaxDimensions } from '../midi/AlgorithmData';
 
 /**
  * Component that renders an SVG diagram of the specified DX7 algorithm.
  */
-export default function DXEAlgorithmDiagram(props: {algNumber: number})
+export default function DXEAlgorithmDiagram(props: {
+  algNumber: number,
+  isFixedWidth: boolean})
 {
   const unitX = 40;
   const hx = unitX/2;
@@ -21,8 +23,13 @@ export default function DXEAlgorithmDiagram(props: {algNumber: number})
     );
   }
 
-  const xUnits = Math.max(...Object.values(a).map(op => op.x)) + 1;
-  const yUnits = Math.max(...Object.values(a).map(op => op.y)) + 1;
+  let xUnits = algorithmMaxDimensions.x;
+  let yUnits = algorithmMaxDimensions.y;
+  if (!props.isFixedWidth) {
+    // Calculate actual width of *this* algorithm
+    xUnits = Math.max(...Object.values(a).map(op => op.x)) + 1;
+    yUnits = Math.max(...Object.values(a).map(op => op.y)) + 1;
+  }
 
   const width = margin + xUnits * (unitX+margin);
   const height = margin + yUnits * (unitY+margin) + margin;
@@ -93,7 +100,7 @@ export default function DXEAlgorithmDiagram(props: {algNumber: number})
 
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>`;
-      <rect x="0" y="0" width={width} height={height} rx={margin} ry={margin} fill="black" />
+      {/* <rect x="0" y="0" width={width} height={height} rx={margin} ry={margin} fill="black" /> */}
       {opsSvg}
     </svg>
   );
