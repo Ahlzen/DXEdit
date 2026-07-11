@@ -1,10 +1,11 @@
 ## DX Edit Changelog
 
 
+### v0.3.0
+
+2026-07-11
 
 * Added visual diagram of selected algorithm.
-
-Internal
 * More internal cleanups.
 
 
