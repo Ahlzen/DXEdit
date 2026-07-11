@@ -1,11 +1,13 @@
 import { type algorithm, algorithms, algorithmMaxDimensions } from '../midi/AlgorithmData';
+import type { opNumber } from '../midi/VoiceParamData';
 
 /**
  * Component that renders an SVG diagram of the specified DX7 algorithm.
  */
 export default function DXEAlgorithmDiagram(props: {
   algNumber: number,
-  isFixedWidth: boolean})
+  isFixedWidth: boolean,
+  currentOp?: opNumber})
 {
   const unitX = 40;
   const hx = unitX/2;
@@ -48,8 +50,12 @@ export default function DXEAlgorithmDiagram(props: {
     const isCarrier = op.y === 0; // hack: carriers are always at the bottom
     const x = margin + op.x * (unitX+margin);
     const y = height - (margin + op.y * (unitY+margin)) - unitY - margin;
-    opsSvg.push(<rect x={x} y={y} width={unitX} height={unitY} rx={4} ry={4} stroke={isCarrier ? fgCarrier : fgModulator} fill={isCarrier ? bgCarrier : bgModulator} key={opNumber}/>);
-    opsSvg.push(<text x={x+hx-fontSize/3} y={y+hy+fontSize/3} fill={isCarrier ? fgCarrier : fgModulator} fontWeight='bold' fontSize={fontSize} key={`text-${opNumber}`}>{opNumber}</text>);
+    const outlineWidth = opNumber === props.currentOp ? 4 : 1;
+
+    opsSvg.push(<rect x={x} y={y} width={unitX} height={unitY} rx={4} ry={4}
+      strokeWidth={outlineWidth} stroke={isCarrier ? fgCarrier : fgModulator}
+      fill={isCarrier ? bgCarrier : bgModulator} key={opNumber}/>);
+    opsSvg.push(<text x={x+hx-fontSize/3} y={y+hy+fontSize/3} fill={isCarrier ? fgCarrier : fgModulator} fontWeight='bold' fontSize={fontSize} key={`text-${opNumber}`}>{getOpDigit(opNumber)}</text>);
     for (const modulator of op.modulatedBy) {
       const modOp = a[modulator];
       if (modOp) {
@@ -104,4 +110,8 @@ export default function DXEAlgorithmDiagram(props: {
       {opsSvg}
     </svg>
   );
+
+  function getOpDigit(op: opNumber): string {
+    return op.substring(2);
+  }
 }

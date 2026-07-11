@@ -2,6 +2,9 @@
 
 
 
+* Added visual diagram of selected algorithm.
+
+Internal
 * More internal cleanups.
 
 
@@ -9,11 +12,10 @@
 
 2026-06-30
 
-New/improved features
 * Sysex is sent only when you finish dragging a slider (or move it
   with the keyboard). This is because too frequent parameter changes
   overwhelms the DX7 and leads to annoying dropouts.
-  UI is still updated continously.
+  UI is still updated continuously.
 * Added "Init Voice (reset to default)" feature in Voice Editor.
 * Added "Send All to Device (synchronize)" feature in Voice Editor.
 * Added correct title.

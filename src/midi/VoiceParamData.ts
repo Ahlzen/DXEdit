@@ -16,7 +16,7 @@ export type voiceParamSpec = {
   maxValue: number,
 }
 
-export let voiceParamSpecs : {[name in voiceParam]: voiceParamSpec} = {
+export const voiceParamSpecs : {[name in voiceParam]: voiceParamSpec} = {
   'Algorithm': {offset: 134, maxValue: 31},
   'Feedback': { offset: 135, maxValue: 7 },
   'Oscillator Sync': { offset: 136, maxValue: 1 },
@@ -39,7 +39,7 @@ export const voiceParamDataLength = 155;
 export type opNumber = 'op1' | 'op2' | 'op3' | 'op4' | 'op5' | 'op6';
 export type egType = opNumber | 'pitch';
 
-export let opOffsets : {[key in opNumber]: number} = {
+export const opOffsets : {[key in opNumber]: number} = {
   'op1': 105,
   'op2': 84,
   'op3': 63,
@@ -48,7 +48,7 @@ export let opOffsets : {[key in opNumber]: number} = {
   'op6': 0,
 };
 
-export let egTypeOffsets : {[key in egType]: number} = {
+export const egTypeOffsets : {[key in egType]: number} = {
   'pitch': 126,
   ...opOffsets, // OP data starts with EG, so we can re-use these here
 };

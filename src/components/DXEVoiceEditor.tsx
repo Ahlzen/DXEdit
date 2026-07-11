@@ -59,11 +59,10 @@ export function DXEVoiceEditor(props: {
           onValueChanged={(v,ce) => handleVoiceParamChanged('Algorithm', v, ce)}
           valueFormatter={formatAlgorithm} />
 
-        {/* Test code */}
-        {/* <div dangerouslySetInnerHTML={{ __html: getAlgorithmSvg(props.voiceParams.getValue('Algorithm')) }} /> */}
         <DXEAlgorithmDiagram
           algNumber={props.voiceParams.getValue('Algorithm')+1}
-          isFixedWidth={true} />
+          isFixedWidth={true}
+          currentOp={currentOp} />
 
         <DXESlider
           title="Feedback"
@@ -129,6 +128,8 @@ export function DXEVoiceEditor(props: {
 
       <Stack className='opsEditor'>
         <Title order={2}>Operators</Title>
+
+        {/* OP selector */}
         <Group className="opSelectors" mt='md' mb='md'>
         {['op1','op2','op3','op4','op5','op6'].map(function (o,i) {
           return (
