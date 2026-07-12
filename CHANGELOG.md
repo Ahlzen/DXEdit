@@ -1,6 +1,11 @@
 ## DX Edit Changelog
 
 
+
+### v0.3.1
+
+2026-07-12
+
 * Removed redundant slider hovertext.
 * Fixed version number.
 * Cleaned up most linting warnings.
