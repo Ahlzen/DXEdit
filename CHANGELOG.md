@@ -1,6 +1,7 @@
 ## DX Edit Changelog
 
 
+* Removed redundant slider hovertext.
 * Fixed version number.
 
 

@@ -37,7 +37,7 @@ export default function DXESlider(props: {
           min={0}
           max={props.maxValue}
           w='10rem'
-          label={formatter}
+          label={null}
           onChange={(e) => props.onValueChanged(Number(e), false)}
           onChangeEnd={(e) => props.onValueChanged(Number(e), true)} />
         <Text size='sm'><b>{formatter(props.selectedValue)}</b></Text>
