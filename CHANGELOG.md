@@ -3,7 +3,7 @@
 
 ### v0.3.0
 
-2026-07-11
+2026-07-12
 
 * Added visual diagram of selected algorithm.
 * More internal cleanups.

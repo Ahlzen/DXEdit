@@ -111,7 +111,7 @@ export default function DXEAlgorithmDiagram(props: {
     </svg>
   );
 
-  function getOpDigit(op: opNumber): string {
+  function getOpDigit(op: string): string {
     return op.substring(2);
   }
 }
