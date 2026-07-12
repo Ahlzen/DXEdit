@@ -42,12 +42,12 @@ export function buildOneVoiceBulkSysex(
 
 export function buildVoiceNameChangeSysex(
   voiceParams: VoiceParamData, midiChannel: number) : number[] {
-  let data = [];
+  const data = [];
   const voiceNameBytes = voiceParams.getVoiceNameData();
   for (let i = 0; i < voiceNameLength; i++) {
     // DX7 Parameter Change sysex (one character at a time)
     // Parameter # 145-154 are Voice Name Char 1-10
-    let ascii = voiceNameBytes[i] || 32;
+    const ascii = voiceNameBytes[i] || 32;
     data.push(
       START_OF_SYSEX, 
       YAMAHA_MANUFACTURER_ID,

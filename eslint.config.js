@@ -18,5 +18,20 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    "rules": {
+      // Allow unused variables that start with "_" (ts default)
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "args": "all",
+          "argsIgnorePattern": "^_",
+          "caughtErrors": "all",
+          "caughtErrorsIgnorePattern": "^_",
+          "destructuredArrayIgnorePattern": "^_",
+          "varsIgnorePattern": "^_",
+          "ignoreRestSiblings": true
+        }
+      ]
+    },
   },
 ])

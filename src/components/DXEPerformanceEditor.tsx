@@ -97,10 +97,10 @@ export function DEXPerformanceEditor(props: {
     isChangeEnd: boolean)
   {
     console.log(`DXEPerformanceEditor: handlePerformanceParamChanged(): ${parameter} ${value}`);
-    let paramNumber = performanceParamSpecs[parameter].paramNumber;
+    const paramNumber = performanceParamSpecs[parameter].paramNumber;
 
     // Update state / UI
-    let newParams = {...props.perfParams};
+    const newParams = {...props.perfParams};
     newParams[parameter] = value;
     props.onPerfParamsChanged(newParams);
 

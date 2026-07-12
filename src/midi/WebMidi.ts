@@ -58,7 +58,7 @@ export class WebMidi
         this._isInitialized = true;
         onSuccess();
       },
-      (error: any) => {
+      (error) => {
         const errorMessage = "Error initializing WebMIDI: " + error.name;
         onError(errorMessage);
       }
@@ -89,7 +89,7 @@ export class WebMidi
   useMidiIn(portName: string|null) {
     this.closeMidiIn();
     if (portName === null) return;
-    let port = this.getInPort(portName);
+    const port = this.getInPort(portName);
     if (port) {
       this._midiIn = port;
       this._midiIn.onmidimessage = this.handleMidiIn;
@@ -102,7 +102,7 @@ export class WebMidi
   useControllerIn(portName: string|null) {
     this.closeControllerIn();
     if (portName === null) return;
-    let port = this.getInPort(portName);
+    const port = this.getInPort(portName);
     if (port) {
       this._controllerIn = port;
       this._controllerIn.onmidimessage = this.handleControllerIn;
@@ -115,7 +115,7 @@ export class WebMidi
   useMidiOut(portName: string|null) {
     this.closeMidiOut();
     if (portName === null) return;
-    let port = this.getOutPort(portName);
+    const port = this.getOutPort(portName);
     if (port) {
       this._midiOut = port;
       console.log('Using MIDI out: ' + portName);
@@ -175,8 +175,8 @@ export class WebMidi
 
   ///// MIDI Input handlers
 
-  private handleMidiIn(event: MIDIMessageEvent) : any {
-    let data = event.data;
+  private handleMidiIn(event: MIDIMessageEvent) {
+    const data = event.data;
     if (data !== null) {
       if (this.verbose)
         console.log('In: [' + toHexString(data) + ']');
@@ -185,8 +185,8 @@ export class WebMidi
     }
   }
 
-  private handleControllerIn(event: MIDIMessageEvent) : any {
-    let data = event.data;
+  private handleControllerIn(event: MIDIMessageEvent) {
+    const data = event.data;
     if (data !== null) {
       if (this.verbose)
         console.log('C.In: [' + toHexString(data) + ']');

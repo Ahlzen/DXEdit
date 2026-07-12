@@ -11,18 +11,18 @@ export default function DXEEnvelopeEditor(props: {
   onValueChanged: (offset: number, value: number, isChangeEnd: boolean) => void })
 {
   // Highlighted envelope parameter (0-7)
-  let [highlight, setHighlight] = useState<number|undefined>(undefined);
+  const [highlight, setHighlight] = useState<number|undefined>(undefined);
 
-  let getVal = (o: number) =>
+  const getVal = (o: number) =>
     props.data.getValueByOffset(
       egTypeOffsets[props.eg] + o);
-  let setVal = function(o: number) : ((n: number, isChangeEnd: boolean) => void) {
+  const setVal = function(o: number) : ((n: number, isChangeEnd: boolean) => void) {
     return function(v: number, isChangeEnd: boolean) {
       props.onValueChanged(egTypeOffsets[props.eg]+o, v, isChangeEnd);
     };
   }
 
-  let handleHoverChanged =
+  const handleHoverChanged =
     function(hover: boolean, offset: number) {
       setHighlight(hover ? offset : undefined);
   }

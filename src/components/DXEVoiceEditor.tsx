@@ -165,7 +165,7 @@ export function DXEVoiceEditor(props: {
 
   function handleUpdateVoiceName(voiceName: string) {
     console.log("App: handleUpdatePatchName(): " + voiceName);
-    let newVoiceParams = props.voiceParams.setVoiceName(voiceName);
+    const newVoiceParams = props.voiceParams.setVoiceName(voiceName);
     props.onVoiceParamsChanged(newVoiceParams);
     const sysexData = buildVoiceNameChangeSysex(newVoiceParams, props.midiChannel);
     props.midi.sendMessage(sysexData);
@@ -177,7 +177,7 @@ export function DXEVoiceEditor(props: {
     isChangeEnd: boolean)
   {
     console.log(`DXEVoiceEditor: handleVoiceParamChanged(): ${parameter} ${value}`);
-    let offset: number = typeof parameter === 'number' ?
+    const offset: number = typeof parameter === 'number' ?
       parameter : voiceParamSpecs[parameter].offset;
     
     // Update state / UI

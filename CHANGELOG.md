@@ -3,6 +3,7 @@
 
 * Removed redundant slider hovertext.
 * Fixed version number.
+* Cleaned up most linting warnings.
 
 
 ### v0.3.0

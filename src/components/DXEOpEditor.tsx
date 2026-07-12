@@ -11,14 +11,14 @@ export default function DXEOpEditor(props: {
 {
   ///// State update
 
-  let getVal = (o: number) =>
+  const getVal = (o: number) =>
       props.data.getValueByOffset(opOffsets[props.op] + o);
-  let setVal = function(o: number) : ((n: number, isChangeEnd: boolean) => void) {
+  const setVal = function(o: number) : ((n: number, isChangeEnd: boolean) => void) {
     return function(v: number, isChangeEnd: boolean) {
       props.onValueChanged(opOffsets[props.op]+o, v, isChangeEnd);
     };
   }
-  let setValAsChangeEnd = function(o: number) : ((n: number) => void) {
+  const setValAsChangeEnd = function(o: number) : ((n: number) => void) {
     return function(v: number) {
       props.onValueChanged(opOffsets[props.op]+o, v, true);
     };

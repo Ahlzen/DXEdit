@@ -8,19 +8,19 @@ export default function DXEEnvelopeGraph(props: {
   highlightSegment: number|undefined,
 })
 {
-  let getVal = (o: number) =>
+  const getVal = (o: number) =>
       props.data.getValueByOffset(
         egTypeOffsets[props.eg] + o);
   const margin = 8;
   
-  let x: number[] = Array<number>(8);
-  let y: number[] = Array<number>(8);
+  const x: number[] = Array<number>(8);
+  const y: number[] = Array<number>(8);
   
   // calculate x coordinates
   const leadInOut = 8;
   const eWidth = props.width - 2*margin; // effective width
-  let maxSegWidth = (eWidth-2*leadInOut) / 5;
-  let rates = [getVal(0), getVal(1), getVal(2), getVal(3)];
+  const maxSegWidth = (eWidth-2*leadInOut) / 5;
+  const rates = [getVal(0), getVal(1), getVal(2), getVal(3)];
   x[0] = margin;
   x[1] = x[0] + leadInOut;
   x[2] = x[1] + maxSegWidth * (1-rates[0]/99); // attack
@@ -32,10 +32,10 @@ export default function DXEEnvelopeGraph(props: {
 
   // calculate y coordinates
   const eHeight = props.height - 2*margin; // effective height
-  let levels = [getVal(4), getVal(5), getVal(6), getVal(7)];
-  let yScale = eHeight / 100;
-  let yBase = props.height-margin;
-  let yOrigin = props.eg === 'pitch' ? props.height * 0.5 : yBase;
+  const levels = [getVal(4), getVal(5), getVal(6), getVal(7)];
+  const yScale = eHeight / 100;
+  const yBase = props.height-margin;
+  const yOrigin = props.eg === 'pitch' ? props.height * 0.5 : yBase;
   y[0] = yBase - yScale*levels[3]; // L4 during key off
   y[1] = y[0];
   y[2] = yBase - yScale*levels[0]; // L1 (attack level)
@@ -46,17 +46,17 @@ export default function DXEEnvelopeGraph(props: {
   y[7] = y[0];
 
   // format SVG coordinates
-  let linePoints = x.map((_, i) => x[i] + ',' + y[i]).join(' ');
-  let polyPoints = x[0] + ',' + yOrigin + ' ' +
+  const linePoints = x.map((_, i) => x[i] + ',' + y[i]).join(' ');
+  const polyPoints = x[0] + ',' + yOrigin + ' ' +
     linePoints + ' ' + x[7] + ',' + yOrigin + ' ';
-  let vertexPoints = [];
+  const vertexPoints = [];
   for (let i = 1; i < x.length-1; i++) {
     vertexPoints.push(<circle cx={x[i]} cy={y[i]} r={2} stroke='#0cf' strokeWidth={2} key={i} />);
   }
 
   // highlighted points/segments
-  let hSegments = [];
-  let hPoints = [];
+  const hSegments = [];
+  const hPoints = [];
   if (props.highlightSegment !== undefined) {
     let s: number[] = [];
     let p: number[] = [];

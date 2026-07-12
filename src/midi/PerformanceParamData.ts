@@ -24,7 +24,7 @@ export type performanceParamSpec = {
   maxValue: number
 };
 
-export let performanceParamSpecs:
+export const performanceParamSpecs:
   {[name in performanceParam]: performanceParamSpec} =
 { 
   'monoMode': {paramNumber: 64, maxValue: 1},

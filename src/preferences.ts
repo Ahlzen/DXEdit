@@ -15,8 +15,8 @@ export class Preferences {
   ///// Getting and setting preferences
 
   setPrefs(name: string, value: any): void {
-    let key = this.prefix + '.' + name;
-    let json = JSON.stringify(value);
+    const key = this.prefix + '.' + name;
+    const json = JSON.stringify(value);
     if (this.storage) {
       // Use local storage
       this.storage.setItem(key, json);
@@ -26,15 +26,15 @@ export class Preferences {
     }
   }
   
-  getPrefs(name: string): any {
-    var key = this.prefix + '.' + name;
-    let str: string = '';
+  getPrefs(name: string) : any {
+    const key = this.prefix + '.' + name;
+    let str: string;
     if (this.storage) {
       // Use local storage
       str = String(this.storage.getItem(key));
     } else {
       // Use a cookie
-      let cookieData = this.getCookie(key);
+      const cookieData = this.getCookie(key);
       if (cookieData === null)
         return null;
       str = cookieData;
@@ -48,17 +48,17 @@ export class Preferences {
   // (ported from w3schools example)
 
   private setCookie(cname: string, cvalue: string, expiryDays: number): void {
-    var d = new Date();
+    const d = new Date();
     d.setTime(d.getTime() + (expiryDays*24*60*60*1000));
-    var expires = "expires="+d.toUTCString();
+    const expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
   }
 
   private getCookie(cname: string): string | null {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
-        var c = ca[i];
+    const name = cname + "=";
+    const ca = document.cookie.split(';');
+    for(let i=0; i<ca.length; i++) {
+        let c = ca[i];
         while (c.charAt(0)==' ') c = c.substring(1);
         if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
     }

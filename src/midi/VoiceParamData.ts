@@ -92,7 +92,7 @@ export class VoiceParamData
     return this.getValueByOffset(voiceParamSpecs[param].offset);
   }
   setValue(param: voiceParam, value: number) : VoiceParamData {
-    let specs = voiceParamSpecs[param];
+    const specs = voiceParamSpecs[param];
     value = this.clamp(value, 0, specs.maxValue);
     return this.setValueByOffset(specs.offset, value);
   }
@@ -101,7 +101,7 @@ export class VoiceParamData
     return this.data[offset];
   }
   setValueByOffset(offset: number, value: number) : VoiceParamData {
-    let newData = new VoiceParamData(this.data);
+    const newData = new VoiceParamData(this.data);
     newData.data[offset] = value;
     return newData;
   }
@@ -111,7 +111,7 @@ export class VoiceParamData
   }
   setEgData(type: egType, data: Uint8Array) : VoiceParamData {
     console.assert(data.length === 8, 'EG data must be 8 bytes');
-    let newData = new VoiceParamData(this.data);
+    const newData = new VoiceParamData(this.data);
     newData.data.set(data, egTypeOffsets[type]);
     return newData;
   }
@@ -130,7 +130,7 @@ export class VoiceParamData
     const padded = voiceName
       .slice(0, voiceNameLength) // max 10 chars
       .padEnd(voiceNameLength, " "); // space-pad if less
-    let newData = new VoiceParamData(this.data);
+    const newData = new VoiceParamData(this.data);
     for (let i = 0; i < voiceNameLength; i++) {
         newData.data[voiceNameOffset + i] = padded.charCodeAt(i);
     }
@@ -141,8 +141,8 @@ export class VoiceParamData
     return this.data[opOffsets[oo]+offset];
   }
   setOpParam(op: opNumber, offset: number, value: number) {
-    let newData = new VoiceParamData(this.data);
-    this.data[opOffsets[op]+offset] = value;
+    const newData = new VoiceParamData(this.data);
+    newData.data[opOffsets[op]+offset] = value;
     return newData;
   }
 
@@ -157,9 +157,7 @@ export class VoiceParamData
    * of the DX7 (mk1).
    */
   private static getInitParams(): Uint8Array {
-    let data = new Uint8Array([
-      // 
-
+    const data = new Uint8Array([
       // OP6
       99,99,99,99, // EG Rate 1-4
       99,99,99,0,  // EG Level 1-4

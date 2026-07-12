@@ -16,11 +16,11 @@ export default function DXESlider(props: {
 }){
   const formatter = props.valueFormatter || defaultFormatter;
 
-  let handleMouseEnter = () => {
+  const handleMouseEnter = () => {
     if (props.onHoverChanged)
       props.onHoverChanged(true);
   }
-  let handleMouseLeave = () => {
+  const handleMouseLeave = () => {
     if (props.onHoverChanged)
       props.onHoverChanged(false);
   }
