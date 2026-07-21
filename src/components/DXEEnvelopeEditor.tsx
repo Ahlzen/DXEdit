@@ -1,8 +1,8 @@
-import { Title, Stack } from '@mantine/core';
+import { Title, Stack, Group, Text } from '@mantine/core';
 import { useState } from "react";
 import { egTypeOffsets, type egType, type VoiceParamData } from "../midi/VoiceParamData";
 import DXEEnvelopeGraph from "./DXEEnvelopeGraph";
-import DXESlider from "./DXESlider";
+import DXEKnob from './DXEKnob';
 
 export default function DXEEnvelopeEditor(props: {
   title: string,
@@ -31,55 +31,38 @@ export default function DXEEnvelopeEditor(props: {
     <Stack className="envelopeEditor">
 
       <Title order={3}>{props.title}</Title>
-      <DXESlider
-        title="Rate 1"
-        selectedValue={getVal(0)}
-        maxValue={99}
-        onValueChanged={setVal(0)}
-        onHoverChanged={(h) => handleHoverChanged(h, 0)} />
-      <DXESlider
-        title="Rate 2"
-        selectedValue={getVal(1)}
-        maxValue={99}
-        onValueChanged={setVal(1)}
-        onHoverChanged={(h) => handleHoverChanged(h, 1)} />
-      <DXESlider
-        title="Rate 3"
-        selectedValue={getVal(2)}
-        maxValue={99}
-        onValueChanged={setVal(2)}
-        onHoverChanged={(h) => handleHoverChanged(h, 2)} />
-      <DXESlider
-        title="Rate 4"
-        selectedValue={getVal(3)}
-        maxValue={99}
-        onValueChanged={setVal(3)}
-        onHoverChanged={(h) => handleHoverChanged(h, 3)} />
 
-      <DXESlider
-        title="Level 1"
-        selectedValue={getVal(4)}
-        maxValue={99}
-        onValueChanged={setVal(4)}
-        onHoverChanged={(h) => handleHoverChanged(h, 4)} />
-      <DXESlider
-        title="Level 2"
-        selectedValue={getVal(5)}
-        maxValue={99}
-        onValueChanged={setVal(5)}
-        onHoverChanged={(h) => handleHoverChanged(h, 5)} />
-      <DXESlider
-        title="Level 3"
-        selectedValue={getVal(6)}
-        maxValue={99}
-        onValueChanged={setVal(6)}
-        onHoverChanged={(h) => handleHoverChanged(h, 6)} />
-      <DXESlider
-        title="Level 4"
-        selectedValue={getVal(7)}
-        maxValue={99}
-        onValueChanged={setVal(7)}
-        onHoverChanged={(h) => handleHoverChanged(h, 7)} />
+      <Group gap="sm">
+        <Text className="envParamLabel">Rate</Text>
+        <DXEKnob value={getVal(0)} max={99}
+          onValueChanged={(val) => props.onValueChanged(egTypeOffsets[props.eg]+0, val, false)}
+          onHoverChanged={(hover) => { handleHoverChanged(hover, 0); } } />
+        <DXEKnob value={getVal(1)} max={99}
+          onValueChanged={(val) => props.onValueChanged(egTypeOffsets[props.eg]+1, val, false)}
+          onHoverChanged={(hover) => { handleHoverChanged(hover, 1); } } />
+        <DXEKnob value={getVal(2)} max={99}
+          onValueChanged={(val) => props.onValueChanged(egTypeOffsets[props.eg]+2, val, false)}
+          onHoverChanged={(hover) => { handleHoverChanged(hover, 2); } } />
+        <DXEKnob value={getVal(3)} max={99}
+          onValueChanged={(val) => props.onValueChanged(egTypeOffsets[props.eg]+3, val, false)}
+          onHoverChanged={(hover) => { handleHoverChanged(hover, 3); } } />
+      </Group>
+
+      <Group gap="sm">
+        <Text className="envParamLabel">Level</Text>
+        <DXEKnob value={getVal(4)} max={99}
+          onValueChanged={(val) => props.onValueChanged(egTypeOffsets[props.eg]+4, val, false)}
+          onHoverChanged={(hover) => { handleHoverChanged(hover, 4); } } />
+        <DXEKnob value={getVal(5)} max={99}
+          onValueChanged={(val) => props.onValueChanged(egTypeOffsets[props.eg]+5, val, false)}
+          onHoverChanged={(hover) => { handleHoverChanged(hover, 5); } } />
+        <DXEKnob value={getVal(6)} max={99}
+          onValueChanged={(val) => props.onValueChanged(egTypeOffsets[props.eg]+6, val, false)}
+          onHoverChanged={(hover) => { handleHoverChanged(hover, 6); } } />
+        <DXEKnob value={getVal(7)} max={99}
+          onValueChanged={(val) => props.onValueChanged(egTypeOffsets[props.eg]+7, val, false)}
+          onHoverChanged={(hover) => { handleHoverChanged(hover, 7); } } />
+      </Group>
 
       <DXEEnvelopeGraph
         width={300}

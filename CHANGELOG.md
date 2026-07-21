@@ -1,6 +1,8 @@
 ## DX Edit Changelog
 
 
+* Added "knobs" (drag or wheel to change) for Envelope values.
+
 
 ### v0.3.1
 
