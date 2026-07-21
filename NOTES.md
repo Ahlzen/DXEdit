@@ -18,10 +18,12 @@
 - [x] Send sysex only on release (sliders)
 - [x] Add proper readme, changelog, license, screenshots etc.
 - [x] Check: voiceParamData.constructor: validate data length
+- [x] Add Algorithm structure depictions
+- [ ] Add algorithm picker chart
+- [x] Color code carriers/modulators (similar to OpSix)?
 - [ ] Responsive UI (Group)
-- [ ] Add Algorithm structure depictions
-- [ ] Algorithm structure chart, showing levels, freq, feedback. Allow select/solo/mute.
-- [ ] Color code carriers/modulators (similar to OpSix)?
+- [ ] Implement history/undo/redo.
+- [ ] Algorithm structure chart: levels, freq, feedback, EGs. Select/solo/mute.
 - [ ] Config: Add instructions for setting up DX7 (and other devices)
 - [ ] UI: Create own icons for tabs etc.
 - [ ] UI: Fix color scheme
@@ -31,7 +33,7 @@
 - [ ] Pick Kbd Break Point by MIDI controller
 - [ ] Visualize LFO, Keyboard Level Scaling
 - [ ] Env Editor: Show values in actual units (dB, seconds)
-- [ ] Env Editor: Support Rate/Level, ADSR, AR envelopes
+- [ ] Env Editor: Support Rate/Level/ADSR/AR envelopes (prefs)
 - [ ] Edit current program params and name
 - [ ] Send/receive full voice/bank sysex
 - [ ] Send individual programs
