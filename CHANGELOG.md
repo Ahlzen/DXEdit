@@ -1,6 +1,6 @@
 ## DX Edit Changelog
 
-
+* Added Algorithm Picker dialog.
 * Added "knobs" (drag or wheel to change) for Envelope values.
 
 
