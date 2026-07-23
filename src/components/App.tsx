@@ -1,5 +1,5 @@
 import '@mantine/core/styles.css';
-import { createTheme, MantineProvider, Stack, Tabs, Title } from '@mantine/core';
+import { createTheme, MantineProvider, Stack, Tabs, Title, Dialog } from '@mantine/core';
 import { GearIcon, FadersHorizontalIcon, PianoKeysIcon } from '@phosphor-icons/react';
 
 import { useState, useRef, useEffect } from 'react';
@@ -34,6 +34,8 @@ export default function App()
     getInitPerformanceParams());
   const [voiceParams, setVoiceParams] =
     useState<VoiceParamData>(new VoiceParamData());
+  
+  const [algorithmPickerDialogOpen, setAlgorithmPickerDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (!midi.current.isInitialized) {
@@ -145,6 +147,17 @@ export default function App()
 
     </Tabs>
 
+    {/* Pop-ups (dialogs) */}
+
+    {/* <Dialog withCloseButton opened={algorithmPickerDialogOpen}>
+      <DXEAlgorithmPicker
+        currentAlgorithm={voiceParams.getValue('Algorithm')}
+        columnCount={8}
+        onAlgorithmSelected={(n) => {voiceParams.setValue('Algorithm', n); setAlgorithmPickerDialogOpen(false);}}
+        onCancel={() => setAlgorithmPickerDialogOpen(false)}
+        />
+    </Dialog> */}
+
     </MantineProvider>
   );
 
@@ -171,6 +184,8 @@ export default function App()
     setControllerIn(portName);
     prefs.current.setPrefs('controllerIn', portName);
   }
+
+
 
 
   ///// MIDI event handlers

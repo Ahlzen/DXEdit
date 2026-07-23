@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
-import { Button, Stack, Group, TextInput, Title, Radio, Space, Text } from '@mantine/core';
+import { Button, Stack, Group, TextInput, Title, Radio, Space, Text, Modal } from '@mantine/core';
 import DXESlider from './DXESlider.tsx';
 import DXEEnvelopeEditor from './DXEEnvelopeEditor.tsx';
 import DXEOpEditor from './DXEOpEditor.tsx';
 import DXERadioGroup from './DXERadioGroup.tsx';
 import DXEAlgorithmDiagram from './DXEAlgorithmDiagram.tsx';
+import DXEAlgorithmPicker from './DXEAlgorithmPicker.tsx';
 
 import { WebMidi } from '../midi/WebMidi.ts'
 import { formatTranspose, formatAlgorithm } from '../midi/DX7.ts';
@@ -24,6 +25,7 @@ export function DXEVoiceEditor(props: {
   ///// State
 
   const [currentOp, setCurrentOp] = useState<opNumber>('op1');
+  const [algorithmPickerOpen, setAlgorithmPickerOpen] = useState<boolean>(false);
 
 
   ///// UI
@@ -62,7 +64,9 @@ export function DXEVoiceEditor(props: {
         <DXEAlgorithmDiagram
           algNumber={props.voiceParams.getValue('Algorithm')+1}
           isFixedWidth={true}
-          currentOp={currentOp} />
+          currentOp={currentOp}
+          hasLabels={true} />
+        <Button onClick={() => setAlgorithmPickerOpen(true)}>...</Button>
 
         <DXESlider
           title="Feedback"
@@ -148,6 +152,20 @@ export function DXEVoiceEditor(props: {
       </Stack>
 
     </Group>
+
+    {/* Pop-ups (dialogs) */}
+
+    <Modal withCloseButton
+      onClose={() => setAlgorithmPickerOpen(false)}
+      opened={algorithmPickerOpen}
+      size="auto"
+      >
+      <DXEAlgorithmPicker currentAlgorithm={props.voiceParams.getValue('Algorithm')}
+        columnCount={8}
+        onAlgorithmSelected={(n: number) => { props.voiceParams.setValue('Algorithm', n); setAlgorithmPickerOpen(false); }}
+        onCancel={() => setAlgorithmPickerOpen(false)}
+        />
+    </Modal>
     </>
   );
 

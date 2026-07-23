@@ -5,21 +5,29 @@ import type { opNumber } from '../midi/VoiceParamData';
  * Component that renders an SVG diagram of the specified DX7 algorithm.
  */
 export default function DXEAlgorithmDiagram(props: {
+  className?: string,
   algNumber: number,
   isFixedWidth: boolean,
-  currentOp?: opNumber})
+  currentOp?: opNumber,
+  unitWidth?: number,
+  unitHeight?: number,
+  gap?: number,
+  fontSize?: number,
+  hasLabels?: boolean,
+})
 {
-  const unitX = 40;
-  const hx = unitX/2;
-  const margin = 10;
-  const unitY = 20;
-  const hy = unitY/2;
-  const fontSize = 14;
+  const unitX = props.unitWidth || 40;
+  const halfX = unitX/2;
+  const unitY = props.unitHeight || 20;
+  const halfY = unitY/2;
+  const gap = props.gap || 10;
+  const fontSize = props.fontSize || 14;
+  const hasLabels = props.hasLabels;
   
   const a : algorithm = algorithms[props.algNumber];
   if (!a) {
     return (
-      <svg width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <svg width="300" height="200" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" className={props.className}>
         <text x="${unitX}" y="${unitY}" font-size="${fontSize}">Algorithm ${props.algNumber} not found</text>
       </svg>
     );
@@ -33,12 +41,13 @@ export default function DXEAlgorithmDiagram(props: {
     yUnits = Math.max(...Object.values(a).map(op => op.y)) + 1;
   }
 
-  const width = margin + xUnits * (unitX+margin);
-  const height = margin + yUnits * (unitY+margin) + margin;
+  const width = gap + xUnits * (unitX+gap);
+  const height = gap + yUnits * (unitY+gap) + gap;
 
   let carrierXMin = 100;
   let carrierXMax = 0;
 
+  const fgSelectedOp = '#fff'; // TODO
   const fgModulator = '#0cf';
   const bgModulator = '#046';
   const fgCarrier = '#f7d';
@@ -48,21 +57,32 @@ export default function DXEAlgorithmDiagram(props: {
   const opsSvg = [];
   for (const [opNumber, op] of Object.entries(a)) {
     const isCarrier = op.y === 0; // hack: carriers are always at the bottom
-    const x = margin + op.x * (unitX+margin);
-    const y = height - (margin + op.y * (unitY+margin)) - unitY - margin;
+    const x = gap + op.x * (unitX+gap);
+    const y = height - (gap + op.y * (unitY+gap)) - unitY - gap;
     const outlineWidth = opNumber === props.currentOp ? 4 : 1;
 
+    // Box
     opsSvg.push(<rect x={x} y={y} width={unitX} height={unitY} rx={4} ry={4}
       strokeWidth={outlineWidth} stroke={isCarrier ? fgCarrier : fgModulator}
       fill={isCarrier ? bgCarrier : bgModulator} key={opNumber}/>);
-    opsSvg.push(<text x={x+hx-fontSize/3} y={y+hy+fontSize/3} fill={isCarrier ? fgCarrier : fgModulator} fontWeight='bold' fontSize={fontSize} key={`text-${opNumber}`}>{getOpDigit(opNumber)}</text>);
+
+    // Label
+    if (hasLabels) {
+      opsSvg.push(<text
+        x={x+halfX-fontSize/3} y={y+halfY+fontSize/3}
+        fill={isCarrier ? fgCarrier : fgModulator}
+        fontWeight='bold' fontSize={fontSize}
+        key={`text-${opNumber}`}>{getOpDigit(opNumber)}</text>);
+    }
+
+    // Connectors from each modulator
     for (const modulator of op.modulatedBy) {
       const modOp = a[modulator];
       if (modOp) {
-        const x1 = x+hx;
+        const x1 = x+halfX;
         const y1 = y;
-        const x2 = margin + modOp.x * (unitX+margin) + hx;
-        const y2 = height - margin - (margin + modOp.y * (unitY+margin));
+        const x2 = gap + modOp.x * (unitX+gap) + halfX;
+        const y2 = height - gap - (gap + modOp.y * (unitY+gap));
         const ym = (y1+y2)/2;
         if (x1 === y1) {
           // Straight vertical line
@@ -77,22 +97,22 @@ export default function DXEAlgorithmDiagram(props: {
       }
     }
     if (isCarrier) {
-      // Draw vertical connector at bottom
-      opsSvg.push(<line x1={x+hx} y1={y+unitY} x2={x+hx} y2={height-margin} stroke={lineColor} key={`carrier-${opNumber}`}/>);
-      carrierXMin = Math.min(carrierXMin, x+hx);
-      carrierXMax = Math.max(carrierXMax, x+hx);
+      // Vertical connector at bottom
+      opsSvg.push(<line x1={x+halfX} y1={y+unitY} x2={x+halfX} y2={height-gap} stroke={lineColor} key={`carrier-${opNumber}`}/>);
+      carrierXMin = Math.min(carrierXMin, x+halfX);
+      carrierXMax = Math.max(carrierXMax, x+halfX);
     }
 
-    // Draw feedback path
+    // Feedback path
     // TODO: need more spacing in a few cases, as these can clash with other
     // lines, such as in algorithm 15, 20
     if (op.feedbackFrom) {
       const fbOp = a[op.feedbackFrom];
       if (fbOp) {
-        const x1 = x+hx;
-        const x2 = x+unitX+margin/2;
-        const y1 = y - margin/2;
-        const y2 = height - margin - (margin + fbOp.y * (unitY+margin)) + margin/2;
+        const x1 = x+halfX;
+        const x2 = x+unitX+gap/2;
+        const y1 = y - gap/2;
+        const y2 = height - gap - (gap + fbOp.y * (unitY+gap)) + gap/2;
         const y3 = y;
         opsSvg.push(<line x1={x1} y1={y1} x2={x2} y2={y1} stroke={lineColor} key={`fb-lineA-${opNumber}-${op.feedbackFrom}`}/>);
         opsSvg.push(<line x1={x2} y1={y1} x2={x2} y2={y2} stroke={lineColor} key={`fb-lineB-${opNumber}-${op.feedbackFrom}`}/>);
@@ -102,11 +122,10 @@ export default function DXEAlgorithmDiagram(props: {
     }
   }
   // Connect carrier lines at bottom
-  opsSvg.push(<line x1={carrierXMin} y1={height-margin} x2={carrierXMax} y2={height-margin} stroke={lineColor} key={`carrier-bottom`}/>);
+  opsSvg.push(<line x1={carrierXMin} y1={height-gap} x2={carrierXMax} y2={height-gap} stroke={lineColor} key={`carrier-bottom`}/>);
 
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>`;
-      {/* <rect x="0" y="0" width={width} height={height} rx={margin} ry={margin} fill="black" /> */}
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className={props.className}>`;
       {opsSvg}
     </svg>
   );

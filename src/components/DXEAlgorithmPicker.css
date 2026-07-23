@@ -1,0 +1,7 @@
+.algItem {
+  display: inline-block;
+  /* border: 1px solid #ccc ; */
+  border-radius: 4px;
+  background-color: black;
+  padding: 0.1em 0.3em;
+}
