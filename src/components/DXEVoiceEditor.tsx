@@ -54,19 +54,21 @@ export function DXEVoiceEditor(props: {
         
         <Space h='md'/>
 
-        <DXESlider
-          title="Algorithm"
-          selectedValue={props.voiceParams.getValue('Algorithm')}
-          maxValue={31}
-          onValueChanged={(v,ce) => handleVoiceParamChanged('Algorithm', v, ce)}
-          valueFormatter={formatAlgorithm} />
-
         <DXEAlgorithmDiagram
           algNumber={props.voiceParams.getValue('Algorithm')+1}
           isFixedWidth={true}
           currentOp={currentOp}
           hasLabels={true} />
-        <Button onClick={() => setAlgorithmPickerOpen(true)}>...</Button>
+        <Group>
+          <DXESlider
+            title="Algorithm"
+            selectedValue={props.voiceParams.getValue('Algorithm')}
+            maxValue={31}
+            onValueChanged={(v,ce) => handleVoiceParamChanged('Algorithm', v, ce)}
+            valueFormatter={formatAlgorithm} />
+          <Button onClick={() => setAlgorithmPickerOpen(true)} size="sm">...</Button>
+        </Group>
+        
 
         <DXESlider
           title="Feedback"
