@@ -1,5 +1,4 @@
-//import { useState } from 'react';
-import { Group, Stack, Text } from '@mantine/core';
+import { Stack, Text } from '@mantine/core';
 import './DXEAlgorithmPicker.css';
 import DXEAlgorithmDiagram from './DXEAlgorithmDiagram';
 
@@ -16,19 +15,18 @@ export default function DXEAlgorithmPicker(props: {
     currentRow.push(
     <div className="algItem" key={"alg" + a}
       onClick={() => props.onAlgorithmSelected(a)}>
-      <Stack>
+      <Stack className='algItemStack' align='center' justify='flex-end'>
         <DXEAlgorithmDiagram
           className="algIcon"
           algNumber={a+1} isFixedWidth={false} 
           unitWidth={16} unitHeight={14} gap={6}
-          hasLabels={false}
-          />
+          hasLabels={false} />
         <Text size="sm">{a+1}</Text>
       </Stack>
     </div>
     );
     if (currentRow.length === props.columnCount) {
-      rows.push(<Group key={"algRow" + a}>{currentRow}</Group>);
+      rows.push(currentRow);
       currentRow = [];
     }
   }
@@ -36,8 +34,8 @@ export default function DXEAlgorithmPicker(props: {
     rows.push(currentRow);
 
   return (
-    <Stack>
+    <div className='algPicker'>
       {rows}
-    </Stack>
+    </div>
   );
 }
