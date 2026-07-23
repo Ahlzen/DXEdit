@@ -164,7 +164,10 @@ export function DXEVoiceEditor(props: {
       >
       <DXEAlgorithmPicker currentAlgorithm={props.voiceParams.getValue('Algorithm')}
         columnCount={8}
-        onAlgorithmSelected={(n: number) => { props.voiceParams.setValue('Algorithm', n); setAlgorithmPickerOpen(false); }}
+        onAlgorithmSelected={(n: number) => {
+          handleVoiceParamChanged('Algorithm', n, true)
+          setAlgorithmPickerOpen(false);
+        }}
         onCancel={() => setAlgorithmPickerOpen(false)}
         />
     </Modal>

@@ -14,7 +14,8 @@ export default function DXEAlgorithmPicker(props: {
   let currentRow = [];
   for (let a = 0; a < 32; a++) {
     currentRow.push(
-    <div className="algItem" key={"alg" + a}>
+    <div className="algItem" key={"alg" + a}
+      onClick={() => props.onAlgorithmSelected(a)}>
       <Stack>
         <DXEAlgorithmDiagram
           className="algIcon"

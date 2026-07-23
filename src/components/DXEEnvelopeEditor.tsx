@@ -69,7 +69,8 @@ export default function DXEEnvelopeEditor(props: {
         height={100}
         data={props.data}
         eg={props.eg}
-        highlightSegment={highlight} />
+        highlightSegment={highlight}
+        />
     </Stack>
   )
 }
