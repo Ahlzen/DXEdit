@@ -47,7 +47,7 @@ export default function DXEAlgorithmDiagram(props: {
   let carrierXMin = 100;
   let carrierXMax = 0;
 
-  const fgSelectedOp = '#fff'; // TODO
+  const fgCurrentOp = '#fff';
   const fgModulator = '#0cf';
   const bgModulator = '#046';
   const fgCarrier = '#f7d';
@@ -59,11 +59,14 @@ export default function DXEAlgorithmDiagram(props: {
     const isCarrier = op.y === 0; // hack: carriers are always at the bottom
     const x = gap + op.x * (unitX+gap);
     const y = height - (gap + op.y * (unitY+gap)) - unitY - gap;
-    const outlineWidth = opNumber === props.currentOp ? 4 : 1;
+    const outlineWidth = opNumber === props.currentOp ? 2 : 1;
+
+    const strokeColor = opNumber === props.currentOp ? fgCurrentOp :
+      (isCarrier ? fgCarrier : fgModulator);
 
     // Box
     opsSvg.push(<rect x={x} y={y} width={unitX} height={unitY} rx={4} ry={4}
-      strokeWidth={outlineWidth} stroke={isCarrier ? fgCarrier : fgModulator}
+      stroke={strokeColor} strokeWidth={outlineWidth}
       fill={isCarrier ? bgCarrier : bgModulator} key={opNumber}/>);
 
     // Label
