@@ -1,32 +1,27 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
 export default function DXEKnob(props: {
   value: number,
-  min?: number,
-  max?: number,
-  step?: number,
-  onValueChanged?: (value: number) => void,
-  onValueCommitted?: (value: number) => void,
+  min: number,
+  max: number,
+  onValueChanged?: (value: number, isChangeEnd: boolean) => void,
   onHoverChanged?: (hover: boolean) => void,
 }) {
-  const max = props.max ?? 100;
-  const min = props.min ?? 0;
-  const step = props.step ?? 1;
-
-  const [currentValue, setCurrentValue] = useState(() => clamp(props.value, min, max));
   const [dragging, setDragging] = useState(false);
-
-  const valueRef = useRef(currentValue);
   const dragRef = useRef({ active: false, lastY: 0 });
+  const liveValueRef = useRef(props.value);
 
-  const applyValue = (next: number) => {
-    const clamped = clamp(next, 0, max);
-    valueRef.current = clamped;
-    setCurrentValue(clamped);
-    props.onValueChanged?.(clamped);
+  useEffect(() => {
+    liveValueRef.current = props.value;
+  }, [props.value]);
+
+  const commitValue = (nextValue: number, isChangeEnd: boolean) => {
+    const clampedValue = clamp(nextValue, props.min, props.max);
+    liveValueRef.current = clampedValue;
+    props.onValueChanged?.(clampedValue, isChangeEnd);
   };
 
   const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -45,7 +40,8 @@ export default function DXEKnob(props: {
     const delta = -1 * (event.movementY ?? (dragRef.current.lastY - event.clientY));
     if (delta === 0) return;
     dragRef.current.lastY = event.clientY;
-    applyValue(valueRef.current + Math.round(delta) * step);
+    const value = clamp(liveValueRef.current + Math.round(delta), props.min, props.max);
+    commitValue(value, false);
   };
 
   const handleMouseUp = () => {
@@ -54,29 +50,29 @@ export default function DXEKnob(props: {
     document.exitPointerLock?.();
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
-    props.onValueCommitted?.(valueRef.current);
+    props.onValueChanged?.(liveValueRef.current, true);
   };
 
   const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
     event.preventDefault();
     const direction = event.deltaY < 0 ? 1 : -1;
-    applyValue(valueRef.current + direction * step);
-    props.onValueCommitted?.(valueRef.current);
+    const value = clamp(liveValueRef.current + direction, props.min, props.max);
+    commitValue(value, true);
   };
 
   return (
     <div
       className='knob'
       role="slider"
-      aria-valuemin={min}
-      aria-valuemax={max}
-      aria-valuenow={currentValue}
+      aria-valuemin={props.min}
+      aria-valuemax={props.max}
+      aria-valuenow={props.value}
       style={{cursor: dragging ? 'none' : 'ns-resize'}}
       onMouseDown={handleMouseDown}
       onMouseEnter={() => props.onHoverChanged?.(true)}
       onMouseLeave={() => props.onHoverChanged?.(false)}
       onWheel={handleWheel} >
-      <div>{currentValue}</div>
+      <div>{props.value}</div>
     </div>
   );
 }
