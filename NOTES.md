@@ -21,9 +21,9 @@
 - [x] Add Algorithm structure depictions
 - [ ] Add algorithm picker chart
 - [x] Color code carriers/modulators (similar to OpSix)?
+- [ ] Algorithm structure chart: levels, freq, feedback, EGs. Select/solo/mute.
 - [ ] Responsive UI (Group)
 - [ ] Implement history/undo/redo.
-- [ ] Algorithm structure chart: levels, freq, feedback, EGs. Select/solo/mute.
 - [ ] Config: Add instructions for setting up DX7 (and other devices)
 - [ ] UI: Create own icons for tabs etc.
 - [ ] UI: Fix color scheme

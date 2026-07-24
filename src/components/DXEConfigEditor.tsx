@@ -1,6 +1,7 @@
 import { Button, Stack, Group, Title, Space, Text } from '@mantine/core';
-import DXEMidiPortSelector from './DXEMidiPortSelector.tsx';
+import DXEMidiPortSelector from './DXEMidiPortSelector';
 import DXESlider from './DXESlider';
+import DXERadioGroup from './DXERadioGroup';
 import { version } from '../../package.json';
 import { WebMidi } from '../midi/WebMidi.ts'
 import type { Preferences } from '../preferences';
@@ -58,7 +59,7 @@ export function DXEConfigEditor(props: {
       <Group>
       <Text style={{minWidth: '8rem'}}>MIDI Test</Text>
       <Button onClick={handleSendNoteOnOff}>
-        Send Note On / Note Off
+        Play Note
       </Button>
       </Group>
 
@@ -76,9 +77,14 @@ export function DXEConfigEditor(props: {
 
     <Stack gap='lg' mt='lg'>
 
-      <Title order={2}>User Interface</Title>
+      <Title order={2}>Editor Settings</Title>
 
-      
+      {/* <DXERadioGroup
+        title="Envelope Mode"
+        options={{ "Rate+Level": 'rl', "Time+Level": 1}}
+        selectedValue={0}
+        onValueChanged={(v) => {}} /> */}
+
 
     </Stack>
   </Group>
