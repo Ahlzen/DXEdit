@@ -27,7 +27,7 @@ export function DXEConfigEditor(props: {
   <Group justify='flex-start' align='top' gap='xl' grow={false}>
 
     <Stack align='stretch' gap='lg' mt='lg'>
-      <Title order={2}>MIDI Configuration</Title>
+      <Title order={2}>MIDI Settings</Title>
       <DXEMidiPortSelector
         title="MIDI Input"
         description='From MIDI Out of DX/TX.'
@@ -46,12 +46,28 @@ export function DXEConfigEditor(props: {
         portNames={props.midiInPortNames}
         selectedPortName={props.controllerIn}
         onPortChanged={props.onControllerInChanged} />
+
+
       <DXESlider
         title="MIDI Channel"
         selectedValue={props.midiChannel}
         maxValue={15}
         onValueChanged={props.onMidiChannelChanged}
         valueFormatter={formatMidiChannel} />
+
+      <Group>
+      <Text style={{minWidth: '8rem'}}>MIDI Test</Text>
+      <Button onClick={handleSendNoteOnOff}>
+        Send Note On / Note Off
+      </Button>
+      </Group>
+
+      <Group>
+      <Text style={{minWidth: '8rem'}}>Utility</Text>
+      <Button onClick={handleAllNotesOff}>
+        All Notes Off
+      </Button>
+      </Group>
 
       <Space h='lg' />
       <Text size='sm'>DX Edit {version}</Text>
@@ -60,15 +76,9 @@ export function DXEConfigEditor(props: {
 
     <Stack gap='lg' mt='lg'>
 
-      <Title order={2}>MIDI Test</Title>
-      <Button onClick={handleSendNoteOnOff}>
-        Send Note On / Note Off
-      </Button>
+      <Title order={2}>User Interface</Title>
 
-      <Title order={2}>Utility</Title>
-      <Button onClick={handleAllNotesOff}>
-        All Notes Off
-      </Button>
+      
 
     </Stack>
   </Group>

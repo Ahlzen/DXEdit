@@ -97,11 +97,11 @@ export default function App()
 
     <title>DX Edit</title>
 
-    <Tabs defaultValue="configuration">
+    <Tabs defaultValue="settings">
 
       <Tabs.List>
-        <Tabs.Tab value="configuration" leftSection={<GearIcon size={16} />}>
-          Configuration
+        <Tabs.Tab value="settings" leftSection={<GearIcon size={16} />}>
+          Settings
         </Tabs.Tab>
         <Tabs.Tab value="performance" leftSection={<PianoKeysIcon size={16} />}>
           Performance Parameters
@@ -111,7 +111,7 @@ export default function App()
         </Tabs.Tab>
       </Tabs.List>
 
-      <Tabs.Panel value="configuration">
+      <Tabs.Panel value="settings">
         <DXEConfigEditor
           midi={midi.current}
           prefs={prefs.current}
