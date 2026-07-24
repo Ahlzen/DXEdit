@@ -15,7 +15,9 @@ export default function DXEKnob(props: {
   const liveValueRef = useRef(props.value);
 
   useEffect(() => {
-    liveValueRef.current = props.value;
+    if (!dragging) {
+      liveValueRef.current = props.value;
+    }
   }, [props.value]);
 
   const commitValue = (nextValue: number, isChangeEnd: boolean) => {
