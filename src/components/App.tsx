@@ -30,8 +30,8 @@ export default function App()
   const [midiChannel, setMidiChannel] = useState<number>(0);
 
   // Other configuration state
-  const [isTimeEgMode, setIsTimeEgMode] =
-    useState<boolean>(prefs.current.getPrefs('itTimeEgMode'));
+  const [isTimeEgMode, setIsTimeEgMode] = useState<boolean>(
+    prefs.current.getPrefs('isTimeEgMode') || false);
 
   // Editor state
   const [perfParams, setPerfParams] = useState<performanceValues>(
@@ -92,6 +92,7 @@ export default function App()
       }),
     },
   });
+
 
   return (
     <MantineProvider
@@ -180,9 +181,9 @@ export default function App()
     prefs.current.setPrefs('controllerIn', portName);
   }
 
-  function handleEgModeChanged(isEgTimeMode: boolean) {
-    setIsTimeEgMode(isEgTimeMode);
-    prefs.current.setPrefs('isEgTimeMode', isEgTimeMode);
+  function handleEgModeChanged(isTimeEgMode: boolean) {
+    setIsTimeEgMode(isTimeEgMode);
+    prefs.current.setPrefs('isTimeEgMode', isTimeEgMode);
   }
 
 

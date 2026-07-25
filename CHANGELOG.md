@@ -1,6 +1,9 @@
 ## DX Edit Changelog
 
 
+* Fixed bug saving "envelope time mode" setting.
+
+
 ### v0.4.0
 
 2026-07-25
