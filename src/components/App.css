@@ -14,7 +14,7 @@ body {
   font-size: 90%;
   font-weight: bold;
 }
-.knob ::hover {
+.knob:hover {
   border: 1px solid white;
 }
 .envelopeEditor .envParamLabel {

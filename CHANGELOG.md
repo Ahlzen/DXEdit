@@ -1,10 +1,14 @@
 ## DX Edit Changelog
 
 
+### v0.4.0
+
+2026-07-25
+
 * Added Algorithm Picker dialog.
 * Added "knobs" (drag or wheel to change) for Envelope values.
-* Envelopes can (optionally) display and edit Time, instead
-  of Rate values, which be more intuitive when used to other
+* Envelopes can be set to display and edit Time (instead of
+  Rate) values. This may be more intuitive when used to other
   synthesizers.
 
 

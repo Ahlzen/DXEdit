@@ -1,4 +1,4 @@
-import { Title, Stack, Group, Text, Switch } from '@mantine/core';
+import { Title, Stack, Group, Text } from '@mantine/core';
 import { useState } from "react";
 import { egTypeOffsets, type egType, type VoiceParamData } from "../midi/VoiceParamData";
 import DXEEnvelopeGraph from "./DXEEnvelopeGraph";
