@@ -29,6 +29,10 @@ export default function App()
   const [controllerIn, setControllerIn] = useState<string|null>(null);
   const [midiChannel, setMidiChannel] = useState<number>(0);
 
+  // Other configuration state
+  const [isTimeEgMode, setIsTimeEgMode] =
+    useState<boolean>(prefs.current.getPrefs('itTimeEgMode'));
+
   // Editor state
   const [perfParams, setPerfParams] = useState<performanceValues>(
     getInitPerformanceParams());
@@ -121,10 +125,13 @@ export default function App()
           midiOut={midiOut}
           controllerIn={controllerIn}
           midiChannel={midiChannel}
+          isTimeEgMode={isTimeEgMode}
           onMidiInChanged={handleMidiInChanged}
           onMidiOutChanged={handleMidiOutChanged}
           onControllerInChanged={handleControllerInChanged}
-          onMidiChannelChanged={setMidiChannel} />
+          onMidiChannelChanged={setMidiChannel}
+          onEgModeChanged={handleEgModeChanged}
+          />
       </Tabs.Panel>
 
       <Tabs.Panel value="performance">
@@ -140,6 +147,7 @@ export default function App()
           midi={midi.current}
           midiChannel={midiChannel}
           voiceParams={voiceParams}
+          isTimeEgMode={isTimeEgMode}
           onVoiceParamsChanged={setVoiceParams} />
       </Tabs.Panel>
 
@@ -172,7 +180,10 @@ export default function App()
     prefs.current.setPrefs('controllerIn', portName);
   }
 
-
+  function handleEgModeChanged(isEgTimeMode: boolean) {
+    setIsTimeEgMode(isEgTimeMode);
+    prefs.current.setPrefs('isEgTimeMode', isEgTimeMode);
+  }
 
 
   ///// MIDI event handlers

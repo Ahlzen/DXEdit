@@ -14,12 +14,12 @@ export default function DXERadioGroup(props: {
     <Group className='radioGroup'>
       <Text style={{minWidth: '8rem'}}>{props.title}</Text>
       {Object.entries(props.options).map(([name, value]) => (
-          <Radio
-            value={value}
-            key={value}
-            label={name}
-            checked={props.selectedValue === value}
-            onChange={(e) => props.onValueChanged(Number(e.target.value))} />
+        <Radio
+          value={value}
+          key={value}
+          label={name}
+          checked={props.selectedValue === value}
+          onChange={(e) => props.onValueChanged(Number(e.target.value))} />
       ))} 
     </Group>
   )

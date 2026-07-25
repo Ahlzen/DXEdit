@@ -7,6 +7,7 @@ import DXERadioGroup from "./DXERadioGroup";
 export default function DXEOpEditor(props: {
   data: VoiceParamData,
   op: opNumber,
+  isTimeEgMode: boolean,
   onValueChanged: (offset: number, value: number, isChangeEnd: boolean) => void})
 {
   ///// State update
@@ -108,6 +109,7 @@ export default function DXEOpEditor(props: {
     <DXEEnvelopeEditor title="OP Envelope"
       data={props.data}
       eg={props.op}
+      isTimeMode={props.isTimeEgMode}
       onValueChanged={props.onValueChanged} />
     
     <h3>Keyboard Level Scaling</h3>

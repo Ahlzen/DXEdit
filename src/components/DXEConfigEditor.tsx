@@ -1,7 +1,6 @@
-import { Button, Stack, Group, Title, Space, Text } from '@mantine/core';
+import { Button, Stack, Group, Title, Space, Text, Switch } from '@mantine/core';
 import DXEMidiPortSelector from './DXEMidiPortSelector';
 import DXESlider from './DXESlider';
-import DXERadioGroup from './DXERadioGroup';
 import { version } from '../../package.json';
 import { WebMidi } from '../midi/WebMidi.ts'
 import type { Preferences } from '../preferences';
@@ -16,10 +15,12 @@ export function DXEConfigEditor(props: {
   midiOut: string|null,
   controllerIn: string|null,
   midiChannel: number,
+  isTimeEgMode: boolean,
   onMidiInChanged: (portName: string | null) => void,
   onMidiOutChanged: (portName: string | null) => void,
   onControllerInChanged: (portName: string | null) => void,
   onMidiChannelChanged: (midiChannel: number) => void,
+  onEgModeChanged: (isTimeEgMode: boolean) => void,
 })
 {
   ///// UI
@@ -47,7 +48,6 @@ export function DXEConfigEditor(props: {
         portNames={props.midiInPortNames}
         selectedPortName={props.controllerIn}
         onPortChanged={props.onControllerInChanged} />
-
 
       <DXESlider
         title="MIDI Channel"
@@ -79,12 +79,13 @@ export function DXEConfigEditor(props: {
 
       <Title order={2}>Editor Settings</Title>
 
-      {/* <DXERadioGroup
-        title="Envelope Mode"
-        options={{ "Rate+Level": 'rl', "Time+Level": 1}}
-        selectedValue={0}
-        onValueChanged={(v) => {}} /> */}
-
+      <Group>
+        <Text style={{minWidth: '8rem'}}>Envelopes</Text>
+        <Switch
+          label="Use Time instead of Rate"
+          checked={props.isTimeEgMode}
+          onChange={(v) => props.onEgModeChanged(v.currentTarget.checked)} />
+      </Group>
 
     </Stack>
   </Group>

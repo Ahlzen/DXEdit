@@ -19,7 +19,7 @@
 - [x] Add proper readme, changelog, license, screenshots etc.
 - [x] Check: voiceParamData.constructor: validate data length
 - [x] Add Algorithm structure depictions
-- [ ] Add algorithm picker chart
+- [x] Add algorithm picker chart
 - [x] Color code carriers/modulators (similar to OpSix)?
 - [ ] Algorithm structure chart: levels, freq, feedback, EGs. Select/solo/mute.
 - [ ] Responsive UI (Group)
@@ -33,7 +33,7 @@
 - [ ] Pick Kbd Break Point by MIDI controller
 - [ ] Visualize LFO, Keyboard Level Scaling
 - [ ] Env Editor: Show values in actual units (dB, seconds)
-- [ ] Env Editor: Support Rate/Level/ADSR/AR envelopes (prefs)
+- [x] Env Editor: Support Rate/Level envelopes (prefs)
 - [ ] Edit current program params and name
 - [ ] Send/receive full voice/bank sysex
 - [ ] Send individual programs

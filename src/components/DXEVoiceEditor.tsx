@@ -19,6 +19,7 @@ export function DXEVoiceEditor(props: {
   midi: WebMidi,
   midiChannel: number,
   voiceParams: VoiceParamData,
+  isTimeEgMode: boolean,
   onVoiceParamsChanged: (newVoiceParams: VoiceParamData) => void,
 })
 {
@@ -129,6 +130,7 @@ export function DXEVoiceEditor(props: {
         <DXEEnvelopeEditor title="Pitch Envelope"
           data={props.voiceParams}
           eg='pitch'
+          isTimeMode={props.isTimeEgMode}
           onValueChanged={handleVoiceParamChanged} />
       </Stack>
 
@@ -150,6 +152,7 @@ export function DXEVoiceEditor(props: {
         </Group>
         
         <DXEOpEditor op={currentOp} data={props.voiceParams}
+          isTimeEgMode={props.isTimeEgMode}
           onValueChanged={handleVoiceParamChanged} />
       </Stack>
 

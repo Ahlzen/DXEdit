@@ -8,16 +8,16 @@ export default function DXEEnvelopeEditor(props: {
   title: string,
   data: VoiceParamData,
   eg: egType,
+  isTimeMode: boolean,
   onValueChanged: (offset: number, value: number, isChangeEnd: boolean) => void })
 {
   // Highlighted envelope parameter (0-7)
   const [highlight, setHighlight] = useState<number|undefined>(undefined);
-  const [isTimeMode, setIsTimeMode] = useState<boolean>(false);
 
   const getVal = (offset: number) => {
     const rawValue = props.data.getValueByOffset(
       egTypeOffsets[props.eg] + offset);
-    if (isTimeMode) {
+    if (props.isTimeMode) {
       return offset < 4 ? 99-rawValue : rawValue;
     } else {
       return rawValue
@@ -26,7 +26,7 @@ export default function DXEEnvelopeEditor(props: {
     
   const setVal = (offset: number, val: number, isChangeEnd: boolean) => {
     const fullOffset = egTypeOffsets[props.eg]+offset;
-    if (isTimeMode) {
+    if (props.isTimeMode) {
       props.onValueChanged(fullOffset, offset < 4 ? 99-val : val, isChangeEnd);
     } else {
       props.onValueChanged(fullOffset, val, isChangeEnd);
@@ -45,7 +45,7 @@ export default function DXEEnvelopeEditor(props: {
       <Title order={3}>{props.title}</Title>
 
       <Group gap="sm">
-        <Text className="envParamLabel">{isTimeMode ? "Time" : "Rate"}</Text>
+        <Text className="envParamLabel">{props.isTimeMode ? "Time" : "Rate"}</Text>
         <DXEKnob value={getVal(0)} min={0} max={99}
           onValueChanged={(val, ice) => setVal(0, val, ice)}
           onHoverChanged={(hover) => { handleHoverChanged(hover, 0); } } />
@@ -58,11 +58,6 @@ export default function DXEEnvelopeEditor(props: {
         <DXEKnob value={getVal(3)} min={0} max={99}
           onValueChanged={(val, ice) => setVal(3, val, ice)}
           onHoverChanged={(hover) => { handleHoverChanged(hover, 3); } } />
-
-        <Switch size="xs" onLabel="T" offLabel="R"
-          checked={isTimeMode}
-          onChange={(v) => {setIsTimeMode(v.currentTarget.checked)}} />
-        
       </Group>
 
       <Group gap="sm">
@@ -86,8 +81,7 @@ export default function DXEEnvelopeEditor(props: {
         height={100}
         data={props.data}
         eg={props.eg}
-        highlightSegment={highlight}
-        />
+        highlightSegment={highlight} />
     </Stack>
   )
 }
