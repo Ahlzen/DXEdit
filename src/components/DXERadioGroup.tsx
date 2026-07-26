@@ -11,8 +11,9 @@ export default function DXERadioGroup(props: {
   onValueChanged: (value: number) => void})
 {
   return (
-    <Group className='radioGroup'>
+    <Group className='radioGroup' wrap='nowrap' align='flex-start'>
       <Text style={{minWidth: '8rem'}}>{props.title}</Text>
+      <Group wrap='wrap'>
       {Object.entries(props.options).map(([name, value]) => (
         <Radio
           value={value}
@@ -21,6 +22,7 @@ export default function DXERadioGroup(props: {
           checked={props.selectedValue === value}
           onChange={(e) => props.onValueChanged(Number(e.target.value))} />
       ))} 
+      </Group>
     </Group>
   )
 };

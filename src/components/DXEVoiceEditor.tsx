@@ -83,6 +83,7 @@ export function DXEVoiceEditor(props: {
           onValueChanged={(v) => handleVoiceParamChanged('Oscillator Sync', v, true)} />
 
         <Title order={3}>LFO</Title>
+
         <DXESlider
           title="Speed"
           selectedValue={props.voiceParams.getValue('LFO Speed')}

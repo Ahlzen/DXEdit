@@ -1,6 +1,9 @@
 ## DX Edit Changelog
 
 
+* Fixed some layout issues.
+
+
 ### v0.4.1
 
 2026-07-25
