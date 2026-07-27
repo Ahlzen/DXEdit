@@ -22,104 +22,10 @@ body {
 }
 
 
-/* .lfoWaveRadio .mantine-Group-root {
-  border: 1px solid green;
-} */
-
 .lfoWaveRadio .mantine-RadioCard-card {
-  /* border: 1px solid red; */
   background-color: black;
 }
-
 .lfoWaveRadio .mantine-RadioCard-card[data-checked="true"] {
   border: 1px solid var(--mantine-primary-color-filled);
-  /* background-color: #333; */
   color: white;
 }
-
-/* body {
-  color: #ecb;
-  background-color: #282420;
-  padding: 10px;
-}
-
-h1 {
-  color: white;
-  font-family: sans-serif;
-  font-size: 120%;
-  font-weight: bold;
-  margin: 5px 0;
-}
-
-#c {
-  border: 2px solid black;
-  width: 95%;
-  height: 95%;
-}
-
-fieldset {
-  border: 1px solid #654;
-  margin: 10px 0;
-}
-legend {
-  font-weight: bold;
-  color: #fff;
-}
-select,
-button,
-input[type="text"],
-input[type="radio"],
-input[type="range"],
-input[type="checkbox"]
-{
-  color: white;
-  background-color: black;
-  border: 1px solid #654;
-  border-radius: 5px;
-  padding: 2px 5px;
-}
-select,
-input[type="text"],
-input[type="radio"],
-input[type="range"],
-input[type="checkbox"],
-.slider .value
-{
-  margin-left: 1em;
-}
-input[type="range"] {
-  padding-top: 0;
-  padding-bottom: 0;
-  position:relative;
-  top: 6px;
-}
-.panel h3 {
-  font-size: 100%;
-  font-weight: bold;
-  margin-bottom: 0;
-  margin-top: 1em;
-}
-
-.opSelectors { margin-top: 0.5em; margin-bottom: 0.5em;}
-.opSelectors label {
-  font-weight: bold;
-  margin-right: 0.3em;
-  padding: 0.1em 0.6em 0.1em 0;
-  margin-bottom: 2em;
-  background-color: black;
-  border: 1px solid #654;
-  border-radius: 5px;
-}
-
-.voiceEditor {
-  display: flex;
-  flex-direction: row;
-  gap: 0.5em;
-}
-.voiceEditor > div {
-  width: 50%;
-}
-
-.envGraph {
-  margin-top: 0.5em;
-} */
