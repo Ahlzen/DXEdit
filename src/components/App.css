@@ -21,6 +21,22 @@ body {
   min-width: 3rem;
 }
 
+
+/* .lfoWaveRadio .mantine-Group-root {
+  border: 1px solid green;
+} */
+
+.lfoWaveRadio .mantine-RadioCard-card {
+  /* border: 1px solid red; */
+  background-color: black;
+}
+
+.lfoWaveRadio .mantine-RadioCard-card[data-checked="true"] {
+  border: 1px solid var(--mantine-primary-color-filled);
+  /* background-color: #333; */
+  color: white;
+}
+
 /* body {
   color: #ecb;
   background-color: #282420;

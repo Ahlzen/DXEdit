@@ -29,7 +29,9 @@
 - [ ] UI: Fix color scheme
 - [ ] UI: Fix spacing, ensure works on various devices
 - [ ] UI: Add help/descriptions to controls (tooltips?)
-- [ ] UI: Graphics for Algorithms, LFO Waveforms, Keyboard level scaling
+- [x] UI: Icons for Algorithms
+- [x] UI: Icons for LFO Waveforms
+- [ ] UI: Icons for Keyboard level scaling
 - [ ] Pick Kbd Break Point by MIDI controller
 - [ ] Visualize LFO, Keyboard Level Scaling
 - [ ] Env Editor: Show values in actual units (dB, seconds)
