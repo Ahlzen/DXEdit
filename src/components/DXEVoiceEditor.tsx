@@ -74,7 +74,7 @@ export function DXEVoiceEditor(props: {
             maxValue={31}
             onValueChanged={(v,ce) => handleVoiceParamChanged('Algorithm', v, ce)}
             valueFormatter={formatAlgorithm} />
-          <Button onClick={() => setAlgorithmPickerOpen(true)} size="sm">...</Button>
+          <Button onClick={() => setAlgorithmPickerOpen(true)} size="xs">...</Button>
         </Group>
         
 

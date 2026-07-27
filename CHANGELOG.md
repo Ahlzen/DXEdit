@@ -1,7 +1,7 @@
 ## DX Edit Changelog
 
 
-* Added LFO waveform icons
+* Added icons for LFO waveforms.
 * Fixed some layout issues.
 
 
