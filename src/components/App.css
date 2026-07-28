@@ -22,10 +22,10 @@ body {
 }
 
 
-.lfoWaveRadio .mantine-RadioCard-card {
+.customRadioButtons .mantine-RadioCard-card {
   background-color: black;
 }
-.lfoWaveRadio .mantine-RadioCard-card[data-checked="true"] {
+.customRadioButtons .mantine-RadioCard-card[data-checked="true"] {
   border: 1px solid var(--mantine-primary-color-filled);
   color: white;
 }

@@ -1,13 +1,12 @@
+import React from 'react';
 import { Group, Radio } from '@mantine/core';
 
-type iconRadioOptions = {
-  [value: string]: {
-    imagePath: string,
-    altText: string
-}};
+type customRadioOptions = {
+  [value: string]: React.JSX.Element
+};
 
-export default function DXEIconRadioButtons(props: {
-  options: iconRadioOptions,
+export default function DXECustomRadioButtons(props: {
+  options: customRadioOptions,
   selectedValue: string,
   className?: string,
   onValueChanged: (value: string) => void})
@@ -16,13 +15,13 @@ export default function DXEIconRadioButtons(props: {
     <Radio.Group
       value={props.selectedValue}
       onChange={props.onValueChanged}
-      className={props.className}>
+      className={props.className + " customRadioButtons"}>
       <Group mt="xs" gap="sm" grow={false}>
-        {Object.entries(props.options).map(([value, imageData]) => (
+        {Object.entries(props.options).map(([value, contents]) => (
           <Radio.Card value={value} key={value} withBorder={true} w='auto'
             data-checked={props.selectedValue === value}>
             <Group wrap="nowrap" p="xs">
-              <img src={imageData.imagePath} alt={imageData.altText} />
+              {contents}
             </Group>
           </Radio.Card>
         ))}

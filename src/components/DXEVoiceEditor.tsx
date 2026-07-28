@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
-import { Button, Stack, Group, TextInput, Title, Radio, Space, Text, Modal } from '@mantine/core';
+import { Button, Stack, Group, TextInput, Title, Space, Text, Modal } from '@mantine/core';
 import DXESlider from './DXESlider.tsx';
 import DXEEnvelopeEditor from './DXEEnvelopeEditor.tsx';
 import DXEOpEditor from './DXEOpEditor.tsx';
 import DXERadioGroup from './DXERadioGroup.tsx';
 import DXEAlgorithmDiagram from './DXEAlgorithmDiagram.tsx';
 import DXEAlgorithmPicker from './DXEAlgorithmPicker.tsx';
-import DXEIconRadioButtons from './DXEIconRadioButtons.tsx';
+import DXECustomRadioButtons from './DXECustomRadioButtons.tsx';
 
 import { WebMidi } from '../midi/WebMidi.ts'
 import { formatTranspose, formatAlgorithm } from '../midi/DX7.ts';
@@ -92,17 +92,16 @@ export function DXEVoiceEditor(props: {
 
         <Title order={3}>LFO</Title>
 
-        {/* Waveform selector */}
-        <DXEIconRadioButtons options={{
-            "0": {imagePath: wf_tri, altText: "Tri"},
-            "1": {imagePath: wf_saw_dn, altText: "SawDn"},
-            "2": {imagePath: wf_saw_up, altText: "SawUp"},
-            "3": {imagePath: wf_square, altText: "Squ"},
-            "4": {imagePath: wf_sine, altText: "Sin"},
-            "5": {imagePath: wf_sandh, altText: "S&H"},
-          }}
+        <DXECustomRadioButtons
+          className='waveformSelector'
+          options={{
+            "0": <img src={wf_tri} alt='Tri' />,
+            "1": <img src={wf_saw_dn} alt='SawDn' />,
+            "2": <img src={wf_saw_up} alt='SawUp' />,
+            "3": <img src={wf_square} alt='Squ' />,
+            "4": <img src={wf_sine} alt='Sin' />,
+            "5": <img src={wf_sandh} alt='S&H' />}}
           selectedValue={String(props.voiceParams.getValue('LFO Waveform')).toString()}
-          className='lfoWaveRadio'
           onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', Number(v), true)} />
         <DXESlider
           title="Speed"
@@ -152,21 +151,18 @@ export function DXEVoiceEditor(props: {
 
       <Stack className='opsEditor'>
         <Title order={2}>Operators</Title>
-
-        {/* OP selector */}
-        <Group className="opSelectors" mt='md' mb='md'>
-        {['op1','op2','op3','op4','op5','op6'].map(function (o,i) {
-          return (
-            <Radio
-              value={o}
-              key={o}
-              label={'OP'+(i+1)}
-              checked={currentOp === o} 
-              onChange={() => setCurrentOp(o as opNumber)} />
-          );
-        })}
-        </Group>
-        
+        <DXECustomRadioButtons
+          className='opSelector'
+          options={{
+            'op1': <Text>OP1</Text>,
+            'op2': <Text>OP2</Text>,
+            'op3': <Text>OP3</Text>,
+            'op4': <Text>OP4</Text>,
+            'op5': <Text>OP5</Text>,
+            'op6': <Text>OP6</Text>,
+          }}
+          selectedValue={currentOp}
+          onValueChanged={(o) => setCurrentOp(o as opNumber)}/>
         <DXEOpEditor op={currentOp} data={props.voiceParams}
           isTimeEgMode={props.isTimeEgMode}
           onValueChanged={handleVoiceParamChanged} />
