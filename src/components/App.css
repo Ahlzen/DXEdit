@@ -22,10 +22,12 @@ body {
 }
 
 
-.customRadioButtons .mantine-RadioCard-card {
+.customRadioButtons .mantine-RadioCard-card,
+.customCheckBox {
   background-color: black;
 }
-.customRadioButtons .mantine-RadioCard-card[data-checked="true"] {
+.customRadioButtons .mantine-RadioCard-card[data-checked="true"],
+.customCheckBox[data-checked="true"] {
   border: 1px solid var(--mantine-primary-color-filled);
   color: white;
 }

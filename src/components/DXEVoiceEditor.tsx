@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Button, Stack, Group, TextInput, Title, Space, Text, Modal } from '@mantine/core';
+import { Button, Stack, Group, TextInput, Title, Space, Text, Modal, Checkbox } from '@mantine/core';
 import DXESlider from './DXESlider.tsx';
 import DXEEnvelopeEditor from './DXEEnvelopeEditor.tsx';
 import DXEOpEditor from './DXEOpEditor.tsx';
@@ -34,6 +34,7 @@ export function DXEVoiceEditor(props: {
   ///// State
 
   const [currentOp, setCurrentOp] = useState<opNumber>('op1');
+  const [enabledOps, setEnabledOps] = useState<number>(0b111111);
   const [algorithmPickerOpen, setAlgorithmPickerOpen] = useState<boolean>(false);
 
 
@@ -151,7 +152,57 @@ export function DXEVoiceEditor(props: {
 
       <Stack className='opsEditor'>
         <Title order={2}>Operators</Title>
-        <DXECustomRadioButtons
+        
+        {/* TODO: Refactor this into something more elegant... */}
+        <Group mt="xs" gap="sm" grow={false}>
+          <Text>Enable</Text>
+          <Checkbox.Card checked={isOpEnabled(1)}
+            className="customCheckBox" w='auto'
+            onChange={(v) => handleEnabledOpsChanged(1, v)}>
+            <Group wrap="nowrap" p="xs">
+              <Text>OP1</Text>
+            </Group>
+          </Checkbox.Card>
+          <Checkbox.Card checked={isOpEnabled(2)}
+            className="customCheckBox" w='auto'
+            onChange={(v) => handleEnabledOpsChanged(2, v)}>
+            <Group wrap="nowrap" p="xs">
+              <Text>OP2</Text>
+            </Group>
+          </Checkbox.Card>
+          <Checkbox.Card checked={isOpEnabled(3)}
+            className="customCheckBox" w='auto'
+            onChange={(v) => handleEnabledOpsChanged(3, v)}>
+            <Group wrap="nowrap" p="xs">
+              <Text>OP3</Text>
+            </Group>
+          </Checkbox.Card>
+          <Checkbox.Card checked={isOpEnabled(4)}
+            className="customCheckBox" w='auto'
+            onChange={(v) => handleEnabledOpsChanged(4, v)}>
+            <Group wrap="nowrap" p="xs">
+              <Text>OP4</Text>
+            </Group>
+          </Checkbox.Card>
+          <Checkbox.Card checked={isOpEnabled(5)}
+            className="customCheckBox" w='auto'
+            onChange={(v) => handleEnabledOpsChanged(5, v)}>
+            <Group wrap="nowrap" p="xs">
+              <Text>OP5</Text>
+            </Group>
+          </Checkbox.Card>
+          <Checkbox.Card checked={isOpEnabled(6)}
+            className="customCheckBox" w='auto'
+            onChange={(v) => handleEnabledOpsChanged(6, v)}>
+            <Group wrap="nowrap" p="xs">
+              <Text>OP6</Text>
+            </Group>
+          </Checkbox.Card>
+        </Group>
+
+        <Group>
+          <Text>Select</Text>
+          <DXECustomRadioButtons
           className='opSelector'
           options={{
             'op1': <Text>OP1</Text>,
@@ -163,6 +214,8 @@ export function DXEVoiceEditor(props: {
           }}
           selectedValue={currentOp}
           onValueChanged={(o) => setCurrentOp(o as opNumber)}/>
+        </Group>
+        
         <DXEOpEditor op={currentOp} data={props.voiceParams}
           isTimeEgMode={props.isTimeEgMode}
           onValueChanged={handleVoiceParamChanged} />
@@ -229,5 +282,31 @@ export function DXEVoiceEditor(props: {
         'voice', offset, value, props.midiChannel);
       props.midi.sendMessage(sysexData);
     }
+  }
+
+  function handleEnabledOpsChanged(
+    opNumber: number, // 1-6
+    checked: boolean)
+  {
+    let value = enabledOps;
+    const bitMask = 0b1000000 >>> opNumber;
+    if (checked) {
+      value |= bitMask;
+    } else {
+      value &= (~bitMask);
+    }
+    setEnabledOps(value);
+
+    // Send sysex
+    const sysexData = buildParameterChangeSysex(
+      'voice', 155, value, props.midiChannel);
+    props.midi.sendMessage(sysexData);
+  }
+
+  function isOpEnabled(
+    opNumber: number // 1-6
+  ){
+      const bitMask = 0b1000000 >>> opNumber;
+      return (enabledOps & bitMask) > 0;
   }
 }
