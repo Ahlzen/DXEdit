@@ -7,6 +7,7 @@ import DXEOpEditor from './DXEOpEditor.tsx';
 import DXERadioGroup from './DXERadioGroup.tsx';
 import DXEAlgorithmDiagram from './DXEAlgorithmDiagram.tsx';
 import DXEAlgorithmPicker from './DXEAlgorithmPicker.tsx';
+import DXEIconRadioButtons from './DXEIconRadioButtons.tsx';
 
 import { WebMidi } from '../midi/WebMidi.ts'
 import { formatTranspose, formatAlgorithm } from '../midi/DX7.ts';
@@ -92,53 +93,17 @@ export function DXEVoiceEditor(props: {
         <Title order={3}>LFO</Title>
 
         {/* Waveform selector */}
-        <Radio.Group
-          value={String(props.voiceParams.getValue('LFO Waveform'))}
-          onChange={(v) => handleVoiceParamChanged('LFO Waveform', Number(v), true)}
-          name="wave"
+        <DXEIconRadioButtons options={{
+            "0": {imagePath: wf_tri, altText: "Tri"},
+            "1": {imagePath: wf_saw_dn, altText: "SawDn"},
+            "2": {imagePath: wf_saw_up, altText: "SawUp"},
+            "3": {imagePath: wf_square, altText: "Squ"},
+            "4": {imagePath: wf_sine, altText: "Sin"},
+            "5": {imagePath: wf_sandh, altText: "S&H"},
+          }}
+          selectedValue={String(props.voiceParams.getValue('LFO Waveform')).toString()}
           className='lfoWaveRadio'
-          >
-          <Group mt="xs" gap="sm" grow={false}>
-            <Radio.Card value="0" key="0" withBorder={true} w='auto'
-              data-checked={props.voiceParams.getValue('LFO Waveform') === 0}>
-              <Group wrap="nowrap" p="xs">
-                <img src={wf_tri} alt="Tri" />
-              </Group>
-            </Radio.Card>
-            <Radio.Card value="1" key="1" withBorder={true} w='auto'
-              data-checked={props.voiceParams.getValue('LFO Waveform') === 1}>
-              <Group wrap="nowrap" p="xs">
-                <img src={wf_saw_dn} alt="SawDn" />
-              </Group>
-            </Radio.Card>
-            <Radio.Card value="2" key="2" withBorder={true} w='auto'
-              data-checked={props.voiceParams.getValue('LFO Waveform') === 2}>
-              <Group wrap="nowrap" p="xs">
-                <img src={wf_saw_up} alt="SawUp" />
-              </Group>
-            </Radio.Card>
-            <Radio.Card value="3" key="3" withBorder={true} w='auto'
-              data-checked={props.voiceParams.getValue('LFO Waveform') === 3}>
-              <Group wrap="nowrap" p="xs">
-                <img src={wf_square} alt="Squ" />
-              </Group>
-            </Radio.Card>
-            <Radio.Card value="4" key="4" withBorder={true} w='auto'
-              data-checked={props.voiceParams.getValue('LFO Waveform') === 4}>
-              <Group wrap="nowrap" p="xs">
-                <img src={wf_sine} alt="Sine" />
-              </Group>
-            </Radio.Card>
-            <Radio.Card value="5" key="5" withBorder={true} w='auto'
-              data-checked={props.voiceParams.getValue('LFO Waveform') === 5}>
-              <Group wrap="nowrap" p="xs">
-                <img src={wf_sandh} alt="S&H" />
-              </Group>
-            </Radio.Card>
-          </Group>
-        </Radio.Group>
-
-
+          onValueChanged={(v) => handleVoiceParamChanged('LFO Waveform', Number(v), true)} />
         <DXESlider
           title="Speed"
           selectedValue={props.voiceParams.getValue('LFO Speed')}
