@@ -1,6 +1,11 @@
 ## DX Edit Changelog
 
 
+### v0.5.0
+
+2026-07-29
+
+
 * Added buttons for enabling/disabling operators.
 * Disabled operators are dimmed in the Algorithm Diagram.
 * Cleaner operator select buttons.
