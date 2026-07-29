@@ -12,7 +12,7 @@ export default function DXERadioGroup(props: {
 {
   return (
     <Group className='radioGroup' wrap='nowrap' align='flex-start'>
-      <Text style={{minWidth: '8rem'}}>{props.title}</Text>
+      <Text className='col1'>{props.title}</Text>
       <Group wrap='wrap'>
       {Object.entries(props.options).map(([name, value]) => (
         <Radio

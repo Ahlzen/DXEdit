@@ -45,7 +45,7 @@ export default function DXEEnvelopeEditor(props: {
       <Title order={3}>{props.title}</Title>
 
       <Group gap="sm">
-        <Text className="envParamLabel">{props.isTimeMode ? "Time" : "Rate"}</Text>
+        <Text className="envParamLabel col1-sm">{props.isTimeMode ? "Time" : "Rate"}</Text>
         <DXEKnob value={getVal(0)} min={0} max={99}
           onValueChanged={(val, ice) => setVal(0, val, ice)}
           onHoverChanged={(hover) => { handleHoverChanged(hover, 0); } } />
@@ -61,7 +61,7 @@ export default function DXEEnvelopeEditor(props: {
       </Group>
 
       <Group gap="sm">
-        <Text className="envParamLabel">Level</Text>
+        <Text className="envParamLabel col1-sm">Level</Text>
         <DXEKnob value={getVal(4)} min={0} max={99}
           onValueChanged={(val, ice) => setVal(4, val, ice)}
           onHoverChanged={(hover) => { handleHoverChanged(hover, 4); } } />

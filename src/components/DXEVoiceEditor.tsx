@@ -53,7 +53,7 @@ export function DXEVoiceEditor(props: {
         <Title order={2}>Common</Title>
         
         <Group>
-          <Text style={{minWidth: '8rem'}}>Patch name</Text>
+          <Text className='col1'>Patch name</Text>
           <TextInput
             value={props.voiceParams.getVoiceName()}
             placeholder="max 10 chars"
@@ -156,7 +156,7 @@ export function DXEVoiceEditor(props: {
         
         {/* TODO: Refactor this into something more elegant... */}
         <Group mt="xs" gap="sm" grow={false}>
-          <Text>Enable</Text>
+          <Text className='col1-sm'>Enable</Text>
           <Checkbox.Card checked={isOpEnabled(enabledOps, 1)}
             className="customCheckBox" w='auto'
             onChange={(v) => handleEnabledOpsChanged(1, v)}>
@@ -201,20 +201,20 @@ export function DXEVoiceEditor(props: {
           </Checkbox.Card>
         </Group>
 
-        <Group>
-          <Text>Select</Text>
+        <Group gap="sm">
+          <Text className='col1-sm'>Select</Text>
           <DXECustomRadioButtons
-          className='opSelector'
-          options={{
-            'op1': <Text>OP1</Text>,
-            'op2': <Text>OP2</Text>,
-            'op3': <Text>OP3</Text>,
-            'op4': <Text>OP4</Text>,
-            'op5': <Text>OP5</Text>,
-            'op6': <Text>OP6</Text>,
-          }}
-          selectedValue={currentOp}
-          onValueChanged={(o) => setCurrentOp(o as opNumber)}/>
+            className='opSelector'
+            options={{
+              'op1': <Text>OP1</Text>,
+              'op2': <Text>OP2</Text>,
+              'op3': <Text>OP3</Text>,
+              'op4': <Text>OP4</Text>,
+              'op5': <Text>OP5</Text>,
+              'op6': <Text>OP6</Text>,
+            }}
+            selectedValue={currentOp}
+            onValueChanged={(o) => setCurrentOp(o as opNumber)}/>
         </Group>
         
         <DXEOpEditor

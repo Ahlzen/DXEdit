@@ -17,10 +17,15 @@ body {
 .knob:hover {
   border: 1px solid white;
 }
-.envelopeEditor .envParamLabel {
-  min-width: 3rem;
-}
 
+/* First column (labels) width */
+.col1 {
+  min-width: 7rem;
+}
+/* First column (labels) width, narrow */
+.col1-sm {
+  min-width: 4rem;
+}
 
 .customRadioButtons .mantine-RadioCard-card,
 .customCheckBox {

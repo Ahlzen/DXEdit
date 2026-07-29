@@ -26,7 +26,7 @@ export default function DXECheckBoxGroup(props: {
   return (
     <div className="checkboxGroup">
       <Group>
-        <Text style={{minWidth: '8rem'}}>{props.title}</Text>
+        <Text className='col1'>{props.title}</Text>
         {Object.entries(props.options).map(([name, value]) => (
           <Checkbox
             value={value}

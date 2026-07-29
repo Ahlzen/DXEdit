@@ -57,14 +57,14 @@ export function DXEConfigEditor(props: {
         valueFormatter={formatMidiChannel} />
 
       <Group>
-      <Text style={{minWidth: '8rem'}}>MIDI Test</Text>
+      <Text className='col1'>MIDI Test</Text>
       <Button onClick={handleSendNoteOnOff}>
         Play Note
       </Button>
       </Group>
 
       <Group>
-      <Text style={{minWidth: '8rem'}}>Utility</Text>
+      <Text className='col1'>Utility</Text>
       <Button onClick={handleAllNotesOff}>
         All Notes Off
       </Button>
@@ -80,7 +80,7 @@ export function DXEConfigEditor(props: {
       <Title order={2}>Editor Settings</Title>
 
       <Group>
-        <Text style={{minWidth: '8rem'}}>Envelopes</Text>
+        <Text className='col1'>Envelopes</Text>
         <Switch
           label="Use Time instead of Rate"
           checked={props.isTimeEgMode}

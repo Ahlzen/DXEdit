@@ -30,7 +30,7 @@ export default function DXESlider(props: {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}>
       <Group>
-        <Text style={{minWidth: '8rem'}}>{props.title}</Text>
+        <Text className='col1'>{props.title}</Text>
         <Slider
           title={props.title}
           value={props.selectedValue}
