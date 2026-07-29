@@ -10,7 +10,7 @@ import DXEAlgorithmPicker from './DXEAlgorithmPicker.tsx';
 import DXECustomRadioButtons from './DXECustomRadioButtons.tsx';
 
 import { WebMidi } from '../midi/WebMidi.ts'
-import { formatTranspose, formatAlgorithm } from '../midi/DX7.ts';
+import { formatTranspose, formatAlgorithm, isOpEnabled } from '../midi/DX7.ts';
 import type { voiceParam, opNumber } from '../midi/VoiceParamData.ts';
 import { VoiceParamData, voiceParamSpecs } from '../midi/VoiceParamData.ts';
 import { buildOneVoiceBulkSysex, buildParameterChangeSysex, buildVoiceNameChangeSysex } from '../midi/DX7.ts';
@@ -34,7 +34,7 @@ export function DXEVoiceEditor(props: {
   ///// State
 
   const [currentOp, setCurrentOp] = useState<opNumber>('op1');
-  const [enabledOps, setEnabledOps] = useState<number>(0b111111);
+  const [enabledOps, setEnabledOps] = useState<number>(0b111111); // same format as in DX7 Sysex param 155
   const [algorithmPickerOpen, setAlgorithmPickerOpen] = useState<boolean>(false);
 
 
@@ -68,6 +68,7 @@ export function DXEVoiceEditor(props: {
           algNumber={props.voiceParams.getValue('Algorithm')+1}
           isFixedWidth={true}
           currentOp={currentOp}
+          enabledOps={enabledOps}
           hasLabels={true} />
         <Group>
           <DXESlider
@@ -156,42 +157,42 @@ export function DXEVoiceEditor(props: {
         {/* TODO: Refactor this into something more elegant... */}
         <Group mt="xs" gap="sm" grow={false}>
           <Text>Enable</Text>
-          <Checkbox.Card checked={isOpEnabled(1)}
+          <Checkbox.Card checked={isOpEnabled(enabledOps, 1)}
             className="customCheckBox" w='auto'
             onChange={(v) => handleEnabledOpsChanged(1, v)}>
             <Group wrap="nowrap" p="xs">
               <Text>OP1</Text>
             </Group>
           </Checkbox.Card>
-          <Checkbox.Card checked={isOpEnabled(2)}
+          <Checkbox.Card checked={isOpEnabled(enabledOps, 2)}
             className="customCheckBox" w='auto'
             onChange={(v) => handleEnabledOpsChanged(2, v)}>
             <Group wrap="nowrap" p="xs">
               <Text>OP2</Text>
             </Group>
           </Checkbox.Card>
-          <Checkbox.Card checked={isOpEnabled(3)}
+          <Checkbox.Card checked={isOpEnabled(enabledOps, 3)}
             className="customCheckBox" w='auto'
             onChange={(v) => handleEnabledOpsChanged(3, v)}>
             <Group wrap="nowrap" p="xs">
               <Text>OP3</Text>
             </Group>
           </Checkbox.Card>
-          <Checkbox.Card checked={isOpEnabled(4)}
+          <Checkbox.Card checked={isOpEnabled(enabledOps, 4)}
             className="customCheckBox" w='auto'
             onChange={(v) => handleEnabledOpsChanged(4, v)}>
             <Group wrap="nowrap" p="xs">
               <Text>OP4</Text>
             </Group>
           </Checkbox.Card>
-          <Checkbox.Card checked={isOpEnabled(5)}
+          <Checkbox.Card checked={isOpEnabled(enabledOps, 5)}
             className="customCheckBox" w='auto'
             onChange={(v) => handleEnabledOpsChanged(5, v)}>
             <Group wrap="nowrap" p="xs">
               <Text>OP5</Text>
             </Group>
           </Checkbox.Card>
-          <Checkbox.Card checked={isOpEnabled(6)}
+          <Checkbox.Card checked={isOpEnabled(enabledOps, 6)}
             className="customCheckBox" w='auto'
             onChange={(v) => handleEnabledOpsChanged(6, v)}>
             <Group wrap="nowrap" p="xs">
@@ -216,7 +217,9 @@ export function DXEVoiceEditor(props: {
           onValueChanged={(o) => setCurrentOp(o as opNumber)}/>
         </Group>
         
-        <DXEOpEditor op={currentOp} data={props.voiceParams}
+        <DXEOpEditor
+          op={currentOp}
+          data={props.voiceParams}
           isTimeEgMode={props.isTimeEgMode}
           onValueChanged={handleVoiceParamChanged} />
       </Stack>
@@ -301,12 +304,5 @@ export function DXEVoiceEditor(props: {
     const sysexData = buildParameterChangeSysex(
       'voice', 155, value, props.midiChannel);
     props.midi.sendMessage(sysexData);
-  }
-
-  function isOpEnabled(
-    opNumber: number // 1-6
-  ){
-      const bitMask = 0b1000000 >>> opNumber;
-      return (enabledOps & bitMask) > 0;
   }
 }

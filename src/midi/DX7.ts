@@ -88,3 +88,17 @@ export function buildAllNotesOffMessage(midiChannel: number) : number[] {
   // Control Change: all sounds off, poly mode
   return [0xB0 + midiChannel, 127, 0]
 }
+
+/**
+ * Determines whether an op is enabled based on the given data.
+ * @param enabledOps Parameter 155 format data.
+ * @param opNumber Operator 1-6
+ * @returns True iff specified operator is enabled.
+ */
+export function isOpEnabled(
+  enabledOps: number,
+  opNumber: number)
+{
+  const bitMask = 0b1000000 >>> opNumber;
+  return (enabledOps & bitMask) > 0;
+}

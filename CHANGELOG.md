@@ -1,6 +1,8 @@
 ## DX Edit Changelog
 
+
 * Added buttons for enabling/disabling operators.
+* Disabled operators are dimmed in the Algorithm Diagram.
 * Cleaner operator select buttons.
 * Added icons for LFO waveforms.
 * Fixed some layout issues.

@@ -1,4 +1,5 @@
 import { type algorithm, algorithms, algorithmMaxDimensions } from '../midi/AlgorithmData';
+import { isOpEnabled } from '../midi/DX7';
 import type { opNumber } from '../midi/VoiceParamData';
 
 /**
@@ -9,6 +10,7 @@ export default function DXEAlgorithmDiagram(props: {
   algNumber: number,
   isFixedWidth: boolean,
   currentOp?: opNumber,
+  enabledOps?: number, // same format as in DX7 Sysex param 155
   unitWidth?: number,
   unitHeight?: number,
   gap?: number,
@@ -23,6 +25,7 @@ export default function DXEAlgorithmDiagram(props: {
   const gap = props.gap || 10;
   const fontSize = props.fontSize || 14;
   const hasLabels = props.hasLabels;
+  const enabledOps = props.enabledOps || 0b111111;
   
   const a : algorithm = algorithms[props.algNumber];
   if (!a) {
@@ -48,9 +51,9 @@ export default function DXEAlgorithmDiagram(props: {
   let carrierXMax = 0;
 
   const fgCurrentOp = '#fff';
-  const fgModulator = '#0cf';
+  const fgModulator = '#8df';
   const bgModulator = '#046';
-  const fgCarrier = '#f7d';
+  const fgCarrier = '#f9e';
   const bgCarrier = '#604';
   const lineColor = '#ccc';
 
@@ -60,23 +63,30 @@ export default function DXEAlgorithmDiagram(props: {
     const x = gap + op.x * (unitX+gap);
     const y = height - (gap + op.y * (unitY+gap)) - unitY - gap;
     const outlineWidth = opNumber === props.currentOp ? 2 : 1;
-
     const strokeColor = opNumber === props.currentOp ? fgCurrentOp :
       (isCarrier ? fgCarrier : fgModulator);
+    const opEnabled = isOpEnabled(enabledOps, getOpNumber(opNumber));
+
+    opsSvg.push()
 
     // Box
-    opsSvg.push(<rect x={x} y={y} width={unitX} height={unitY} rx={4} ry={4}
+    const box = <rect x={x} y={y} width={unitX} height={unitY} rx={4} ry={4}
       stroke={strokeColor} strokeWidth={outlineWidth}
-      fill={isCarrier ? bgCarrier : bgModulator} key={opNumber}/>);
+      fill={isCarrier ? bgCarrier : bgModulator} key={opNumber}/>;
+    //opsSvg.push(box);
 
     // Label
+    let label = null;
     if (hasLabels) {
-      opsSvg.push(<text
+      label = <text
         x={x+halfX-fontSize/3} y={y+halfY+fontSize/3}
         fill={isCarrier ? fgCarrier : fgModulator}
         fontWeight='bold' fontSize={fontSize}
-        key={`text-${opNumber}`}>{getOpDigit(opNumber)}</text>);
+        key={`text-${opNumber}`}>{getOpDigit(opNumber)}</text>;
+      //opsSvg.push(label);
     }
+
+    opsSvg.push(<g style={{opacity: opEnabled ? 1.0 : 0.5 }}>{box}{label}</g>)
 
     // Connectors from each modulator
     for (const modulator of op.modulatedBy) {
@@ -135,5 +145,9 @@ export default function DXEAlgorithmDiagram(props: {
 
   function getOpDigit(op: string): string {
     return op.substring(2);
+  }
+
+  function getOpNumber(op:string) : number {
+    return Number(getOpDigit(op));
   }
 }
