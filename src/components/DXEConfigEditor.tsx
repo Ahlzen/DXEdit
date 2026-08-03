@@ -5,6 +5,7 @@ import { version } from '../../package.json';
 import { WebMidi } from '../midi/WebMidi.ts'
 import type { Preferences } from '../preferences';
 import { buildAllNotesOffMessage } from '../midi/DX7.ts';
+import dxedit_logo_w from '../assets/dxedit_logo_w.svg';
 
 export function DXEConfigEditor(props: {
   midi: WebMidi,
@@ -70,8 +71,6 @@ export function DXEConfigEditor(props: {
       </Button>
       </Group>
 
-      <Space h='lg' />
-      <Text size='sm'>DX Edit {version}</Text>
 
     </Stack>
 
@@ -86,6 +85,10 @@ export function DXEConfigEditor(props: {
           checked={props.isTimeEgMode}
           onChange={(v) => props.onEgModeChanged(v.currentTarget.checked)} />
       </Group>
+
+      <Space h='xl' />
+      <img src={dxedit_logo_w} alt="DX Edit" style={{ width: '300px', opacity: 0.3, }} />
+      <Text size='sm'>v{version}</Text>
 
     </Stack>
   </Group>

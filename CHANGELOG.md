@@ -1,6 +1,10 @@
 ## DX Edit Changelog
 
 
+
+* Added DX Edit logo.
+
+
 ### v0.5.0
 
 2026-07-29
