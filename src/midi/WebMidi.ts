@@ -34,7 +34,6 @@ export class WebMidi
   private verbose: boolean = true;
 
 
-
   ///// Initialization
 
   constructor()
@@ -166,10 +165,10 @@ export class WebMidi
   ///// MIDI Output
 
   sendMessage(data: Iterable<number>) {
-    if (!this._midiOut) return;
     if (this.verbose)
       console.log('Out: [' + toHexString(data) + ']');
-    this._midiOut.send(data);
+    if (this._midiOut)
+      this._midiOut.send(data);
   }
 
 

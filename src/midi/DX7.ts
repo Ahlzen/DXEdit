@@ -1,7 +1,8 @@
 // Features specific to the DX7 (and other DX/TX devices)
 
 import { START_OF_SYSEX, END_OF_SYSEX, YAMAHA_MANUFACTURER_ID } from './WebMidi'
-import { VoiceParamData, voiceNameLength } from './VoiceParamData.ts';
+//import { VoiceParamData, voiceNameLength } from './VoiceParamData.ts';
+import { VoiceData, voiceNameLength } from './VoiceEditorData.ts';
 
 const SUB_STATUS_BULK = 0x00;
 const SUB_STATUS_PARAMETER = 0x10; // 0x01 << 4
@@ -28,20 +29,20 @@ export function formatAlgorithm(n: number): string { return String(n+1); }
 ///// SysEx message builders
 
 export function buildOneVoiceBulkSysex(
-  voiceParams: VoiceParamData, midiChannel: number) : number[] {
+  voiceParams: VoiceData, midiChannel: number) : number[] {
   return [
     START_OF_SYSEX, 
     YAMAHA_MANUFACTURER_ID,
     SUB_STATUS_BULK + midiChannel,
     BULK_FORMAT_SINGLE_VOICE,
     0x01, 0x1b, // byte count MSB, LSB
-    ...voiceParams.getRawData(),
+    ...voiceParams.cloneRawData(),
     voiceParams.getChecksumByte(),
     END_OF_SYSEX];
 }
 
 export function buildVoiceNameChangeSysex(
-  voiceParams: VoiceParamData, midiChannel: number) : number[] {
+  voiceParams: VoiceData, midiChannel: number) : number[] {
   const data = [];
   const voiceNameBytes = voiceParams.getVoiceNameData();
   for (let i = 0; i < voiceNameLength; i++) {

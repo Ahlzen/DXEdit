@@ -1,14 +1,16 @@
 ## DX Edit Changelog
 
 
-
+* Added Multi-step Undo/Redo.
 * Added DX Edit logo.
+
+Internal
+* Factored out VoiceData / VoiceEditor logic.
 
 
 ### v0.5.0
 
 2026-07-29
-
 
 * Added buttons for enabling/disabling operators.
 * Disabled operators are dimmed in the Algorithm Diagram.

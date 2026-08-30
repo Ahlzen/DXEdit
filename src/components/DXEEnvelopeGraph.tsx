@@ -1,16 +1,18 @@
-import { egTypeOffsets, VoiceParamData, type egType } from "../midi/VoiceParamData";
+import { VoiceData, type egParam, type egType } from '../midi/VoiceEditorData.ts';
 
 export default function DXEEnvelopeGraph(props: {
   width: number,
   height: number,
-  data: VoiceParamData,
+  data: VoiceData,
   eg: egType,
   highlightSegment: number|undefined,
 })
 {
-  const getVal = (o: number) =>
-      props.data.getValueByOffset(
-        egTypeOffsets[props.eg] + o);
+  // const getVal = (o: number) =>
+  //     props.data.getValueByOffset(
+  //       egTypeOffsets[props.eg] + o);
+  const getVal = (param: egParam) =>
+    props.data.getEgValue(props.eg, param);
   const margin = 8;
   
   const x: number[] = Array<number>(8);
@@ -20,7 +22,7 @@ export default function DXEEnvelopeGraph(props: {
   const leadInOut = 8;
   const eWidth = props.width - 2*margin; // effective width
   const maxSegWidth = (eWidth-2*leadInOut) / 5;
-  const rates = [getVal(0), getVal(1), getVal(2), getVal(3)];
+  const rates = [getVal('R1'), getVal('R2'), getVal('R3'), getVal('R4')];
   x[0] = margin;
   x[1] = x[0] + leadInOut;
   x[2] = x[1] + maxSegWidth * (1-rates[0]/99); // attack
@@ -32,10 +34,10 @@ export default function DXEEnvelopeGraph(props: {
 
   // calculate y coordinates
   const eHeight = props.height - 2*margin; // effective height
-  const levels = [getVal(4), getVal(5), getVal(6), getVal(7)];
+  const levels = [getVal('L1'), getVal('L2'), getVal('L3'), getVal('L4')];
   const yScale = eHeight / 100;
   const yBase = props.height-margin;
-  const yOrigin = props.eg === 'pitch' ? props.height * 0.5 : yBase;
+  const yOrigin = props.eg === 'Pitch' ? props.height * 0.5 : yBase;
   y[0] = yBase - yScale*levels[3]; // L4 during key off
   y[1] = y[0];
   y[2] = yBase - yScale*levels[0]; // L1 (attack level)

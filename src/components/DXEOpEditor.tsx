@@ -1,29 +1,37 @@
-import { type opNumber, type VoiceParamData, opOffsets } from "../midi/VoiceParamData";
+//import { type opNumber, type VoiceParamData, opOffsets } from "../midi/VoiceParamData";
+import { type opNumber, type opParam, VoiceData, VoiceEditor } from '../midi/VoiceEditorData.ts';
 
 import DXEEnvelopeEditor from "./DXEEnvelopeEditor";
 import DXESlider from "./DXESlider";
 import DXERadioGroup from "./DXERadioGroup";
 
 export default function DXEOpEditor(props: {
-  data: VoiceParamData,
+  data: VoiceData,
+  editor: VoiceEditor,
   op: opNumber,
   isTimeEgMode: boolean,
-  onValueChanged: (offset: number, value: number, isChangeEnd: boolean) => void})
+  //onValueChanged: (offset: number, value: number, isChangeEnd: boolean) => void})
+  })
 {
   ///// State update
 
-  const getVal = (o: number) =>
-      props.data.getValueByOffset(opOffsets[props.op] + o);
-  const setVal = function(o: number) : ((n: number, isChangeEnd: boolean) => void) {
+  //const getVal = (o: number) =>
+  const getVal = (param: opParam) =>
+        //props.data.getValueByOffset(opOffsets[props.op] + o);
+    props.data.getOpValue(props.op, param);
+  const setVal = function(o: opParam) : ((n: number, isChangeEnd: boolean) => void) {
     return function(v: number, isChangeEnd: boolean) {
-      props.onValueChanged(opOffsets[props.op]+o, v, isChangeEnd);
+      //props.onValueChanged(opOffsets[props.op]+o, v, isChangeEnd);
+      props.editor.setOpValue(props.op, o, v, isChangeEnd);
     };
   }
-  const setValAsChangeEnd = function(o: number) : ((n: number) => void) {
+  const setValAsChangeEnd = function(o: opParam) : ((n: number) => void) {
     return function(v: number) {
-      props.onValueChanged(opOffsets[props.op]+o, v, true);
+      props.editor.setOpValue(props.op, o, v, true);
+      //props.onValueChanged(opOffsets[props.op]+o, v, true);
     };
   }
+  const isFixedFreq = () => getVal('Osc Mode') == 1;
 
   ///// Formatters
 
@@ -33,8 +41,8 @@ export default function DXEOpEditor(props: {
     return `${notes[n%12]} ${Math.floor((n-3)/12)}`;
   }
   function formatCoarseFreq(n: number) : string {
-    const isFixedFreq : boolean = getVal(17) == 1;
-    if (isFixedFreq) {
+    //const isFixedFreq : boolean = getVal('Osc Mode') == 1;
+    if (isFixedFreq()) {
       switch (n % 4) { // low 2 bits determine range:
         case 0: return "1-10 Hz";
         case 1: return "10-100 Hz";
@@ -48,12 +56,12 @@ export default function DXEOpEditor(props: {
     }
   }
   function formatFineFreq(n: number) : string {
-    const isFixedFreq : boolean = getVal(17) == 1;
-    if (isFixedFreq) {
+    //const isFixedFreq : boolean = getVal('Osc Mode') == 1;
+    if (isFixedFreq()) {
       // Freq(n) = coarseFactor * (10^0.01)^n
       let coarseFactor = 0;
       let decimals = 3;
-      switch (getVal(18) % 4) {
+      switch (getVal('Osc Freq Coarse') % 4) {
         case 0: coarseFactor = 1; decimals = 3; break;
         case 1: coarseFactor = 10; decimals = 2; break;
         case 2: coarseFactor = 100; decimals = 1; break;
@@ -79,83 +87,83 @@ export default function DXEOpEditor(props: {
   <div className="opEditor">
     <DXESlider
       title='Level'
-      selectedValue={getVal(16)}
+      selectedValue={getVal('Operator Output Level')}
       maxValue={99}
-      onValueChanged={setVal(16)} />
+      onValueChanged={setVal('Operator Output Level')} />
     <DXERadioGroup
       title="Osc mode"
       options={{'Ratio': 0, 'Fixed': 1}}
-      selectedValue={getVal(17)}
-      onValueChanged={setValAsChangeEnd(17)} />
+      selectedValue={getVal('Osc Mode')}
+      onValueChanged={setValAsChangeEnd('Osc Mode')} />
     <DXESlider
       title='Coarse'
-      selectedValue={getVal(18)}
+      selectedValue={getVal('Osc Freq Coarse')}
       maxValue={33}
-      onValueChanged={setVal(18)}
+      onValueChanged={setVal('Osc Freq Coarse')}
       valueFormatter={formatCoarseFreq} />
     <DXESlider
       title='Fine'
-      selectedValue={getVal(19)}
+      selectedValue={getVal('Osc Freq Fine')}
       maxValue={99}
-      onValueChanged={setVal(19)}
+      onValueChanged={setVal('Osc Freq Fine')}
       valueFormatter={formatFineFreq} />
     <DXESlider
       title='Detune'
-      selectedValue={getVal(20)}
+      selectedValue={getVal('Osc Detune')}
       maxValue={14}
-      onValueChanged={setVal(20)}
+      onValueChanged={setVal('Osc Detune')}
       valueFormatter={formatDetune} />
     
     <DXEEnvelopeEditor title="OP Envelope"
       data={props.data}
+      editor={props.editor}
       eg={props.op}
-      isTimeMode={props.isTimeEgMode}
-      onValueChanged={props.onValueChanged} />
+      isTimeMode={props.isTimeEgMode} />
     
     <h3>Keyboard Level Scaling</h3>
     <DXESlider
       title='L Depth'
-      selectedValue={getVal(9)}
+      selectedValue={getVal('Kbd Lev Scl L Depth')}
       maxValue={99}
-      onValueChanged={setVal(9)} />
+      onValueChanged={setVal('Kbd Lev Scl L Depth')} />
     <DXERadioGroup
       title="L Curve"
       options={{'-Lin': 0, '-Exp': 1, '+Exp': 2, '+Lin': 3}}
-      selectedValue={getVal(11)}
-      onValueChanged={setValAsChangeEnd(11)} />
+      selectedValue={getVal('Kbd Lev Scl L Curve')}
+      onValueChanged={setValAsChangeEnd('Kbd Lev Scl L Curve')} />
     <DXESlider
       title='Break pt'
-      selectedValue={getVal(8)}
+      selectedValue={getVal('Kbd Lev Scl Brk Pt')}
       maxValue={99}
-      onValueChanged={setVal(8)}
+      onValueChanged={setVal('Kbd Lev Scl Brk Pt')}
       valueFormatter={formatBreakpoint} />
     <DXESlider
       title='R Depth'
-      selectedValue={getVal(10)}
+      selectedValue={getVal('Kbd Lev Scl R Depth')}
       maxValue={99}
-      onValueChanged={setVal(10)} />
+      onValueChanged={setVal('Kbd Lev Scl R Depth')} />
     <DXERadioGroup
       title="R Curve"
       options={{'-Lin': 0, '-Exp': 1, '+Exp': 2, '+Lin': 3}}
-      selectedValue={getVal(12)}
-      onValueChanged={setValAsChangeEnd(12)} />
+      selectedValue={getVal('Kbd Lev Scl R Curve')}
+      onValueChanged={setValAsChangeEnd('Kbd Lev Scl R Curve')} />
     <br/>
 
     <DXESlider
       title='Kbd rate sc'
-      selectedValue={getVal(13)}
+      selectedValue={getVal('Kbd Rate Scaling')}
       maxValue={7}
-      onValueChanged={setVal(13)} />
+      onValueChanged={setVal('Kbd Rate Scaling')} />
     <DXESlider
-      title='Kbd mod sens'
-      selectedValue={getVal(14)}
+      title='Amp mod sens'
+      selectedValue={getVal('Amp Mod Sensitivity')}
       maxValue={3}
-      onValueChanged={setVal(14)} />
+      onValueChanged={setVal('Amp Mod Sensitivity')} />
     <DXESlider
       title='Kbd vel sens'
-      selectedValue={getVal(15)}
+      selectedValue={getVal('Key Vel Sensitivity')}
       maxValue={7}
-      onValueChanged={setVal(15)} />      
+      onValueChanged={setVal('Key Vel Sensitivity')} />      
   </div>
   );
 }

@@ -9,7 +9,7 @@ import './App.css';
 // MIDI / DX7 sysex
 import { WebMidi, START_OF_SYSEX, END_OF_SYSEX } from '../midi/WebMidi.ts'
 import { type performanceValues, getInitPerformanceParams } from '../midi/PerformanceParamData.ts';
-import { VoiceParamData } from '../midi/VoiceParamData.ts';
+import { VoiceData, VoiceEditor } from '../midi/VoiceEditorData.ts';
 
 // Components
 import { DXEConfigEditor } from './DXEConfigEditor.tsx';
@@ -36,8 +36,11 @@ export default function App()
   // Editor state
   const [perfParams, setPerfParams] = useState<performanceValues>(
     getInitPerformanceParams());
-  const [voiceParams, setVoiceParams] =
-    useState<VoiceParamData>(new VoiceParamData());
+  const [currentVoiceData, setCurrentVoiceData] = useState<VoiceData>(
+    new VoiceData());
+
+  const voiceEditor = useRef<VoiceEditor>(new VoiceEditor(
+    0, undefined, handleSendMidi, handleNewVoiceData));
 
   useEffect(() => {
     if (!midi.current.isInitialized) {
@@ -137,7 +140,7 @@ export default function App()
           onMidiInChanged={handleMidiInChanged}
           onMidiOutChanged={handleMidiOutChanged}
           onControllerInChanged={handleControllerInChanged}
-          onMidiChannelChanged={setMidiChannel}
+          onMidiChannelChanged={handleMidiChannelChanged}
           onEgModeChanged={handleEgModeChanged}
           />
       </Tabs.Panel>
@@ -152,11 +155,9 @@ export default function App()
 
       <Tabs.Panel value="edit">
         <DXEVoiceEditor
-          midi={midi.current}
-          midiChannel={midiChannel}
-          voiceParams={voiceParams}
           isTimeEgMode={isTimeEgMode}
-          onVoiceParamsChanged={setVoiceParams} />
+          data={currentVoiceData}
+          editor={voiceEditor.current} />
       </Tabs.Panel>
 
     </Tabs>
@@ -193,11 +194,28 @@ export default function App()
     prefs.current.setPrefs('isTimeEgMode', isTimeEgMode);
   }
 
+  function handleMidiChannelChanged(channel: number) {
+    setMidiChannel(channel);
+    prefs.current.setPrefs('midiChannel', channel);
+    voiceEditor.current.setMidiChannel(channel);
+  }
+
+
+  ///// Editor event handlers
+
+  function handleNewVoiceData(rawData: Uint8Array) {
+    console.log("App: handleNewVoiceData()");
+    setCurrentVoiceData(new VoiceData(rawData));
+  }
+
 
   ///// MIDI event handlers
 
-  function handleMidiIn(data: Uint8Array)
-  {
+  function handleSendMidi(data: Uint8Array) {
+    midi.current.sendMessage(data);
+  }
+
+  function handleMidiIn(data: Uint8Array) {
     //console.log("Received: [" + toHexString(data) + "]");
     if (data.length === 0) return;
 
@@ -208,16 +226,14 @@ export default function App()
     }
   }
 
-  function handleControllerIn(_data: Uint8Array)
-  {
+  function handleControllerIn(_data: Uint8Array) {
     //console.log("Controller in: [" + toHexString(data) + "]");
   }
 
 
   ///// Helpers
 
-  function updateMidiPorts()
-  {
+  function updateMidiPorts() {
     console.log("App: updateMidiPorts()");
     setMidiInPortNames(midi.current.getInNames());
     setMidiOutPortNames(midi.current.getOutNames());
