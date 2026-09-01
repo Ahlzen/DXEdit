@@ -8,6 +8,7 @@ import './App.css';
 
 // MIDI / DX7 sysex
 import { WebMidi, START_OF_SYSEX, END_OF_SYSEX } from '../midi/WebMidi.ts'
+import { isSysexMessage } from '../midi/DX7.ts';
 import { type performanceValues, getInitPerformanceParams } from '../midi/PerformanceParamData.ts';
 import { VoiceData, VoiceEditor } from '../midi/VoiceEditorData.ts';
 
@@ -166,7 +167,7 @@ export default function App()
   );
 
 
-  ///// UI Event handlers
+  ///// UI event handlers
 
   async function handleMidiInChanged(portName: string|null) {
     console.log("App: handleMidiInChanged(): " + portName);
@@ -215,18 +216,20 @@ export default function App()
     midi.current.sendMessage(data);
   }
 
-  function handleMidiIn(data: Uint8Array) {
+  function handleReceiveMidi(data: Uint8Array) {
     if (data.length === 0) return;
-
-    if (data[0] === START_OF_SYSEX &&
-      data.at(-1) === END_OF_SYSEX)
-    {
+    if (isSysexMessage(data)) {
       console.log(`Received sysex: ${data.length} bytes.`);
     }
   }
 
-  function handleControllerIn(_data: Uint8Array) {
-    //console.log("Controller in: [" + toHexString(data) + "]");
+  function handleMidiIn(data: Uint8Array) {
+    handleReceiveMidi(data);
+  }
+
+  function handleControllerIn(data: Uint8Array) {
+    handleReceiveMidi(data);
+    midi.current.sendMessage(data);
   }
 
 

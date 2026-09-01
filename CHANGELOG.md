@@ -1,11 +1,13 @@
 ## DX Edit Changelog
 
 
+* MIDI Echo (Controller In -> MIDI Out) works.
 * Added Multi-step Undo/Redo.
 * Added DX Edit logo.
 
 Internal
 * Factored out VoiceData / VoiceEditor logic.
+* Many minor cleanups and refactorings.
 
 
 ### v0.5.0
