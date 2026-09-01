@@ -183,7 +183,6 @@ export class VoiceData
   setEgValue(egType: egType, egParam: egParam, newValue: number) : VoiceData {
     const spec = egParamSpecs[egParam];
     const egOffset = egOffsets[egType];
-    const paramName = `${egType} Env ${egParam}`;
     return this.setValueByOffset(spec, egOffset, newValue);
   }
 
@@ -195,7 +194,6 @@ export class VoiceData
   setOpValue(opNumber: opNumber, opParam: opParam, newValue: number) : VoiceData {
     const spec = opParamSpecs[opParam];
     const opOffset = opOffsets[opNumber];
-    const paramName = `${opNumber} ${opParam}`;
     return this.setValueByOffset(spec, opOffset, newValue);
   }
 

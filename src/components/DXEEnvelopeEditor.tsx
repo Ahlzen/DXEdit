@@ -1,8 +1,7 @@
 import { Title, Stack, Group, Text } from '@mantine/core';
 import { useState } from "react";
-//import { egTypeOffsets, type egType, type VoiceParamData } from "../midi/VoiceParamData";
 import { VoiceEditor, VoiceData, isRateParam } from '../midi/VoiceEditorData.ts';
-import type { opNumber, egParam, egType } from '../midi/VoiceEditorData.ts'; 
+import type { egParam, egType } from '../midi/VoiceEditorData.ts'; 
 
 import DXEEnvelopeGraph from "./DXEEnvelopeGraph";
 import DXEKnob from './DXEKnob';
@@ -13,7 +12,6 @@ export default function DXEEnvelopeEditor(props: {
   editor: VoiceEditor,
   eg: egType,
   isTimeMode: boolean
-  //onValueChanged: (offset: number, value: number, isChangeEnd: boolean) => void })
   })
 {
   // Highlighted envelope parameter (0-7)
@@ -21,31 +19,21 @@ export default function DXEEnvelopeEditor(props: {
 
   const getVal = (param: egParam) => {
     const rawValue =
-      //props.data.getValueByOffset(
-      //  egTypeOffsets[props.eg] + offset);
       props.data.getEgValue(props.eg, param);
 
     if (props.isTimeMode) {
-      //return offset < 4 ? 99-rawValue : rawValue;
       return isRateParam(param) ? 99-rawValue : rawValue;
     } else {
       return rawValue
     }
   }
     
-  //const setVal = (offset: number, val: number, isChangeEnd: boolean) => {
   const setVal = (param: egParam, val: number, isChangeEnd: boolean) => {
-    //const fullOffset = egTypeOffsets[props.eg]+offset;
-    //if (props.isTimeMode) {
-    //  props.onValueChanged(fullOffset, offset < 4 ? 99-val : val, isChangeEnd);
-    //} else {
-    //  props.onValueChanged(fullOffset, val, isChangeEnd);
-    //}
     if (props.isTimeMode) {
       props.editor.setEgValue(props.eg, param, isRateParam(param) ? 99-val : val, isChangeEnd);
     }
     else {
-
+      props.editor.setEgValue(props.eg, param, val, isChangeEnd);
     }
   }
 

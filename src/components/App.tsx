@@ -7,7 +7,7 @@ import { Preferences } from '../preferences';
 import './App.css';
 
 // MIDI / DX7 sysex
-import { WebMidi, START_OF_SYSEX, END_OF_SYSEX } from '../midi/WebMidi.ts'
+import { WebMidi } from '../midi/WebMidi.ts'
 import { isSysexMessage } from '../midi/DX7.ts';
 import { type performanceValues, getInitPerformanceParams } from '../midi/PerformanceParamData.ts';
 import { VoiceData, VoiceEditor } from '../midi/VoiceEditorData.ts';
