@@ -1,7 +1,6 @@
 // Features specific to the DX7 (and other DX/TX devices)
 
 import { START_OF_SYSEX, END_OF_SYSEX, YAMAHA_MANUFACTURER_ID } from './WebMidi'
-//import { VoiceParamData, voiceNameLength } from './VoiceParamData.ts';
 import { VoiceData, voiceNameLength } from './VoiceEditorData.ts';
 
 const SUB_STATUS_BULK = 0x00;
@@ -102,4 +101,10 @@ export function isOpEnabled(
 {
   const bitMask = 0b1000000 >>> opNumber;
   return (enabledOps & bitMask) > 0;
+}
+
+export function isSysexMessage(data: Uint8Array) : boolean {
+  return data.length > 2 &&
+    data[0] === START_OF_SYSEX &&
+    data.at(-1) === END_OF_SYSEX;
 }

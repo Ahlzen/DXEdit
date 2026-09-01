@@ -23,7 +23,7 @@
 - [x] Color code carriers/modulators (similar to OpSix)?
 - [ ] Algorithm structure chart: levels, freq, feedback, EGs. Select/solo/mute.
 - [ ] Responsive UI (Group)
-- [ ] Implement history/undo/redo.
+- [x] Implement history/undo/redo.
 - [ ] Config: Add instructions for setting up DX7 (and other devices)
 - [ ] UI: Create own icons for tabs etc.
 - [ ] UI: Fix color scheme
@@ -36,7 +36,6 @@
 - [ ] Visualize LFO, Keyboard Level Scaling
 - [ ] Env Editor: Show values in actual units (dB, seconds)
 - [x] Env Editor: Support Rate/Level envelopes (prefs)
-- [ ] Edit current program params and name
 - [ ] Send/receive full voice/bank sysex
 - [ ] Send individual programs
 - [ ] Librarian features. Save and remix banks

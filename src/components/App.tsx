@@ -166,7 +166,7 @@ export default function App()
   );
 
 
-  // ///// UI Event handlers
+  ///// UI Event handlers
 
   async function handleMidiInChanged(portName: string|null) {
     console.log("App: handleMidiInChanged(): " + portName);
@@ -216,7 +216,6 @@ export default function App()
   }
 
   function handleMidiIn(data: Uint8Array) {
-    //console.log("Received: [" + toHexString(data) + "]");
     if (data.length === 0) return;
 
     if (data[0] === START_OF_SYSEX &&
