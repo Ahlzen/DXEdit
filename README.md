@@ -68,7 +68,11 @@ npm run dev
 ```
 Build dist package under `dist/`:
 ```
-npm build
+npm run build
+```
+Run unit tests:
+```
+npm run test
 ```
 
 
