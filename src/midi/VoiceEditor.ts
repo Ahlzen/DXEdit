@@ -121,6 +121,7 @@ export class VoiceEditor
       this.currentStep--;
       const newData = this.getCurrentData();
       this.onVoiceDataChanged?.(newData.cloneRawData());
+      this.sendCurrentData();
     }
   }
 
@@ -129,6 +130,7 @@ export class VoiceEditor
       this.currentStep++;
       const newData = this.getCurrentData();
       this.onVoiceDataChanged?.(newData.cloneRawData());
+      this.sendCurrentData();
     }
   }
 
