@@ -1,4 +1,4 @@
-import { VoiceData, type egParam, type egType } from '../midi/VoiceEditorData.ts';
+import { VoiceData, type egParam, type egType } from '../midi/VoiceData.ts';
 
 export default function DXEEnvelopeGraph(props: {
   width: number,

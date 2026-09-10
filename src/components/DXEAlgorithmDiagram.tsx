@@ -1,6 +1,6 @@
 import { type algorithm, algorithms, algorithmMaxDimensions } from '../midi/AlgorithmData';
 import { isOpEnabled } from '../midi/DX7';
-import type { opNumber } from '../midi/VoiceEditorData';
+import type { opNumber } from '../midi/VoiceData';
 
 /**
  * Component that renders an SVG diagram of the specified DX7 algorithm.

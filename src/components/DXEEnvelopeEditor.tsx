@@ -1,7 +1,8 @@
 import { Title, Stack, Group, Text } from '@mantine/core';
 import { useState } from "react";
-import { VoiceEditor, VoiceData, isRateParam } from '../midi/VoiceEditorData.ts';
-import type { egParam, egType } from '../midi/VoiceEditorData.ts'; 
+import { VoiceData, isRateParam } from '../midi/VoiceData.ts';
+import { VoiceEditor } from '../midi/VoiceEditor.ts';
+import type { egParam, egType } from '../midi/VoiceData.ts'; 
 
 import DXEEnvelopeGraph from "./DXEEnvelopeGraph";
 import DXEKnob from './DXEKnob';

@@ -1,7 +1,7 @@
 // Features specific to the DX7 (and other DX/TX devices)
 
 import { START_OF_SYSEX, END_OF_SYSEX, YAMAHA_MANUFACTURER_ID } from './WebMidi'
-import { VoiceData, voiceNameLength } from './VoiceEditorData.ts';
+import { VoiceData, voiceNameLength } from './VoiceData.ts';
 
 const SUB_STATUS_BULK = 0x00;
 const SUB_STATUS_PARAMETER = 0x10; // 0x01 << 4

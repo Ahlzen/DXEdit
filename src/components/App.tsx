@@ -1,16 +1,19 @@
 import '@mantine/core/styles.css';
-import { createTheme, MantineProvider, Stack, Tabs, Title } from '@mantine/core';
+import { MantineProvider, Tabs } from '@mantine/core';
 import { GearIcon, FadersHorizontalIcon, PianoKeysIcon } from '@phosphor-icons/react';
+import { theme } from '../theme.tsx';
 
 import { useState, useRef, useEffect } from 'react';
 import { Preferences } from '../preferences';
+
 import './App.css';
 
 // MIDI / DX7 sysex
 import { WebMidi } from '../midi/WebMidi.ts'
 import { isSysexMessage } from '../midi/DX7.ts';
 import { type performanceValues, getInitPerformanceParams } from '../midi/PerformanceParamData.ts';
-import { VoiceData, VoiceEditor } from '../midi/VoiceEditorData.ts';
+import { VoiceData } from '../midi/VoiceData.ts';
+import { VoiceEditor } from '../midi/VoiceEditor.ts';
 
 // Components
 import { DXEConfigEditor } from './DXEConfigEditor.tsx';
@@ -67,104 +70,6 @@ export default function App()
       );
     }
   });
-
-  // Mantine theme
-  const theme = createTheme({
-    focusRing: 'always',
-    scale: 1.0,
-    fontSmoothing: true,
-    defaultRadius: 'sm',
-    cursorType: 'pointer',
-    spacing: {
-      // reduce spacing a bit compared to default
-      xs: '0.2rem',
-      sm: '0.5rem',
-      md: '0.7rem',
-      lg: '1.5rem',
-      xl: '2.5rem'
-    },
-    components: {
-      Stack: Stack.extend( {
-        defaultProps: {
-          gap: 'xs'
-        }
-      }),
-      Title: Title.extend({
-        defaultProps: {
-          mt: 'lg'
-        }
-      }),
-    },
-    headings: {
-      sizes: {
-        h1: { fontSize: '2rem'},
-        h2: { fontSize: '1.3rem'},
-        h3: { fontSize: '1rem'},
-      }
-    },
-  });
-
-
-  return (
-    <MantineProvider
-      theme={theme}
-      defaultColorScheme='dark'
-      classNamesPrefix='mantine'>
-
-    <title>DX Edit</title>
-
-    <Tabs defaultValue="settings">
-
-      <Tabs.List>
-        <Tabs.Tab value="settings" leftSection={<GearIcon size={16} />}>
-          Settings
-        </Tabs.Tab>
-        <Tabs.Tab value="performance" leftSection={<PianoKeysIcon size={16} />}>
-          Performance Parameters
-        </Tabs.Tab>
-        <Tabs.Tab value="edit" leftSection={<FadersHorizontalIcon size={16} />}>
-          Voice Editor
-        </Tabs.Tab>
-      </Tabs.List>
-
-      <Tabs.Panel value="settings">
-        <DXEConfigEditor
-          midi={midi.current}
-          prefs={prefs.current}
-          midiInPortNames={midiInPortNames}
-          midiOutPortNames={midiOutPortNames}
-          midiIn={midiIn}
-          midiOut={midiOut}
-          controllerIn={controllerIn}
-          midiChannel={midiChannel}
-          isTimeEgMode={isTimeEgMode}
-          onMidiInChanged={handleMidiInChanged}
-          onMidiOutChanged={handleMidiOutChanged}
-          onControllerInChanged={handleControllerInChanged}
-          onMidiChannelChanged={handleMidiChannelChanged}
-          onEgModeChanged={handleEgModeChanged}
-          />
-      </Tabs.Panel>
-
-      <Tabs.Panel value="performance">
-        <DEXPerformanceEditor
-          midi={midi.current}
-          midiChannel={midiChannel}
-          perfParams={perfParams}
-          onPerfParamsChanged={setPerfParams} />
-      </Tabs.Panel>
-
-      <Tabs.Panel value="edit">
-        <DXEVoiceEditor
-          isTimeEgMode={isTimeEgMode}
-          data={currentVoiceData}
-          editor={voiceEditor.current} />
-      </Tabs.Panel>
-
-    </Tabs>
-
-    </MantineProvider>
-  );
 
 
   ///// UI event handlers
@@ -240,6 +145,68 @@ export default function App()
     setMidiInPortNames(midi.current.getInNames());
     setMidiOutPortNames(midi.current.getOutNames());
   }
+
+
+  return (
+    <MantineProvider
+      theme={theme}
+      defaultColorScheme='dark'
+      classNamesPrefix='mantine'>
+
+    <title>DX Edit</title>
+
+    <Tabs defaultValue="settings">
+
+      <Tabs.List>
+        <Tabs.Tab value="settings" leftSection={<GearIcon size={16} />}>
+          Settings
+        </Tabs.Tab>
+        <Tabs.Tab value="performance" leftSection={<PianoKeysIcon size={16} />}>
+          Performance Parameters
+        </Tabs.Tab>
+        <Tabs.Tab value="edit" leftSection={<FadersHorizontalIcon size={16} />}>
+          Voice Editor
+        </Tabs.Tab>
+      </Tabs.List>
+
+      <Tabs.Panel value="settings">
+        <DXEConfigEditor
+          midi={midi.current}
+          prefs={prefs.current}
+          midiInPortNames={midiInPortNames}
+          midiOutPortNames={midiOutPortNames}
+          midiIn={midiIn}
+          midiOut={midiOut}
+          controllerIn={controllerIn}
+          midiChannel={midiChannel}
+          isTimeEgMode={isTimeEgMode}
+          onMidiInChanged={handleMidiInChanged}
+          onMidiOutChanged={handleMidiOutChanged}
+          onControllerInChanged={handleControllerInChanged}
+          onMidiChannelChanged={handleMidiChannelChanged}
+          onEgModeChanged={handleEgModeChanged}
+          />
+      </Tabs.Panel>
+
+      <Tabs.Panel value="performance">
+        <DEXPerformanceEditor
+          midi={midi.current}
+          midiChannel={midiChannel}
+          perfParams={perfParams}
+          onPerfParamsChanged={setPerfParams} />
+      </Tabs.Panel>
+
+      <Tabs.Panel value="edit">
+        <DXEVoiceEditor
+          isTimeEgMode={isTimeEgMode}
+          data={currentVoiceData}
+          editor={voiceEditor.current} />
+      </Tabs.Panel>
+
+    </Tabs>
+
+    </MantineProvider>
+  );
 }
 
 

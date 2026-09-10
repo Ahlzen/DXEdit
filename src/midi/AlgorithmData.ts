@@ -1,4 +1,4 @@
-import type { opNumber } from './VoiceEditorData';
+import type { opNumber } from './VoiceData';
 
 /**
  * Describes an operator (carrier or modulator) and its relationship

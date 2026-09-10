@@ -1,5 +1,6 @@
-//import { type opNumber, type VoiceParamData, opOffsets } from "../midi/VoiceParamData";
-import { type opNumber, type opParam, VoiceData, VoiceEditor } from '../midi/VoiceEditorData.ts';
+import type { opNumber, opParam } from '../midi/VoiceData.ts';
+import { VoiceData } from '../midi/VoiceData.ts';
+import { VoiceEditor } from '../midi/VoiceEditor.ts';
 
 import DXEEnvelopeEditor from "./DXEEnvelopeEditor";
 import DXESlider from "./DXESlider";
@@ -9,26 +10,20 @@ export default function DXEOpEditor(props: {
   data: VoiceData,
   editor: VoiceEditor,
   op: opNumber,
-  isTimeEgMode: boolean,
-  //onValueChanged: (offset: number, value: number, isChangeEnd: boolean) => void})
-  })
+  isTimeEgMode: boolean})
 {
   ///// State update
 
-  //const getVal = (o: number) =>
   const getVal = (param: opParam) =>
-        //props.data.getValueByOffset(opOffsets[props.op] + o);
     props.data.getOpValue(props.op, param);
   const setVal = function(o: opParam) : ((n: number, isChangeEnd: boolean) => void) {
     return function(v: number, isChangeEnd: boolean) {
-      //props.onValueChanged(opOffsets[props.op]+o, v, isChangeEnd);
       props.editor.setOpValue(props.op, o, v, isChangeEnd);
     };
   }
   const setValAsChangeEnd = function(o: opParam) : ((n: number) => void) {
     return function(v: number) {
       props.editor.setOpValue(props.op, o, v, true);
-      //props.onValueChanged(opOffsets[props.op]+o, v, true);
     };
   }
   const isFixedFreq = () => getVal('Osc Mode') == 1;
@@ -41,7 +36,6 @@ export default function DXEOpEditor(props: {
     return `${notes[n%12]} ${Math.floor((n-3)/12)}`;
   }
   function formatCoarseFreq(n: number) : string {
-    //const isFixedFreq : boolean = getVal('Osc Mode') == 1;
     if (isFixedFreq()) {
       switch (n % 4) { // low 2 bits determine range:
         case 0: return "1-10 Hz";
@@ -56,9 +50,7 @@ export default function DXEOpEditor(props: {
     }
   }
   function formatFineFreq(n: number) : string {
-    //const isFixedFreq : boolean = getVal('Osc Mode') == 1;
     if (isFixedFreq()) {
-      // Freq(n) = coarseFactor * (10^0.01)^n
       let coarseFactor = 0;
       let decimals = 3;
       switch (getVal('Osc Freq Coarse') % 4) {

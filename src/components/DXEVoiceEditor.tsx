@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { ArrowArcLeftIcon, ArrowArcRightIcon } from '@phosphor-icons/react';
 
-
 import { Button, Stack, Group, TextInput, Title, Space, Text, Modal, Checkbox } from '@mantine/core';
 import DXESlider from './DXESlider.tsx';
 import DXEEnvelopeEditor from './DXEEnvelopeEditor.tsx';
@@ -13,8 +12,9 @@ import DXEAlgorithmPicker from './DXEAlgorithmPicker.tsx';
 import DXECustomRadioButtons from './DXECustomRadioButtons.tsx';
 
 import { formatTranspose, formatAlgorithm, isOpEnabled } from '../midi/DX7.ts';
-import { VoiceEditor, VoiceData } from '../midi/VoiceEditorData.ts';
-import type { opNumber, commonVoiceParam } from '../midi/VoiceEditorData.ts'; 
+import { VoiceData } from '../midi/VoiceData.ts';
+import { VoiceEditor } from '../midi/VoiceEditor.ts';
+import type { opNumber, commonVoiceParam } from '../midi/VoiceData.ts'; 
 
 // LFO waveform images
 import wf_tri from '../assets/wf-tri.svg';
@@ -42,6 +42,55 @@ export function DXEVoiceEditor(props: {
 
   const undoLabel = props.editor.undoLabel();
   const redoLabel = props.editor.redoLabel();
+
+
+  ///// Event handlers
+
+  function handleInitVoice() {
+
+    props.editor.initializeVoice();
+    enableAllOps();
+  }
+
+  function handleSendAll() {
+    console.log("DXEVoiceEditor: handleSendAll()");
+    props.editor.sendCurrentData();
+  }
+
+  function handleUpdateVoiceName(voiceName: string, isChangeEnd: boolean) {
+    console.log("DXEVoiceEditor: handleUpdatePatchName(): " + voiceName);
+    props.editor.setVoiceName(voiceName, isChangeEnd);
+  }
+
+  function handleCommonVoiceParamChanged(
+    parameter: commonVoiceParam,
+    value: number,
+    isChangeEnd: boolean)
+  {
+    console.log(`DXEVoiceEditor: handleCommonVoiceParamChanged(): ${parameter} ${value}`);
+    props.editor.setCommonValue(parameter, value, isChangeEnd);
+  }
+
+  function handleEnabledOpsChanged(
+    opNumber: number, // 1-6
+    checked: boolean)
+  {
+    let value = enabledOps;
+    const bitMask = 0b1000000 >>> opNumber;
+    if (checked) {
+      value |= bitMask;
+    } else {
+      value &= (~bitMask);
+    }
+    setEnabledOps(value);
+    props.editor.sendEnabledOpsData(value);
+  }
+
+  function enableAllOps() {
+    setEnabledOps(0b111111);
+    props.editor.sendEnabledOpsData(0b111111);
+  }
+
 
   return (
     <>
@@ -257,52 +306,4 @@ export function DXEVoiceEditor(props: {
     </Modal>
     </>
   );
-
-
-  ///// Event handlers
-
-  function handleInitVoice() {
-
-    props.editor.initializeVoice();
-    enableAllOps();
-  }
-
-  function handleSendAll() {
-    console.log("DXEVoiceEditor: handleSendAll()");
-    props.editor.sendCurrentData();
-  }
-
-  function handleUpdateVoiceName(voiceName: string, isChangeEnd: boolean) {
-    console.log("DXEVoiceEditor: handleUpdatePatchName(): " + voiceName);
-    props.editor.setVoiceName(voiceName, isChangeEnd);
-  }
-
-  function handleCommonVoiceParamChanged(
-    parameter: commonVoiceParam,
-    value: number,
-    isChangeEnd: boolean)
-  {
-    console.log(`DXEVoiceEditor: handleCommonVoiceParamChanged(): ${parameter} ${value}`);
-    props.editor.setCommonValue(parameter, value, isChangeEnd);
-  }
-
-  function handleEnabledOpsChanged(
-    opNumber: number, // 1-6
-    checked: boolean)
-  {
-    let value = enabledOps;
-    const bitMask = 0b1000000 >>> opNumber;
-    if (checked) {
-      value |= bitMask;
-    } else {
-      value &= (~bitMask);
-    }
-    setEnabledOps(value);
-    props.editor.sendEnabledOpsData(value);
-  }
-
-  function enableAllOps() {
-    setEnabledOps(0b111111);
-    props.editor.sendEnabledOpsData(0b111111);
-  }
 }
