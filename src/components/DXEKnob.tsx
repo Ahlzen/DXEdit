@@ -18,7 +18,7 @@ export default function DXEKnob(props: {
     if (!dragging) {
       liveValueRef.current = props.value;
     }
-  }, [props.value]);
+  }, [props.value, dragging]);
 
   const commitValue = (nextValue: number, isChangeEnd: boolean) => {
     const clampedValue = clamp(nextValue, props.min, props.max);

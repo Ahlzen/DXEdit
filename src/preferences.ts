@@ -14,7 +14,7 @@ export class Preferences {
 
   ///// Getting and setting preferences
 
-  setPrefs(name: string, value: any): void {
+  setPrefs<T>(name: string, value: T): void {
     const key = this.prefix + '.' + name;
     const json = JSON.stringify(value);
     if (this.storage) {
@@ -26,7 +26,7 @@ export class Preferences {
     }
   }
   
-  getPrefs(name: string) : any {
+  getPrefs<T>(name: string): T | null {
     const key = this.prefix + '.' + name;
     let str: string;
     if (this.storage) {
@@ -39,7 +39,7 @@ export class Preferences {
         return null;
       str = cookieData;
     }
-    return JSON.parse(str);
+    return JSON.parse(str) as T;
   }
 
 
