@@ -1,7 +1,9 @@
+[![Build](https://github.com/Ahlzen/DXEdit/actions/workflows/build.yml/badge.svg)](https://github.com/Ahlzen/DXEdit/actions/workflows/build.yml) [![Tests](https://github.com/Ahlzen/DXEdit/actions/workflows/test.yml/badge.svg)](https://github.com/Ahlzen/DXEdit/actions/workflows/test.yml)
+
+
 # DX Edit
 
 Browser based editor and utility for Yamaha DX / TX and similar synthesizers.
-
 
 **Try it [here](https://dx.ahlzen.com/)**.
 
