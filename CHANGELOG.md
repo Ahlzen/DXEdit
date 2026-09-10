@@ -8,6 +8,7 @@
 Internal
 * Factored out VoiceData / VoiceEditor logic.
 * Many minor cleanups and refactorings.
+* Added unit tests.
 
 
 ### v0.5.0
