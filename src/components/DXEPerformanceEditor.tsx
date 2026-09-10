@@ -5,7 +5,7 @@ import DXEPerformanceControlEditor from './DXEPerformanceControlEditor.tsx';
 
 import { WebMidi } from '../midi/WebMidi.ts'
 import { type performanceParam, type performanceValues,
-  performanceParamSpecs } from '../midi/PerformanceParamData.ts';
+  performanceParamSpecs } from '../midi/performanceParamData.ts';
 import { formatSemitones, buildParameterChangeSysex } from '../midi/DX7.ts';
 
 export function DEXPerformanceEditor(props: {

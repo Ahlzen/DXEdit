@@ -11,7 +11,7 @@ import './App.css';
 // MIDI / DX7 sysex
 import { WebMidi } from '../midi/WebMidi.ts'
 import { isSysexMessage } from '../midi/DX7.ts';
-import { type performanceValues, getInitPerformanceParams } from '../midi/PerformanceParamData.ts';
+import { type performanceValues, getInitPerformanceParams } from '../midi/performanceParamData.ts';
 import { VoiceData } from '../midi/VoiceData.ts';
 import { VoiceEditor } from '../midi/VoiceEditor.ts';
 

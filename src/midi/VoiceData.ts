@@ -1,4 +1,4 @@
-import { getInitVoiceData } from './InitVoiceData.ts';
+import { getInitVoiceData } from './initVoiceData.ts';
 
 ///// Voice parameters
 

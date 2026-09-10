@@ -1,6 +1,6 @@
 import type { egParam, egType, opNumber, opParam, commonVoiceParam } from './VoiceData.ts';
 import { VoiceData, commonVoiceParamSpecs, egParamSpecs, opParamSpecs, opOffsets, egOffsets } from './VoiceData.ts';
-import { getInitVoiceData } from './InitVoiceData.ts';
+import { getInitVoiceData } from './initVoiceData.ts';
 import { buildOneVoiceBulkSysex, buildParameterChangeSysex, buildVoiceNameChangeSysex } from './DX7.ts';
 
 
