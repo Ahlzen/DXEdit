@@ -5,7 +5,6 @@ import { getInitVoiceData } from './initVoiceData.ts';
 // NOTE: For consistency, parameter names and abbreviations
 // are used verbatim from "Yamaha DX7 Sysex Format.txt". (see /docs)
 
-
 export type commonVoiceParam = 
   'Algorithm' |
   'Feedback' |
@@ -38,6 +37,20 @@ export type egParam = 'R1' | 'R2' | 'R3' | 'R4' | 'L1' | 'L2' | 'L3' | 'L4';
 export function isRateParam(param: egParam) : boolean {
   return param === 'R1' || param === 'R2' || param === 'R3' || param === 'R4';
 }
+
+
+///// Voice object types 
+
+type commonVoiceValues = {[param in commonVoiceParam]: number};
+type egValues = {[param in egParam]: number};
+type opValues = {[param in opParam]: number} & {EG: egValues};
+
+export type voiceValues =
+  commonVoiceValues &
+  { 'Pitch EG': egValues } &
+  { 'Voice Name': string; } &
+  { [op in opNumber]: opValues };
+
 
 
 ///// Voice parameter specs
@@ -137,6 +150,50 @@ export class VoiceData
     sum &= 0x7f;
     return (128 - sum) & 0x7f; // low 7 bits of 2s complement
   }
+
+
+  ///// Formatting
+
+  private egToObject(eg: egType) : egValues {
+    const obj: egValues = {} as egValues;
+    for (const param in egParamSpecs) {
+      obj[param as egParam] = this.getEgValue(eg, param as egParam);
+    }
+    return obj;
+  }
+
+  private opToObject(op: opNumber) : opValues {
+    const obj: opValues = {} as opValues;
+    for (const param in opParamSpecs) {
+      obj[param as opParam] = this.getOpValue(op, param as opParam);
+    }
+    obj['EG'] = this.egToObject(op);
+    return obj;
+  }
+
+  toObject(): object {
+    const obj: voiceValues = {} as voiceValues;
+
+    // Common parameters
+    for (const param in commonVoiceParamSpecs) {
+      obj[param as commonVoiceParam] =
+        this.getCommonValue(param as commonVoiceParam);
+    }
+    obj['Pitch EG'] = this.egToObject('Pitch');
+    obj['Voice Name'] = this.getVoiceName();
+    // OP1-OP6
+    for (const op of Object.keys(opOffsets)) {
+       obj[op as opNumber] = this.opToObject(op as opNumber);
+    }
+    return obj;
+  }
+
+  toJSON(): string {
+    return JSON.stringify(this.toObject(), null, 2);
+  }
+
+
+
 
 
   ///// Getting/setting parameter values
