@@ -118,6 +118,14 @@ export const voiceNameLength = 10;
 export const voiceParamDataLength = 155;
 
 
+/**
+ * Immutable class representing a single DX7 voice.
+ * Internally the voice data is stored in the same format as the
+ * DX7 single-voice bulk data (155 bytes).
+ * 
+ * As the class is designed to be immutable, changes to parameter
+ * values will return a new VoiceData instance.
+ */
 export class VoiceData
 {
   /**
@@ -171,9 +179,8 @@ export class VoiceData
     return obj;
   }
 
-  toObject(): object {
+  toObject(): voiceValues {
     const obj: voiceValues = {} as voiceValues;
-
     // Common parameters
     for (const param in commonVoiceParamSpecs) {
       obj[param as commonVoiceParam] =
@@ -193,8 +200,57 @@ export class VoiceData
   }
 
 
+  ///// Parsing
 
+  // TODO: Make these static
+  // TODO: Add well defined error handling (e.g. parsing invalid JSON, missing parameters, invalid parameter values, etc.)
 
+  private verifyValue<T extends object>(obj: T, param: keyof T, type: string | null) : void {
+    if (!obj.hasOwnProperty(param)) {
+      throw new Error(`Missing parameter: ${String(param)}`);
+    }
+    if (type && typeof(obj[param]) !== type) {
+      throw new Error(`Invalid parameter: ${String(param)}. Must be ${type}.`);
+    }
+  }
+
+  private parseEgValues(eg: egType, values: egValues) : void {
+    for (const param in egParamSpecs) {
+      this.verifyValue(values, param as egParam, 'number');
+      this.setEgValue(eg, param as egParam, values[param as egParam]);
+    }
+  }
+
+  private parseOpValues(op: opNumber, values: opValues) : void {
+    for (const param in opParamSpecs) {
+      this.verifyValue(values, param as opParam, 'number');
+      this.setOpValue(op, param as opParam, values[param as opParam]);
+    }
+    this.parseEgValues(op, values['EG']);
+  }
+
+  parseObject(values: voiceValues) : void {
+    // Common parameters
+    for (const param in commonVoiceParamSpecs) {
+      this.verifyValue(values, param as commonVoiceParam, 'number');
+      this.setCommonValue(param as commonVoiceParam, values[param as commonVoiceParam]);
+    }
+    this.verifyValue(values, 'Pitch EG', 'object');
+    this.parseEgValues('Pitch', values['Pitch EG']);
+    this.verifyValue(values, 'Voice Name', 'string');
+    this.setVoiceName(values['Voice Name']);
+    // OP1-OP6
+    for (const op of Object.keys(opOffsets)) {
+      this.verifyValue(values, op as opNumber, 'object');
+      this.parseOpValues(op as opNumber, values[op as opNumber]);
+    }
+  }
+
+  parseJSON(json: string) : void {
+    const values: voiceValues = JSON.parse(json);
+    this.parseObject(values);
+  }
+ 
 
   ///// Getting/setting parameter values
 

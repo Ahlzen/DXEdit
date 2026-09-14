@@ -44,3 +44,64 @@ test("Format init voice data", () => {
   expect(json).toBeDefined();
   console.log(json);
 });
+
+
+///// Parsing
+
+test("Format and parse voice data", () => {
+  const initData: Uint8Array = getInitVoiceData();
+  const voiceData = new VoiceData(initData);
+  
+  // Format object
+  const obj = voiceData.toObject();
+  const json = voiceData.toJSON();
+
+  // Parse data
+  const newVoiceDataFromObject = new VoiceData();
+  newVoiceDataFromObject.parseJSON(json);
+
+  // Check that the serialized+deserialized data matches the original
+  expect(newVoiceDataFromObject.cloneRawData()).toEqual(initData);
+});
+
+test("Parse object with missing or invalid data", () => {
+  
+  const newVoiceData = new VoiceData();
+
+  let obj = new VoiceData().toObject();
+  delete (obj as any)['Algorithm']; // Algorithm is required
+  expect(() => newVoiceData.parseObject(obj)).toThrow();
+
+  obj = new VoiceData().toObject();
+  (obj as any)['Algorithm'] = "invalid"; // Algorithm must be a number
+  expect(() => newVoiceData.parseObject(obj)).toThrow();
+
+  obj = new VoiceData().toObject();
+  delete (obj as any)['Pitch EG']; // Pitch EG is required
+  expect(() => newVoiceData.parseObject(obj)).toThrow();
+
+  obj = new VoiceData().toObject();
+  (obj['Pitch EG'] as any).L1 = "invalid"; // Pitch EG L1 must be a number
+  expect(() => newVoiceData.parseObject(obj)).toThrow();
+
+  obj = new VoiceData().toObject();
+  delete (obj as any)['Voice Name']; // Voice Name is required
+  expect(() => newVoiceData.parseObject(obj)).toThrow();
+
+  obj = new VoiceData().toObject();
+  (obj as any)['Voice Name'] = 123; // Voice Name must be a string
+  expect(() => newVoiceData.parseObject(obj)).toThrow();
+  
+  obj = new VoiceData().toObject();
+  delete (obj as any)['OP1']; // OP1 is required
+  expect(() => newVoiceData.parseObject(obj)).toThrow();
+
+  obj = new VoiceData().toObject();
+  (obj['OP1'] as any)["Operator Output Level"] = "invalid"; // OP1 Level must be a number
+  expect(() => newVoiceData.parseObject(obj)).toThrow();
+});
+
+test("Parse invalid JSON", () => {
+  const newVoiceData = new VoiceData();
+  expect(() => newVoiceData.parseJSON("invalid json")).toThrow();
+});
