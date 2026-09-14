@@ -202,10 +202,7 @@ export class VoiceData
 
   ///// Parsing
 
-  // TODO: Make these static
-  // TODO: Add well defined error handling (e.g. parsing invalid JSON, missing parameters, invalid parameter values, etc.)
-
-  private verifyValue<T extends object>(obj: T, param: keyof T, type: string | null) : void {
+  private static verifyValue<T extends object>(obj: T, param: keyof T, type: string | null) : void {
     if (!Object.prototype.hasOwnProperty.call(obj, param)) {
       throw new Error(`Missing parameter: ${String(param)}`);
     }
@@ -214,41 +211,44 @@ export class VoiceData
     }
   }
 
-  private parseEgValues(eg: egType, values: egValues) : void {
+  private static parseEgValues(eg: egType, values: egValues, data: Uint8Array) : void {
     for (const param in egParamSpecs) {
-      this.verifyValue(values, param as egParam, 'number');
-      this.setEgValue(eg, param as egParam, values[param as egParam]);
+      VoiceData.verifyValue(values, param as egParam, 'number');
+      VoiceData.setEgValueInData(eg, param as egParam, values[param as egParam], data);
     }
   }
 
-  private parseOpValues(op: opNumber, values: opValues) : void {
+  private static parseOpValues(op: opNumber, values: opValues, data: Uint8Array) : void {
     for (const param in opParamSpecs) {
-      this.verifyValue(values, param as opParam, 'number');
-      this.setOpValue(op, param as opParam, values[param as opParam]);
+      VoiceData.verifyValue(values, param as opParam, 'number');
+      VoiceData.setOpValueInData(op, param as opParam, values[param as opParam], data);
     }
-    this.parseEgValues(op, values['EG']);
+    VoiceData.parseEgValues(op, values['EG'], data);
   }
 
-  parseObject(values: voiceValues) : void {
-    // Common parameters
+  static fromObject(values: voiceValues) : VoiceData {
+    const data = new Uint8Array(voiceParamDataLength);
+
     for (const param in commonVoiceParamSpecs) {
-      this.verifyValue(values, param as commonVoiceParam, 'number');
-      this.setCommonValue(param as commonVoiceParam, values[param as commonVoiceParam]);
+      VoiceData.verifyValue(values, param as commonVoiceParam, 'number');
+      VoiceData.setCommonValueInData(param as commonVoiceParam, values[param as commonVoiceParam], data);
     }
-    this.verifyValue(values, 'Pitch EG', 'object');
-    this.parseEgValues('Pitch', values['Pitch EG']);
-    this.verifyValue(values, 'Voice Name', 'string');
-    this.setVoiceName(values['Voice Name']);
+    VoiceData.verifyValue(values, 'Pitch EG', 'object');
+    VoiceData.parseEgValues('Pitch', values['Pitch EG'], data);
+    VoiceData.verifyValue(values, 'Voice Name', 'string');
+    VoiceData.setVoiceNameInData(values['Voice Name'], data);
     // OP1-OP6
     for (const op of Object.keys(opOffsets)) {
-      this.verifyValue(values, op as opNumber, 'object');
-      this.parseOpValues(op as opNumber, values[op as opNumber]);
+      VoiceData.verifyValue(values, op as opNumber, 'object');
+      VoiceData.parseOpValues(op as opNumber, values[op as opNumber], data);
     }
+
+    return new VoiceData(data);
   }
 
-  parseJSON(json: string) : void {
+  static fromJSON(json: string) : VoiceData {
     const values: voiceValues = JSON.parse(json);
-    this.parseObject(values);
+    return VoiceData.fromObject(values);
   }
  
 
@@ -262,6 +262,10 @@ export class VoiceData
     const spec = commonVoiceParamSpecs[param];
     return this.setValueByOffset(spec, 0, newValue);
   }
+  private static setCommonValueInData(param: commonVoiceParam, newValue: number, data: Uint8Array) {
+    const spec = commonVoiceParamSpecs[param];
+    VoiceData.setValueByOffsetInData(spec, 0, newValue, data);
+  }
 
   getEgValue(egType: egType, egParam: egParam) {
     const spec = egParamSpecs[egParam];
@@ -272,6 +276,11 @@ export class VoiceData
     const spec = egParamSpecs[egParam];
     const egOffset = egOffsets[egType];
     return this.setValueByOffset(spec, egOffset, newValue);
+  }
+  private static setEgValueInData(egType: egType, egParam: egParam, newValue: number, data: Uint8Array) {
+    const spec = egParamSpecs[egParam];
+    const egOffset = egOffsets[egType];
+    VoiceData.setValueByOffsetInData(spec, egOffset, newValue, data);
   }
 
   getOpValue(opNumber: opNumber, opParam: opParam) {
@@ -284,6 +293,11 @@ export class VoiceData
     const opOffset = opOffsets[opNumber];
     return this.setValueByOffset(spec, opOffset, newValue);
   }
+  private static setOpValueInData(opNumber: opNumber, opParam: opParam, newValue: number, data: Uint8Array) : VoiceData {
+    const spec = opParamSpecs[opParam];
+    const opOffset = opOffsets[opNumber];
+    VoiceData.setValueByOffsetInData(spec, opOffset, newValue, data);
+  }
 
   getVoiceName() : string {
     return String.fromCharCode(...this.getVoiceNameData()).trimEnd();
@@ -293,10 +307,14 @@ export class VoiceData
       voiceNameOffset, voiceNameOffset + voiceNameLength);
   }
   setVoiceName(newName: string) : VoiceData {
+    const newData = this.cloneRawData();
+    VoiceData.setVoiceNameInData(newName, newData);
+    return new VoiceData(newData);
+  }
+  private static setVoiceNameInData(newName: string, data: Uint8Array) {
     const padded = newName
       .slice(0, voiceNameLength) // max 10 chars
       .padEnd(voiceNameLength, " "); // space-pad if less
-    const newData = this.cloneRawData();
     for (let i = 0; i < voiceNameLength; i++) {
       let char = padded.charCodeAt(i);
       // NOTE: The DX7 panel offers a very limited character set
@@ -305,9 +323,8 @@ export class VoiceData
       // To be on the safe side, we keep it within the
       // printable range:
       char = this.clamp(char, 32, 126);
-      newData[voiceNameOffset + i] = char;
+      data[voiceNameOffset + i] = char;
     }
-    return new VoiceData(newData);
   }
 
   getValueByOffset(spec: paramSpec, sectionOffset: number) : number {
@@ -320,12 +337,20 @@ export class VoiceData
     newValue: number) : VoiceData
   {
     const newData = this.cloneRawData();
-    const offset = sectionOffset + spec.offset; 
-    newData[offset] = newValue;
+    VoiceData.setValueByOffsetInData(spec, sectionOffset, newValue, newData);
     return new VoiceData(newData);
   }
+  private static setValueByOffsetInData(
+    spec: paramSpec,
+    sectionOffset: number,
+    newValue: number,
+    data: Uint8Array)
+  {
+    const offset = sectionOffset + spec.offset; 
+    data[offset] = newValue;
+  }
 
-  private clamp(value: number, min: number, max: number) : number {
+  private static clamp(value: number, min: number, max: number) : number {
     if (value < min) value = min;
     if (value > max) value = max;
     return value;
