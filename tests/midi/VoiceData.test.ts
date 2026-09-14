@@ -2,6 +2,9 @@ import { expect, test} from 'vitest';
 import { VoiceData, voiceParamDataLength } from '../../src/midi/VoiceData';
 import { getInitVoiceData } from '../../src/midi/initVoiceData.ts';
 
+// NOTE: we need to allow "any" to simulate bad input data for testing.
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 
 ///// Construction
 
@@ -53,7 +56,6 @@ test("Format and parse voice data", () => {
   const voiceData = new VoiceData(initData);
   
   // Format object
-  const obj = voiceData.toObject();
   const json = voiceData.toJSON();
 
   // Parse data

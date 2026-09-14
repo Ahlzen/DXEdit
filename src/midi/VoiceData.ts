@@ -206,7 +206,7 @@ export class VoiceData
   // TODO: Add well defined error handling (e.g. parsing invalid JSON, missing parameters, invalid parameter values, etc.)
 
   private verifyValue<T extends object>(obj: T, param: keyof T, type: string | null) : void {
-    if (!obj.hasOwnProperty(param)) {
+    if (!Object.prototype.hasOwnProperty.call(obj, param)) {
       throw new Error(`Missing parameter: ${String(param)}`);
     }
     if (type && typeof(obj[param]) !== type) {
