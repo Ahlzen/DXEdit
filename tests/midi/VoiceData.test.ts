@@ -1,6 +1,9 @@
 import { expect, test} from 'vitest';
-import { VoiceData, voiceParamDataLength } from '../../src/midi/VoiceData';
+import { packedVoiceParamDataLength, VoiceData, voiceParamDataLength } from '../../src/midi/VoiceData';
 import { getInitVoiceData } from '../../src/midi/initVoiceData.ts';
+
+import fs from 'node:fs';
+import path from 'node:path';
 
 // NOTE: we need to allow "any" to simulate bad input data for testing.
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -102,4 +105,49 @@ test("Parse object with missing or invalid data", () => {
 
 test("Parse invalid JSON", () => {
   expect(() => VoiceData.fromJSON("invalid json")).toThrow();
+});
+
+
+///// Packed data
+
+test("Pack and unpack init voice data", () => {
+  let initVoice = new VoiceData();
+  
+  let initVoiceData: Uint8Array = initVoice.cloneRawData();
+  expect(initVoiceData.length).toEqual(voiceParamDataLength);
+
+  // pack data
+  let packedData: Uint8Array = initVoice.toPackedData();
+  expect(packedData.length).toEqual(packedVoiceParamDataLength);
+
+  // unpack data and compare to original
+  let unpackedVoice = VoiceData.fromPackedData(packedData);
+  let unpackedVoiceData = unpackedVoice.cloneRawData();
+  expect(unpackedVoiceData.length).toEqual(voiceParamDataLength);
+  expect(unpackedVoiceData).toEqual(initVoiceData);
+  expect(unpackedVoice.toJSON()).toEqual(initVoice.toJSON());
+});
+
+test ("Parse ROM-1 32-voice bank data", () => {
+  const filePath = path.resolve(__dirname, '../data/ROM1A.syx');
+  const fileData = fs.readFileSync(filePath);
+
+  // A DX7 32-voice sysex dump should be:
+  //  6 byte header
+  //  4096 (32x128) bytes packed voice data
+  //  1 byte checksum
+  //  1 byte end-of-sysex marker
+  // Total: 4104 bytes
+
+  expect(fileData).toBeInstanceOf(Buffer);
+  expect(fileData.length).toBe(4104);
+
+  // Unpack and print the name of each voice in the bank
+  for (let voice = 0; voice < 32; voice++) {
+    let packedVoiceData = fileData.slice(6+voice*128, 6+voice*128+128);
+    let voiceData = VoiceData.fromPackedData(packedVoiceData);
+    let voiceName = voiceData.getVoiceName();
+    console.log((voice+1) + ": " + voiceName);
+  }
+
 });

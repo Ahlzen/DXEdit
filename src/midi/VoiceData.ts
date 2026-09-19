@@ -1,4 +1,5 @@
 import { getInitVoiceData } from './initVoiceData.ts';
+import { packVoiceData, unpackVoiceData } from './packedVoiceData.ts';
 
 ///// Voice parameters
 
@@ -116,6 +117,7 @@ export const egOffsets : {[key in egType]: number} = {
 export const voiceNameOffset = 145; // start of voice name data
 export const voiceNameLength = 10;
 export const voiceParamDataLength = 155;
+export const packedVoiceParamDataLength = 128;
 
 
 /**
@@ -249,6 +251,21 @@ export class VoiceData
   static fromJSON(json: string) : VoiceData {
     const values: voiceValues = JSON.parse(json);
     return VoiceData.fromObject(values);
+  }
+
+
+  ///// Pack/Unpack data (for 32-voice banks)
+
+  static fromPackedData(packedData: Uint8Array) : VoiceData {
+    if (packedData.length !== packedVoiceParamDataLength) {
+      throw new Error(`VoiceData.fromPackedData: Invalid length: ${packedData.length}. Expected: ${packedVoiceParamDataLength}.`);
+    }
+    const unpackedData = unpackVoiceData(packedData);
+    return new VoiceData(unpackedData);
+  }
+
+  toPackedData() : Uint8Array {
+    return packVoiceData(this.rawData);
   }
  
 
