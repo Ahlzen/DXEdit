@@ -1,5 +1,5 @@
 import { expect, test} from 'vitest';
-import { packedVoiceParamDataLength, VoiceData, voiceParamDataLength } from '../../src/midi/VoiceData';
+import { packedVoiceParamDataLength, VoiceData, voiceParamDataLength, packed32VoiceSysexLength } from '../../src/midi/VoiceData';
 import { getInitVoiceData } from '../../src/midi/initVoiceData.ts';
 
 import fs from 'node:fs';
@@ -140,7 +140,7 @@ test ("Parse ROM-1 32-voice bank data", () => {
   // Total: 4104 bytes
 
   expect(fileData).toBeInstanceOf(Buffer);
-  expect(fileData.length).toBe(4104);
+  expect(fileData.length).toBe(packed32VoiceSysexLength);
 
   // Unpack and print the name of each voice in the bank
   for (let voice = 0; voice < 32; voice++) {

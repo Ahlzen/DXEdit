@@ -118,6 +118,8 @@ export const voiceNameOffset = 145; // start of voice name data
 export const voiceNameLength = 10;
 export const voiceParamDataLength = 155;
 export const packedVoiceParamDataLength = 128;
+export const packed32VoiceDataLength = 32 * packedVoiceParamDataLength;
+export const packed32VoiceSysexLength = 6 + packed32VoiceDataLength + 2;
 
 
 /**
@@ -153,12 +155,6 @@ export class VoiceData
 
   cloneRawData = () : Uint8Array => {
     return new Uint8Array(this.rawData);
-  }
-
-  getChecksumByte() : number {
-    let sum = this.rawData.reduce((x,y) => x+y, 0);
-    sum &= 0x7f;
-    return (128 - sum) & 0x7f; // low 7 bits of 2s complement
   }
 
 

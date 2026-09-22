@@ -1,12 +1,13 @@
 // Features specific to the DX7 (and other DX/TX devices)
 
 import { START_OF_SYSEX, END_OF_SYSEX, YAMAHA_MANUFACTURER_ID } from './WebMidi'
-import { VoiceData, voiceNameLength } from './VoiceData.ts';
+import { VoiceData, voiceNameLength, packedVoiceParamDataLength, packed32VoiceDataLength } from './VoiceData.ts';
+import type { VoiceBank } from './VoiceBank.ts';
 
 const SUB_STATUS_BULK = 0x00;
 const SUB_STATUS_PARAMETER = 0x10; // 0x01 << 4
 const BULK_FORMAT_SINGLE_VOICE = 0x00;
-//const BULK_FORMAT_32VOICES = 0x09;
+const BULK_FORMAT_32VOICES = 0x09;
 const PARAMETER_GROUP_VOICE = 0x00;
 const PARAMETER_GROUP_FUNCTION = 0x08; // 0x02 << 2
 
@@ -29,16 +30,36 @@ export function formatAlgorithm(n: number): string { return String(n+1); }
 
 export function buildOneVoiceBulkSysex(
   voiceParams: VoiceData, midiChannel: number) : number[] {
+  let rawVoiceData = voiceParams.cloneRawData();
   return [
     START_OF_SYSEX, 
     YAMAHA_MANUFACTURER_ID,
     SUB_STATUS_BULK + midiChannel,
     BULK_FORMAT_SINGLE_VOICE,
     0x01, 0x1b, // byte count MSB, LSB
-    ...voiceParams.cloneRawData(),
-    voiceParams.getChecksumByte(),
+    ...rawVoiceData,
+    calculateChecksum(rawVoiceData),
     END_OF_SYSEX];
 }
+
+export function build32VoiceBulkSysex(
+  voiceBank: VoiceBank, midiChannel: number) : number[] {
+  let allVoiceData = new Uint8Array(packed32VoiceDataLength);
+  for (let i = 0; i < 32; i++) {
+    let voiceData = voiceBank.getVoice(i).toPackedData();
+    allVoiceData.set(voiceData, i*packedVoiceParamDataLength);
+  }
+  return [
+    START_OF_SYSEX,
+    YAMAHA_MANUFACTURER_ID,
+    SUB_STATUS_BULK + midiChannel,
+    BULK_FORMAT_32VOICES,
+    0x20, 0x00, // byte count MSB, LSB
+    ...allVoiceData,
+    calculateChecksum(allVoiceData),
+    END_OF_SYSEX];
+}
+
 
 export function buildVoiceNameChangeSysex(
   voiceParams: VoiceData, midiChannel: number) : number[] {
@@ -107,4 +128,10 @@ export function isSysexMessage(data: Uint8Array) : boolean {
   return data.length > 2 &&
     data[0] === START_OF_SYSEX &&
     data.at(-1) === END_OF_SYSEX;
+}
+
+export function calculateChecksum(data: Uint8Array) : number {
+  let sum = data.reduce((x,y) => x+y, 0);
+  sum &= 0x7f;
+  return (128 - sum) & 0x7f; // low 7 bits of 2s complement
 }
