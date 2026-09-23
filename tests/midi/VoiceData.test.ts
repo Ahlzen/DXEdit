@@ -111,18 +111,18 @@ test("Parse invalid JSON", () => {
 ///// Packed data
 
 test("Pack and unpack init voice data", () => {
-  let initVoice = new VoiceData();
+  const initVoice = new VoiceData();
   
-  let initVoiceData: Uint8Array = initVoice.cloneRawData();
+  const initVoiceData: Uint8Array = initVoice.cloneRawData();
   expect(initVoiceData.length).toEqual(voiceParamDataLength);
 
   // pack data
-  let packedData: Uint8Array = initVoice.toPackedData();
+  const packedData: Uint8Array = initVoice.toPackedData();
   expect(packedData.length).toEqual(packedVoiceParamDataLength);
 
   // unpack data and compare to original
-  let unpackedVoice = VoiceData.fromPackedData(packedData);
-  let unpackedVoiceData = unpackedVoice.cloneRawData();
+  const unpackedVoice = VoiceData.fromPackedData(packedData);
+  const unpackedVoiceData = unpackedVoice.cloneRawData();
   expect(unpackedVoiceData.length).toEqual(voiceParamDataLength);
   expect(unpackedVoiceData).toEqual(initVoiceData);
   expect(unpackedVoice.toJSON()).toEqual(initVoice.toJSON());
@@ -144,9 +144,9 @@ test ("Parse ROM-1 32-voice bank data", () => {
 
   // Unpack and print the name of each voice in the bank
   for (let voice = 0; voice < 32; voice++) {
-    let packedVoiceData = fileData.slice(6+voice*128, 6+voice*128+128);
-    let voiceData = VoiceData.fromPackedData(packedVoiceData);
-    let voiceName = voiceData.getVoiceName();
+    const packedVoiceData = fileData.slice(6+voice*128, 6+voice*128+128);
+    const voiceData = VoiceData.fromPackedData(packedVoiceData);
+    const voiceName = voiceData.getVoiceName();
     console.log((voice+1) + ": " + voiceName);
   }
 

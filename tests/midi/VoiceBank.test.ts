@@ -1,7 +1,6 @@
 import { expect, test} from 'vitest';
-import { packed32VoiceSysexLength, packedVoiceParamDataLength, VoiceData, voiceParamDataLength, packed32VoiceDataLength } from '../../src/midi/VoiceData';
+import { packed32VoiceSysexLength, VoiceData } from '../../src/midi/VoiceData';
 import { VoiceBank } from '../../src/midi/VoiceBank.ts';
-import { getInitVoiceData } from '../../src/midi/initVoiceData.ts';
 
 import fs from 'node:fs';
 import path from 'node:path';

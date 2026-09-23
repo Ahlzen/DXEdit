@@ -306,7 +306,7 @@ export class VoiceData
     const opOffset = opOffsets[opNumber];
     return this.setValueByOffset(spec, opOffset, newValue);
   }
-  private static setOpValueInData(opNumber: opNumber, opParam: opParam, newValue: number, data: Uint8Array) : VoiceData {
+  private static setOpValueInData(opNumber: opNumber, opParam: opParam, newValue: number, data: Uint8Array) {
     const spec = opParamSpecs[opParam];
     const opOffset = opOffsets[opNumber];
     VoiceData.setValueByOffsetInData(spec, opOffset, newValue, data);

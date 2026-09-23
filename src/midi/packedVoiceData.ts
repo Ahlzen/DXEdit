@@ -27,7 +27,7 @@ function unpackOpData(src: Uint8Array, opNumber: number /* 1-6 */) : Uint8Array 
   // src: 128 bytes
   // dst: 21 bytes
   const dst = new Uint8Array(21);
-  let srcOffset = (6-opNumber)*17;
+  const srcOffset = (6-opNumber)*17;
 
   dst.set(src.slice(srcOffset, srcOffset+11), 0); // first 11 bytes are identical
   unpack(src, srcOffset+11, 0, 2, dst, 11); // kbd scale left curve
@@ -52,7 +52,7 @@ export function unpackVoiceData(src: Uint8Array) : Uint8Array {
 
   // OP1-6
   for (let op = 1; op <= 6; op++) {
-    let dstOffset = (6-op)*21;
+    const dstOffset = (6-op)*21;
     dst.set(unpackOpData(src, op), dstOffset);
   }
   dst.set(src.slice(102, 110), 126);
@@ -96,7 +96,7 @@ function packOpData(src: Uint8Array, opNumber: number /* 1-6 */) : Uint8Array {
   // src: 155 bytes
   // dst: 17 bytes
   const dst = new Uint8Array(17);
-  let srcOffset = (6-opNumber)*21;
+  const srcOffset = (6-opNumber)*21;
   dst.set(src.slice(srcOffset, srcOffset+11), 0); // first 11 bytes are identical
   pack(src, srcOffset+11, dst, 11, 0); // kbd lev scl left curve
   pack(src, srcOffset+12, dst, 11, 2); // kbd lev scl right curve
@@ -120,7 +120,7 @@ export function packVoiceData(src: Uint8Array) : Uint8Array {
 
   // OP1-6
   for (let op = 1; op <= 6; op++) {
-    let dstOffset = (6-op)*17;
+    const dstOffset = (6-op)*17;
     dst.set(packOpData(src, op), dstOffset);
   }
   dst.set(src.slice(126, 134), 102); // Pitch EG

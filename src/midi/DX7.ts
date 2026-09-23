@@ -30,7 +30,7 @@ export function formatAlgorithm(n: number): string { return String(n+1); }
 
 export function buildOneVoiceBulkSysex(
   voiceParams: VoiceData, midiChannel: number) : number[] {
-  let rawVoiceData = voiceParams.cloneRawData();
+  const rawVoiceData = voiceParams.cloneRawData();
   return [
     START_OF_SYSEX, 
     YAMAHA_MANUFACTURER_ID,
@@ -44,9 +44,9 @@ export function buildOneVoiceBulkSysex(
 
 export function build32VoiceBulkSysex(
   voiceBank: VoiceBank, midiChannel: number) : number[] {
-  let allVoiceData = new Uint8Array(packed32VoiceDataLength);
+  const allVoiceData = new Uint8Array(packed32VoiceDataLength);
   for (let i = 0; i < 32; i++) {
-    let voiceData = voiceBank.getVoice(i).toPackedData();
+    const voiceData = voiceBank.getVoice(i).toPackedData();
     allVoiceData.set(voiceData, i*packedVoiceParamDataLength);
   }
   return [

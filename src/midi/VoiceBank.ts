@@ -20,7 +20,7 @@ export class VoiceBank
   }
 
   static getInitBank() : VoiceBank {
-    let voices: VoiceData[] = [];
+    const voices: VoiceData[] = [];
     for (let i = 0; i < 32; i++) {
       voices.push(new VoiceData());
     }
@@ -44,16 +44,16 @@ export class VoiceBank
     if (rawSysexData.length !== packed32VoiceSysexLength) {
       throw new Error(`32-voice dump sysex: incorrect length. Expected ${packed32VoiceSysexLength}, was ${rawSysexData.length}`);
     }
-    let allVoiceData = rawSysexData.slice(6, 6+packed32VoiceDataLength);
-    let expectedChecksum = calculateChecksum(allVoiceData);
-    let actualChecksum = rawSysexData[6+packed32VoiceDataLength];
+    const allVoiceData = rawSysexData.slice(6, 6+packed32VoiceDataLength);
+    const expectedChecksum = calculateChecksum(allVoiceData);
+    const actualChecksum = rawSysexData[6+packed32VoiceDataLength];
     if (actualChecksum !== expectedChecksum) {
       throw new Error(`Invalid checksum.`);
     }
-    let voices: VoiceData[] = [];
+    const voices: VoiceData[] = [];
     for (let i = 0; i < 32; i++) {
-      let packedVoiceData = allVoiceData.slice(i*packedVoiceParamDataLength, (i+1)*packedVoiceParamDataLength);
-      let voice = VoiceData.fromPackedData(packedVoiceData);
+      const packedVoiceData = allVoiceData.slice(i*packedVoiceParamDataLength, (i+1)*packedVoiceParamDataLength);
+      const voice = VoiceData.fromPackedData(packedVoiceData);
       voices.push(voice);
     }
     return new VoiceBank(voices);
