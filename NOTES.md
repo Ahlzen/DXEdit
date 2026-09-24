@@ -38,5 +38,13 @@
 - [x] Env Editor: Support Rate/Level envelopes (prefs)
 - [ ] Send/receive full voice/bank sysex
 - [ ] Send individual programs
-- [ ] Librarian features. Save and remix banks
-- [ ] Cloud/share support
+- [ ] Librarian features. Save and remix banks (indexedDB: dexie.js local)
+      -> Drag+drop .syx, receive sysex, rename, audit, upload voice/bank, edit, copy, remix banks, export voice/bank .syx, share, star.
+      [x] Preview selected
+      (Local/Cloud) (Star) NAME [Edit] [Export] [Share]
+- [ ] Cloud/share support (possibly subabase)
+      Metadata: Notes/description/author
+      Metadata: Categories (multiple): Mixed, Bass, Bells, Keyboard, Synths, Sound effects, Perc, etc.
+      Rating: Star on shared voice is a vote
+      Image (e.g. for standard ROMs)?
+      All can browse, Register to share/rate
