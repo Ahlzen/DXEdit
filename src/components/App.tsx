@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { MantineProvider, Tabs } from '@mantine/core';
-import { GearIcon, FadersHorizontalIcon, PianoKeysIcon } from '@phosphor-icons/react';
+import { GearIcon, FadersHorizontalIcon, PianoKeysIcon, FilesIcon } from '@phosphor-icons/react';
 import { theme } from '../theme.tsx';
 
 import { useState, useRef, useEffect } from 'react';
@@ -19,6 +19,7 @@ import { VoiceEditor } from '../midi/VoiceEditor.ts';
 import { DXEConfigEditor } from './DXEConfigEditor.tsx';
 import { DEXPerformanceEditor } from './DXEPerformanceEditor.tsx';
 import { DXEVoiceEditor } from './DXEVoiceEditor.tsx';
+import { DXELibrarian } from './DXELibrarian.tsx';
 
 export default function App()
 {
@@ -167,6 +168,9 @@ export default function App()
         <Tabs.Tab value="edit" leftSection={<FadersHorizontalIcon size={16} />}>
           Voice Editor
         </Tabs.Tab>
+        <Tabs.Tab value="librarian" leftSection={<FilesIcon size={16} />}>
+          Librarian
+        </Tabs.Tab>
       </Tabs.List>
 
       <Tabs.Panel value="settings">
@@ -201,6 +205,10 @@ export default function App()
           isTimeEgMode={isTimeEgMode}
           data={currentVoiceData}
           editor={voiceEditor.current} />
+      </Tabs.Panel>
+
+      <Tabs.Panel value="librarian">
+        <DXELibrarian />
       </Tabs.Panel>
 
     </Tabs>
