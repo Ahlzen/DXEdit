@@ -20,6 +20,7 @@ import { DXEConfigEditor } from './DXEConfigEditor.tsx';
 import { DEXPerformanceEditor } from './DXEPerformanceEditor.tsx';
 import { DXEVoiceEditor } from './DXEVoiceEditor.tsx';
 import { DXELibrarian } from './DXELibrarian.tsx';
+import { Librarian } from '../midi/Librarian.ts';
 
 export default function App()
 {
@@ -43,6 +44,8 @@ export default function App()
     getInitPerformanceParams());
   const [currentVoiceData, setCurrentVoiceData] = useState<VoiceData>(
     new VoiceData());
+  const [librarian, setLibrarian] = useState<Librarian>(
+    Librarian.getWithFactoryBanks());
 
   const voiceEditor = useRef<VoiceEditor>(new VoiceEditor(
     0, undefined, handleSendMidi, handleNewVoiceData));
@@ -71,7 +74,7 @@ export default function App()
       );
     }
   });
-
+  
 
   ///// UI event handlers
 
@@ -208,7 +211,8 @@ export default function App()
       </Tabs.Panel>
 
       <Tabs.Panel value="librarian">
-        <DXELibrarian />
+        <DXELibrarian
+          librarian={librarian} />
       </Tabs.Panel>
 
     </Tabs>

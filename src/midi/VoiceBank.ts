@@ -40,7 +40,7 @@ export class VoiceBank
     this.voices[voiceNumber] = voiceData;
   }
 
-  static fromSysexData(rawSysexData: Uint8Array) {
+  static fromSysexData(rawSysexData: Uint8Array, name?: string) {
     if (rawSysexData.length !== packed32VoiceSysexLength) {
       throw new Error(`32-voice dump sysex: incorrect length. Expected ${packed32VoiceSysexLength}, was ${rawSysexData.length}`);
     }
@@ -56,7 +56,7 @@ export class VoiceBank
       const voice = VoiceData.fromPackedData(packedVoiceData);
       voices.push(voice);
     }
-    return new VoiceBank(voices);
+    return new VoiceBank(voices, name);
   }
 
   toSysexData(midiChannel: number) : number[] {
