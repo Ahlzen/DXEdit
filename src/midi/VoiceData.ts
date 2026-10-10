@@ -1,3 +1,4 @@
+import { buildOneVoiceBulkSysex, calculateChecksum } from './DX7.ts';
 import { getInitVoiceData } from './initVoiceData.ts';
 import { packVoiceData, unpackVoiceData } from './packedVoiceData.ts';
 
@@ -117,6 +118,7 @@ export const egOffsets : {[key in egType]: number} = {
 export const voiceNameOffset = 145; // start of voice name data
 export const voiceNameLength = 10;
 export const voiceParamDataLength = 155;
+export const singleVoiceSysexLength = 6 + voiceParamDataLength + 2;
 export const packedVoiceParamDataLength = 128;
 export const packed32VoiceDataLength = 32 * packedVoiceParamDataLength;
 export const packed32VoiceSysexLength = 6 + packed32VoiceDataLength + 2;
@@ -197,6 +199,10 @@ export class VoiceData
     return JSON.stringify(this.toObject(), null, 2);
   }
 
+  toSysexData(midiChannel: number) : number[] {
+    return buildOneVoiceBulkSysex(this, midiChannel);
+  }
+
 
   ///// Parsing
 
@@ -247,6 +253,19 @@ export class VoiceData
   static fromJSON(json: string) : VoiceData {
     const values: voiceValues = JSON.parse(json);
     return VoiceData.fromObject(values);
+  }
+
+  static fromSysexData(rawSysexData: Uint8Array, name?: string) {
+    if (rawSysexData.length !== singleVoiceSysexLength) {
+      throw new Error(`32-voice dump sysex: incorrect length. Expected ${singleVoiceSysexLength}, was ${rawSysexData.length}`);
+    }
+    const voiceData = rawSysexData.slice(6, 6+voiceParamDataLength);
+    const expectedChecksum = calculateChecksum(voiceData);
+    const actualChecksum = rawSysexData.at(-2);
+    if (actualChecksum !== expectedChecksum) {
+      throw new Error(`Invalid checksum.`);
+    }
+    return new VoiceData(voiceData);
   }
 
 

@@ -10,7 +10,7 @@ import './App.css';
 
 // MIDI / DX7 sysex
 import { WebMidi } from '../midi/WebMidi.ts'
-import { isSysexMessage } from '../midi/DX7.ts';
+import { is32VoiceSysexMessage, isSingleVoiceSysexMessage, isSysexMessage } from '../midi/DX7.ts';
 import { type performanceValues, getInitPerformanceParams } from '../midi/performanceParamData.ts';
 import { VoiceData } from '../midi/VoiceData.ts';
 import { VoiceEditor } from '../midi/VoiceEditor.ts';
@@ -20,7 +20,8 @@ import { DXEConfigEditor } from './DXEConfigEditor.tsx';
 import { DEXPerformanceEditor } from './DXEPerformanceEditor.tsx';
 import { DXEVoiceEditor } from './DXEVoiceEditor.tsx';
 import { DXELibrarian } from './DXELibrarian.tsx';
-import { Librarian } from '../midi/Librarian.ts';
+import { VoiceBank } from '../midi/VoiceBank.ts';
+import { addBankItem, addVoiceItem} from '../midi/database.ts';
 
 export default function App()
 {
@@ -44,8 +45,6 @@ export default function App()
     getInitPerformanceParams());
   const [currentVoiceData, setCurrentVoiceData] = useState<VoiceData>(
     new VoiceData());
-  const [librarian, setLibrarian] = useState<Librarian>(
-    Librarian.getWithFactoryBanks());
 
   const voiceEditor = useRef<VoiceEditor>(new VoiceEditor(
     0, undefined, handleSendMidi, handleNewVoiceData));
@@ -110,6 +109,32 @@ export default function App()
     voiceEditor.current.setMidiChannel(channel);
   }
 
+  async function handleDroppedFiles(files: FileList) {
+    console.log("handleDroppedFiles()");
+    for (const file of Array.from(files)) {
+      try {
+        const rawData = new Uint8Array(await file.arrayBuffer());
+        handleFileDropped(file.name || undefined, rawData);
+      } catch (error) {
+        console.error(`Could not read ${file.name}:`, error);
+      }
+    }
+  }
+
+  function handleFileDropped(filename: string | undefined, rawData: Uint8Array) {
+    console.log(`Dropped file "${filename}", ${rawData.length} bytes.`);
+    if (isSingleVoiceSysexMessage(rawData)) {
+      console.log("single voice sysex dump");
+      const voiceData = VoiceData.fromSysexData(rawData, filename);
+      addVoiceItem(voiceData);
+    }
+    else if (is32VoiceSysexMessage(rawData)) {
+      console.log("32 voice sysex dump");
+      const voiceBank = VoiceBank.fromSysexData(rawData, filename);
+      addBankItem(voiceBank);
+    }
+  }
+
 
   ///// Editor event handlers
 
@@ -158,6 +183,20 @@ export default function App()
       classNamesPrefix='mantine'>
 
     <title>DX Edit</title>
+
+    {/* Wrapper for file drop */}
+    <div
+      style={{minHeight: 'calc(100vh-2rem)'}}
+      onDragOver={(event) => {
+        if (event.dataTransfer.types.includes('Files')) {
+          event.preventDefault();
+        }
+      }}
+      onDrop={(event) => {
+        if (event.dataTransfer.files.length === 0) return;
+        event.preventDefault();
+        void handleDroppedFiles(event.dataTransfer.files);
+      }} >
 
     <Tabs defaultValue="settings">
 
@@ -211,11 +250,12 @@ export default function App()
       </Tabs.Panel>
 
       <Tabs.Panel value="librarian">
-        <DXELibrarian
-          librarian={librarian} />
+        <DXELibrarian />
       </Tabs.Panel>
 
     </Tabs>
+
+    </div>
 
     </MantineProvider>
   );

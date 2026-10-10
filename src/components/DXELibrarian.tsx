@@ -1,37 +1,41 @@
-import { Librarian, type LibraryItem } from "../midi/Librarian";
-import { VoiceBank } from "../midi/VoiceBank";
-import { VoiceData } from "../midi/VoiceData";
+import { useState } from "react";
+import { DXEVoiceList } from "./DXEVoiceList";
+import { Title, Text, Stack, TextInput, Group } from "@mantine/core";
 
-export function DXELibrarian(props: {
-  librarian: Librarian,
-})
+export function DXELibrarian(props: {})
 {
-  ///// UI
+  let [searchPhrase, setSearchPhrase] = useState<string | undefined>(undefined);
+  let [starredOnly, setStarredOnly] = useState<boolean>(false);
 
-  const items = [];
-  for (let i = 0; i < props.librarian.length(); i++) {
-    let item: LibraryItem = props.librarian.getItem(i);
-    if (item instanceof VoiceData) {
-      const voice = item as VoiceData;
-      items.push(<li key={i}>{voice.getVoiceName()}</li>);
-    }
-    else if (item instanceof VoiceBank) {
-      const bank = item as VoiceBank;
-      let subItems = [];
-      for (let s = 0; s < 32; s++) {
-        const voice = item.getVoice(s);
-        subItems.push(<li key={s}>{voice.getVoiceName()}</li>)
-      }
-      items.push(<li>{bank.name || "Voice Bank"}<ul>{subItems}</ul></li>);
-    }
+  function handleSearchPhraseChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setSearchPhrase(event.target.value);
+  }
+  function handleStarredOnlyChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setStarredOnly(event.target.checked);
   }
 
   return (
-    <>
-      <h2>Librarian</h2>
-      <ul>
-        {items}
-      </ul>
-    </>
+    <div className="librarian">
+
+      <Stack mt="md">
+        <Group>
+          <Text>Search:</Text>
+          <TextInput
+            placeholder="Search voices..."
+            value={searchPhrase}
+            onChange={handleSearchPhraseChange} />
+        </Group>
+        <Group>
+          <Text>Starred only:</Text>
+          <input type="checkbox" checked={starredOnly}
+            onChange={handleStarredOnlyChange} />
+        </Group>
+      </Stack>
+
+      <Title order={2}>On Device/Browser</Title>
+      <DXEVoiceList
+        searchPhrase={searchPhrase}
+        starredOnly={starredOnly} />
+    </div>
   );
 }

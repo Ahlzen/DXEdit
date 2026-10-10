@@ -1,7 +1,7 @@
 // Features specific to the DX7 (and other DX/TX devices)
 
 import { START_OF_SYSEX, END_OF_SYSEX, YAMAHA_MANUFACTURER_ID } from './WebMidi'
-import { VoiceData, voiceNameLength, packedVoiceParamDataLength, packed32VoiceDataLength } from './VoiceData.ts';
+import { VoiceData, voiceNameLength, packedVoiceParamDataLength, packed32VoiceDataLength, voiceParamDataLength, packed32VoiceSysexLength, singleVoiceSysexLength } from './VoiceData.ts';
 import type { VoiceBank } from './VoiceBank.ts';
 
 const SUB_STATUS_BULK = 0x00;
@@ -103,6 +103,46 @@ export function buildParameterChangeSysex(
 }
 
 
+///// For equality and comparing voice data
+
+/**
+ * Returns a hash of the parameter data (optionally
+ * excluding the voice name). This can be used as a first
+ * step in finding potential duplicate voices.
+ */
+export function getHash(rawVoiceData: Uint8Array, excludeVoiceName: boolean): number {
+  const dataLength = excludeVoiceName ? 145 : 155;
+
+  // Use FNV-1a
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < dataLength; i++) {
+    hash = Math.imul(hash ^ rawVoiceData[i], 0x01000193);
+  }
+  return hash >>> 0; // converts to 32-bit uint
+}
+
+/**
+ * @param excludeVoiceName If false, the voice data is ignored.
+ * @returns true iff the two raw voice data are equal, false otherwise. 
+ */
+export function voiceDataAreEqual(
+  rawVoiceDataA: Uint8Array,
+  rawVoiceDataB: Uint8Array,
+  excludeVoiceName: boolean) {
+  const dataLength = excludeVoiceName ? 145 : 155;
+  
+  // Compare lengths
+  if (rawVoiceDataA.length !== rawVoiceDataB.length) return false;
+  if (rawVoiceDataA.length < dataLength) return false;
+  if (rawVoiceDataB.length < dataLength) return false;
+  // Compare contents
+  for (let i = 0; i < dataLength; i++) {
+    if (rawVoiceDataA[i] !== rawVoiceDataB[i]) return false;
+  }
+  return true;
+}
+
+
 ///// Misc
 
 export function buildAllNotesOffMessage(midiChannel: number) : number[] {
@@ -127,6 +167,28 @@ export function isOpEnabled(
 export function isSysexMessage(data: Uint8Array) : boolean {
   return data.length > 2 &&
     data[0] === START_OF_SYSEX &&
+    data.at(-1) === END_OF_SYSEX;
+}
+
+export function isSingleVoiceSysexMessage(data: Uint8Array) : boolean {
+  return data.length === singleVoiceSysexLength &&
+    data[0] === START_OF_SYSEX &&
+    data[1] === YAMAHA_MANUFACTURER_ID &&
+    (data[2] & 0xf0) === SUB_STATUS_BULK && // mask midi channel (lower 4 bits)
+    data[3] === BULK_FORMAT_SINGLE_VOICE &&
+    data[4] === 0x01 && // data length msb
+    data[5] === 0x1b && // data length lsb
+    data.at(-1) === END_OF_SYSEX;
+}
+
+export function is32VoiceSysexMessage(data: Uint8Array) : boolean {
+  return data.length === packed32VoiceSysexLength &&
+    data[0] === START_OF_SYSEX &&
+    data[1] === YAMAHA_MANUFACTURER_ID &&
+    (data[2] & 0xf0) === SUB_STATUS_BULK && // mask midi channel (lower 4 bits)
+    data[3] === BULK_FORMAT_32VOICES &&
+    data[4] === 0x20 && // data length msb
+    data[5] === 0x00 && // data length lsb
     data.at(-1) === END_OF_SYSEX;
 }
 

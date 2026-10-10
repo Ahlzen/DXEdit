@@ -36,3 +36,9 @@ body {
   border: 1px solid var(--mantine-primary-color-filled);
   color: white;
 }
+
+
+.star {
+  cursor: pointer;
+  color: gold;
+}
