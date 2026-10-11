@@ -1,0 +1,42 @@
+.voice-list {
+  vertical-align: top;
+}
+
+.voice-list .bank-group {
+  margin: 0.5rem;
+  border: 2px solid #666;
+  border-radius: 5px;
+  /* box-shadow: 0 0 6px rgba(255,255,255, 0.4 ); */
+  /* padding: 0.5rem; */
+  background-color: black;
+  /* margin-bottom: 0.7rem; */
+  display: inline-block;
+  max-width: 10em;
+}
+
+.voice-list .bank-name {
+  /* margin-bottom: 0.3rem;
+  margin-top: 0.3rem; */
+  margin-top: 0 !important;
+  padding: 0.3rem;
+  font-size: 90%;
+  background-color: #666;
+  color: #fff; 
+}
+
+.voice-list .voice-item {
+  background-color: black;
+  border-radius: 5px;
+  margin: 1px 4px;
+  font-size: 90%;
+  /* display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem;
+  border-bottom: 1px solid #ccc; */
+}
+
+.voice-list .star {
+  cursor: pointer;
+  color: gold;
+}
