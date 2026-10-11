@@ -38,14 +38,18 @@ export function DXEVoiceList(props: {
     }
   }
 
+  // Remove banks with no matching voices
+  const filteredBanks = banks?.filter((bank) => voicesByBank.has(bank.id));
+
   return (
     <div className="voice-list">
-      {banks?.map((bank) => (
+      {filteredBanks?.map((bank) => (
         <section key={bank.id} className="bank-group">
           <Title order={3} className="bank-name">
             {bank.name ?? `Bank ${bank.id} (unnamed)`}
           </Title>
 
+          <div className="bank-voices">
           {(voicesByBank.get(bank.id) ?? []).map((voice) => (
             <div key={voice.id} className="voice-item">
               <span
@@ -58,6 +62,7 @@ export function DXEVoiceList(props: {
               <span>{voice.name}</span>
             </div>
           ))}
+          </div>
         </section>
       ))}
     </div>
