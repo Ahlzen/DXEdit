@@ -123,6 +123,12 @@ export default function App()
 
   function handleFileDropped(filename: string | undefined, rawData: Uint8Array) {
     console.log(`Dropped file "${filename}", ${rawData.length} bytes.`);
+
+    // remove any .syx or .sysex extension from filename
+    if (filename) {
+      filename = filename.replace(/\.syx|\.sysex$/i, '');
+    }
+
     if (isSingleVoiceSysexMessage(rawData)) {
       console.log("single voice sysex dump");
       const voiceData = VoiceData.fromSysexData(rawData, filename);
