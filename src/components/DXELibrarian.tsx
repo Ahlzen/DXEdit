@@ -13,10 +13,10 @@ export function DXELibrarian(props: {
   onVoiceDownload?: (voiceData: VoiceData) => void,
 })
 {
-  let [searchPhrase, setSearchPhrase] = useState<string | undefined>(undefined);
-  let [starredOnly, setStarredOnly] = useState<boolean>(false);
-  let [selectedVoiceId, setSelectedVoiceId] = useState<number|null>(null);
-  let [autoPlaySelected, setAutoPlaySelected] = useState<boolean>(false);
+  const [searchPhrase, setSearchPhrase] = useState<string | undefined>(undefined);
+  const [starredOnly, setStarredOnly] = useState<boolean>(false);
+  const [selectedVoiceId, setSelectedVoiceId] = useState<number|null>(null);
+  const [autoPlaySelected, setAutoPlaySelected] = useState<boolean>(false);
 
   function handleSearchPhraseChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchPhrase(event.target.value);
@@ -30,7 +30,7 @@ export function DXELibrarian(props: {
       db.voices.get(voiceId).then((v) => {
         const rawVoiceData = v?.data;
         if (rawVoiceData) {
-          let sysexData = buildOneVoiceBulkSysex(
+          const sysexData = buildOneVoiceBulkSysex(
             new VoiceData(rawVoiceData), 
             props.midiChannel,
           );

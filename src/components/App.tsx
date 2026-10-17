@@ -130,7 +130,7 @@ export default function App()
 
     if (isSingleVoiceSysexMessage(rawData)) {
       console.log("single voice sysex dump");
-      const voiceData = VoiceData.fromSysexData(rawData, filename);
+      const voiceData = VoiceData.fromSysexData(rawData);
       addVoiceItem(voiceData);
     }
     else if (is32VoiceSysexMessage(rawData)) {

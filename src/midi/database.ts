@@ -55,12 +55,12 @@ export function addVoiceItem(voice: VoiceData) {
 }
 
 export function addBankItem(bank: VoiceBank) {
-  let result: PromiseExtended<number> = db.banks.add(
+  const result: PromiseExtended<number> = db.banks.add(
     { name: bank.name, starred: false });
   // await add, since we need the id
   result.then((bankId: number) => {
     for (let v = 0; v < 32; v++) {
-      let voice = bank.getVoice(v);
+      const voice = bank.getVoice(v);
       db.voices.add({
         bankId: bankId,
         name: voice.getVoiceName(),
@@ -83,7 +83,7 @@ export function starVoiceBank(bankId: number, starred: boolean) {
 }
 
 export function addFactoryBanks() {
-  let newItems = [
+  const newItems = [
     VoiceBank.fromSysexData(rom1aSysex, "ROM 1A"),
     VoiceBank.fromSysexData(rom1bSysex, "ROM 1B"),
     VoiceBank.fromSysexData(rom2aSysex, "ROM 2A"),
@@ -92,7 +92,7 @@ export function addFactoryBanks() {
     VoiceBank.fromSysexData(rom3bSysex, "ROM 3B"),
     VoiceBank.fromSysexData(rom4aSysex, "ROM 4A"),
     VoiceBank.fromSysexData(rom4bSysex, "ROM 4B")];
-  for (let item of newItems) {
+  for (const item of newItems) {
     addBankItem(item);
   }
 }

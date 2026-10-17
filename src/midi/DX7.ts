@@ -1,7 +1,7 @@
 // Features specific to the DX7 (and other DX/TX devices)
 
 import { START_OF_SYSEX, END_OF_SYSEX, YAMAHA_MANUFACTURER_ID } from './WebMidi'
-import { VoiceData, voiceNameLength, packedVoiceParamDataLength, packed32VoiceDataLength, voiceParamDataLength, packed32VoiceSysexLength, singleVoiceSysexLength } from './VoiceData.ts';
+import { VoiceData, voiceNameLength, packedVoiceParamDataLength, packed32VoiceDataLength, packed32VoiceSysexLength, singleVoiceSysexLength } from './VoiceData.ts';
 import type { VoiceBank } from './VoiceBank.ts';
 
 const SUB_STATUS_BULK = 0x00;

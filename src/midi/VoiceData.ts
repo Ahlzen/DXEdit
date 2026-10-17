@@ -255,7 +255,7 @@ export class VoiceData
     return VoiceData.fromObject(values);
   }
 
-  static fromSysexData(rawSysexData: Uint8Array, name?: string) {
+  static fromSysexData(rawSysexData: Uint8Array) : VoiceData {
     if (rawSysexData.length !== singleVoiceSysexLength) {
       throw new Error(`32-voice dump sysex: incorrect length. Expected ${singleVoiceSysexLength}, was ${rawSysexData.length}`);
     }
