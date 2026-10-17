@@ -36,18 +36,17 @@ export default function App()
   const [controllerIn, setControllerIn] = useState<string|null>(null);
   const [midiChannel, setMidiChannel] = useState<number>(0);
 
-  // Other configuration state
+  // Editor state
   const [isTimeEgMode, setIsTimeEgMode] = useState<boolean>(
     prefs.current.getPrefs('isTimeEgMode') || false);
-
-  // Editor state
   const [perfParams, setPerfParams] = useState<performanceValues>(
     getInitPerformanceParams());
   const [currentVoiceData, setCurrentVoiceData] = useState<VoiceData>(
     new VoiceData());
-
   const voiceEditor = useRef<VoiceEditor>(new VoiceEditor(
     0, undefined, handleSendMidi, handleNewVoiceData));
+
+  const [activeTab, setActiveTab] = useState<string|null>('settings');
 
   useEffect(() => {
     if (!midi.current.isInitialized) {
@@ -149,6 +148,24 @@ export default function App()
     setCurrentVoiceData(new VoiceData(rawData));
   }
 
+  function handleVoiceEdit(voiceData: VoiceData) {
+    console.log("App: handleVoiceEdit()");
+    setCurrentVoiceData(voiceData);
+    setActiveTab('edit');
+  }
+
+  function handleVoiceDownload(voiceData: VoiceData) {
+    console.log("App: handleVoiceDownload()");
+    const sysexData: number[] = voiceData.toSysexData(midiChannel);
+    const blob = new Blob([new Uint8Array(sysexData)], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${voiceData.getVoiceName() || 'voice'}.syx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
 
   ///// MIDI event handlers
 
@@ -204,7 +221,7 @@ export default function App()
         void handleDroppedFiles(event.dataTransfer.files);
       }} >
 
-    <Tabs defaultValue="settings">
+    <Tabs value={activeTab} onChange={setActiveTab}>
 
       <Tabs.List>
         <Tabs.Tab value="settings" leftSection={<GearIcon size={16} />}>
@@ -256,7 +273,12 @@ export default function App()
       </Tabs.Panel>
 
       <Tabs.Panel value="librarian">
-        <DXELibrarian />
+        <DXELibrarian
+          midiChannel={midiChannel}
+          sendMidiFunc={handleSendMidi}
+          onVoiceEdit={handleVoiceEdit}
+          onVoiceDownload={handleVoiceDownload}
+         />
       </Tabs.Panel>
 
     </Tabs>

@@ -34,7 +34,11 @@
   font-size: 90%;
 }
 
-.voice-list .star {
+.voice-list .voice-item:hover {
+  background-color: #333;
   cursor: pointer;
-  color: gold;
 }
+.voice-list .voice-item.selected {
+  background-color: #555;
+}
+

@@ -1,13 +1,29 @@
-import { db, type VoiceEntity, type BankEntity } from "../midi/database";
+import { db, type VoiceEntity } from "../midi/database";
 import { useLiveQuery } from "dexie-react-hooks"
-import { Text, Stack, Group, Title } from "@mantine/core";
+import { Title } from "@mantine/core";
 import { starVoiceItem } from "../midi/database";
+import { useState } from "react";
+
 import './DXEVoiceList.css';
 
 export function DXEVoiceList(props: {
   searchPhrase: string | undefined,
-  starredOnly: boolean})
+  starredOnly: boolean,
+  onVoiceSelected: (voiceId: number | null) => void})
 {
+  ///// State
+
+  const [selectedVoiceId, setSelectedVoiceId] = useState<number | null>(null);
+
+
+  ///// Event handlers
+
+  const handleVoiceItemSelected = function(voiceId: number) {
+    setSelectedVoiceId(voiceId);
+    props.onVoiceSelected(voiceId);
+  };
+
+
   const searchPhrase = props.searchPhrase?.trim().toLowerCase();
 
   // Get voices
@@ -51,11 +67,12 @@ export function DXEVoiceList(props: {
 
           <div className="bank-voices">
           {(voicesByBank.get(bank.id) ?? []).map((voice) => (
-            <div key={voice.id} className="voice-item">
+            <div key={voice.id}
+              className={"voice-item " + (selectedVoiceId === voice.id ? 'selected' : '')}
+              onClick={() => handleVoiceItemSelected(voice.id)}>
               <span
-                className="star"
-                onClick={() => starVoiceItem(voice.id, !voice.starred)}
-              >
+                className="starred"
+                onClick={() => starVoiceItem(voice.id, !voice.starred)}>
                 {voice.starred ? "★" : "☆"}
               </span>
               &nbsp;

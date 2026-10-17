@@ -38,3 +38,7 @@ body {
 }
 
 
+.starred {
+  cursor: pointer;
+  color: gold;
+}
