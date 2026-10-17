@@ -36,15 +36,14 @@
 - [ ] Visualize LFO, Keyboard Level Scaling
 - [ ] Env Editor: Show values in actual units (dB, seconds)
 - [x] Env Editor: Support Rate/Level envelopes (prefs)
-- [ ] Send/receive full voice/bank sysex
-- [ ] Send individual programs
-- [ ] Librarian features. Save and remix banks (indexedDB: dexie.js local)
-      -> Drag+drop .syx, receive sysex, rename, audit, upload voice/bank, edit, copy, remix banks, export voice/bank .syx, share, star.
-      [x] Preview selected
-      (Local/Cloud) (Star) NAME [Edit] [Export] [Share]
-- [ ] Cloud/share support (possibly subabase)
-      Metadata: Notes/description/author
-      Metadata: Categories (multiple): Mixed, Bass, Bells, Keyboard, Synths, Sound effects, Perc, etc.
-      Rating: Star on shared voice is a vote
-      Image (e.g. for standard ROMs)?
-      All can browse, Register to share/rate
+- [x] Librarian: List banks and voices (local storage / indexedDB)
+- [x] Librarian: Drag-and-drop files
+- [x] Librarian: Edit selected
+- [x] Librarian: Download voice sysex file
+- [x] Librarian: Star voices
+- [ ] Librarian: Upload full bank to DX7
+- [ ] Librarian: Download bank as sysex file
+- [ ] Librarian: Receive voice/bank sysex from DX7
+- [ ] Librarian: Copy/remix/rename voices/banks
+- [ ] Librarian: Share voices/banks (cloud)
+- [ ] Librarian: More metadata, e.g. comments, image, etc
