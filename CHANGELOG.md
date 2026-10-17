@@ -1,6 +1,6 @@
 ## DX Edit Changelog
 
-
+* Added basic Voice/Bank librarian tab.
 * MIDI Echo (Controller In -> MIDI Out) works.
 * Added Multi-step Undo/Redo.
 * Added DX Edit logo.
