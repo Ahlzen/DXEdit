@@ -9,6 +9,7 @@ import './DXEVoiceList.css';
 export function DXEVoiceList(props: {
   searchPhrase: string | undefined,
   starredOnly: boolean,
+  groupByBank: boolean,
   onVoiceSelected: (voiceId: number | null) => void})
 {
   ///// State
@@ -57,31 +58,55 @@ export function DXEVoiceList(props: {
   // Remove banks with no matching voices
   const filteredBanks = banks?.filter((bank) => voicesByBank.has(bank.id));
 
-  return (
-    <div className="voice-list">
-      {filteredBanks?.map((bank) => (
-        <section key={bank.id} className="bank-group">
-          <Title order={3} className="bank-name">
-            {bank.name ?? `Bank ${bank.id} (unnamed)`}
-          </Title>
+  if (props.groupByBank) {
+      return (
+      <div className="voiceListArea voiceBankList">
+        {filteredBanks?.map((bank) => (
+          <section key={bank.id} className="voiceBank">
+            <Title order={3} className="bankName">
+              {bank.name ?? `Bank ${bank.id} (unnamed)`}
+            </Title>
 
-          <div className="bank-voices">
-          {(voicesByBank.get(bank.id) ?? []).map((voice) => (
-            <div key={voice.id}
-              className={"voice-item " + (selectedVoiceId === voice.id ? 'selected' : '')}
-              onClick={() => handleVoiceItemSelected(voice.id)}>
-              <span
-                className="starred"
-                onClick={() => starVoiceItem(voice.id, !voice.starred)}>
-                {voice.starred ? "★" : "☆"}
-              </span>
-              &nbsp;
-              <span>{voice.name}</span>
+            <div className="bankVoiceList">
+            {(voicesByBank.get(bank.id) ?? []).map((voice) => (
+              <div key={voice.id}
+                className={"voiceItem " + (selectedVoiceId === voice.id ? 'selected' : '')}
+                onClick={() => handleVoiceItemSelected(voice.id)}>
+                <span
+                  className="starred"
+                  onClick={() => starVoiceItem(voice.id, !voice.starred)}>
+                  {voice.starred ? "★" : "☆"}
+                </span>
+                &nbsp;
+                <span>{voice.name}</span>
+              </div>
+            ))}
             </div>
-          ))}
+          </section>
+        ))}
+      </div>
+    );
+  }
+  else
+  {
+    return (
+      <div className="voiceListArea ungroupedVoiceList">
+        {(voices ?? []).map((voice) => (
+          <div key={voice.id}
+            className={"voiceItem " + (selectedVoiceId === voice.id ? 'selected' : '')}
+            onClick={() => handleVoiceItemSelected(voice.id)}>
+            <span
+              className="starred"
+              onClick={() => starVoiceItem(voice.id, !voice.starred)}>
+              {voice.starred ? "★" : "☆"}
+            </span>
+            &nbsp;
+            <span>{voice.name}</span>
           </div>
-        </section>
-      ))}
-    </div>
-  );
+        ))}
+      </div>
+    )
+  }
+
+
 }

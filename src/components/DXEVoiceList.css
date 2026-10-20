@@ -1,10 +1,9 @@
-.voice-list {
+.voiceBankList {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
-
-.voice-list .bank-group {
+.voiceBankList .voiceBank {
   border: 2px solid #666;
   border-radius: 5px;
   background-color: black;
@@ -12,8 +11,7 @@
   max-width: 16em;
   box-sizing: border-box;
 }
-
-.voice-list .bank-name {
+.voiceBankList .bankName {
   margin-top: 0 !important;
   padding: 0.2rem;
   line-height: 1.2;
@@ -22,23 +20,41 @@
   color: #fff; 
   min-height: 2.5rem;
 }
-
-.voice-list .bank-voices {
+.voiceBankList .bankVoiceList {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+.voiceBankList .voiceItem {
+  flex: 0 1 8em;
+  max-width: 8em;
+  box-sizing: border-box;
+  margin: 0px 4px;
+}
 
-.voice-list .voice-item {
+.ungroupedVoiceList {
+  display: flex;
+  flex-wrap: wrap;
+  /* gap: 0.5rem; */
+  font-size: 90%;
+}
+.ungroupedVoiceList .voiceItem {
+  flex: 0 1 10em;
+  max-width: 10em;
+  box-sizing: border-box;
+  margin: 2px 4px !important;
+}
+
+.voiceListArea .voiceItem {
   border-radius: 5px;
   margin: 0px 4px;
   font-size: 90%;
+  background-color: black;
 }
-
-.voice-list .voice-item:hover {
+.voiceListArea .voiceItem:hover {
   background-color: #333;
   cursor: pointer;
 }
-.voice-list .voice-item.selected {
+.voiceListArea .voiceItem.selected {
   background-color: #555;
 }
 

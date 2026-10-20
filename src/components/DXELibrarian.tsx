@@ -17,6 +17,7 @@ export function DXELibrarian(props: {
   const [starredOnly, setStarredOnly] = useState<boolean>(false);
   const [selectedVoiceId, setSelectedVoiceId] = useState<number|null>(null);
   const [autoPlaySelected, setAutoPlaySelected] = useState<boolean>(false);
+  const [groupByBank, setGroupByBank] = useState<boolean>(true);
 
   function handleSearchPhraseChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchPhrase(event.target.value);
@@ -61,33 +62,45 @@ export function DXELibrarian(props: {
   return (
     <div className="librarian">
 
+      {/* TODO: Convert to use Mantine controls */}
+
       {/* Top controls */}
       <Group align="top" gap="xl" mb="md">
 
+        {/* View / Settings */}
+        <Stack mt="md">
+          <Title order={2} mb="md">
+            View / Settings
+          </Title>
+          <Group>
+            <Text>Auto-play selected voice:</Text>
+            <input type="checkbox" checked={autoPlaySelected} onChange={(e) => setAutoPlaySelected(e.target.checked)} />
+          </Group>
+          <Group>
+            <Text>Group by bank</Text>
+            <input type="checkbox" checked={groupByBank} onChange={(e) => setGroupByBank(e.target.checked)} />
+          </Group>
+        </Stack>
+      
 
-          {/* Search/Filter */}
-          <Stack mt="md">
-            <Title order={2} mb="md">
-              Search and Filter
-            </Title>
-            <Group>
-              <Text>Search:</Text>
-              <TextInput
-                placeholder="Search voices..."
-                value={searchPhrase}
-                onChange={handleSearchPhraseChange} />
-            </Group>
-            <Group>
-              <Text>Starred only:</Text>
-              <input type="checkbox" checked={starredOnly}
-                onChange={handleStarredOnlyChange} />
-            </Group>
-            {/* TODO: Move? */}
-            <Group>
-              <Text>Auto-play selected:</Text>
-              <input type="checkbox" checked={autoPlaySelected} onChange={(e) => setAutoPlaySelected(e.target.checked)} />
-            </Group>
-          </Stack>
+        {/* Search/Filter */}
+        <Stack mt="md">
+          <Title order={2} mb="md">
+            Search and Filter
+          </Title>
+          <Group>
+            <Text>Search:</Text>
+            <TextInput
+              placeholder="Search voices..."
+              value={searchPhrase}
+              onChange={handleSearchPhraseChange} />
+          </Group>
+          <Group>
+            <Text>Starred only:</Text>
+            <input type="checkbox" checked={starredOnly}
+              onChange={handleStarredOnlyChange} />
+          </Group>
+        </Stack>
 
         {/* Voice details */}
         <DXEVoiceDetails voiceId={selectedVoiceId}
@@ -97,10 +110,11 @@ export function DXELibrarian(props: {
 
       </Group>
 
-      <Title order={2}>On Device/Browser</Title>
+      <Title mb="md" order={2}>On Device/Browser</Title>
       <DXEVoiceList
         searchPhrase={searchPhrase}
         starredOnly={starredOnly}
+        groupByBank={groupByBank}
         onVoiceSelected={handleVoiceSelected}
         />
     </div>
