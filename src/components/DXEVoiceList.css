@@ -4,21 +4,29 @@
   gap: 0.5rem;
 }
 .voiceBankList .voiceBank {
-  border: 2px solid #666;
+  border: 2px solid #444;
   border-radius: 5px;
   background-color: black;
   flex: 0 1 16em;
   max-width: 16em;
   box-sizing: border-box;
 }
+.voiceBankList .voiceBank.selected {
+  border-color: #777;
+}
 .voiceBankList .bankName {
   margin-top: 0 !important;
   padding: 0.2rem;
   line-height: 1.2;
   font-size: 90%;
-  background-color: #666;
-  color: #fff; 
+  background-color: #444;
+  color: #ddd; 
   min-height: 2.5rem;
+  cursor: pointer;
+}
+.voiceBankList .voiceBank.selected .bankName {
+  background-color: #777;
+  color: #fff; 
 }
 .voiceBankList .bankVoiceList {
   display: grid;
@@ -34,7 +42,6 @@
 .ungroupedVoiceList {
   display: flex;
   flex-wrap: wrap;
-  /* gap: 0.5rem; */
   font-size: 90%;
 }
 .ungroupedVoiceList .voiceItem {
@@ -57,4 +64,6 @@
 .voiceListArea .voiceItem.selected {
   background-color: #555;
 }
-
+.voiceListArea .voiceBank .bankName.selected {
+  color: green; 
+}

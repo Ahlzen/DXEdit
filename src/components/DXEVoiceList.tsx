@@ -1,8 +1,7 @@
 import { db, type VoiceEntity } from "../midi/database";
 import { useLiveQuery } from "dexie-react-hooks"
 import { Title } from "@mantine/core";
-import { starVoiceItem } from "../midi/database";
-import { useState } from "react";
+import { starVoiceItem, starVoiceBank } from "../midi/database";
 
 import './DXEVoiceList.css';
 
@@ -10,20 +9,14 @@ export function DXEVoiceList(props: {
   searchPhrase: string | undefined,
   starredOnly: boolean,
   groupByBank: boolean,
-  onVoiceSelected: (voiceId: number | null) => void})
+  selectedVoiceId: number | null,
+  selectedBankId: number | null,
+  onVoiceSelected: (voiceId: number | null) => void,
+  onBankSelected: (bankId: number | null) => void
+  })
 {
-  ///// State
-
-  const [selectedVoiceId, setSelectedVoiceId] = useState<number | null>(null);
-
 
   ///// Event handlers
-
-  const handleVoiceItemSelected = function(voiceId: number) {
-    setSelectedVoiceId(voiceId);
-    props.onVoiceSelected(voiceId);
-  };
-
 
   const searchPhrase = props.searchPhrase?.trim().toLowerCase();
 
@@ -62,16 +55,24 @@ export function DXEVoiceList(props: {
       return (
       <div className="voiceListArea voiceBankList">
         {filteredBanks?.map((bank) => (
-          <section key={bank.id} className="voiceBank">
-            <Title order={3} className="bankName">
-              {bank.name ?? `Bank ${bank.id} (unnamed)`}
+          <section key={bank.id} className={"voiceBank " + (props.selectedBankId === bank.id ? 'selected' : '')}>
+            <Title order={3} className="bankName"
+              onClick={() => props.onBankSelected(bank.id)}>
+              <span
+                className="starred"
+                onClick={() => starVoiceBank(bank.id, !bank.starred)}>
+                {bank.starred ? "★" : "☆"}
+              </span>
+              &nbsp;
+              <span>
+                {bank.name ?? `Bank ${bank.id} (unnamed)`}
+              </span>
             </Title>
-
             <div className="bankVoiceList">
             {(voicesByBank.get(bank.id) ?? []).map((voice) => (
               <div key={voice.id}
-                className={"voiceItem " + (selectedVoiceId === voice.id ? 'selected' : '')}
-                onClick={() => handleVoiceItemSelected(voice.id)}>
+                className={"voiceItem " + (props.selectedVoiceId === voice.id ? 'selected' : '')}
+                onClick={() => props.onVoiceSelected(voice.id)}>
                 <span
                   className="starred"
                   onClick={() => starVoiceItem(voice.id, !voice.starred)}>
@@ -93,8 +94,8 @@ export function DXEVoiceList(props: {
       <div className="voiceListArea ungroupedVoiceList">
         {(voices ?? []).map((voice) => (
           <div key={voice.id}
-            className={"voiceItem " + (selectedVoiceId === voice.id ? 'selected' : '')}
-            onClick={() => handleVoiceItemSelected(voice.id)}>
+            className={"voiceItem " + (props.selectedVoiceId === voice.id ? 'selected' : '')}
+            onClick={() => props.onVoiceSelected(voice.id)}>
             <span
               className="starred"
               onClick={() => starVoiceItem(voice.id, !voice.starred)}>
@@ -107,6 +108,4 @@ export function DXEVoiceList(props: {
       </div>
     )
   }
-
-
 }

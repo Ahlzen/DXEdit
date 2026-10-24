@@ -2,20 +2,25 @@ import { useState } from "react";
 import { DXEVoiceList } from "./DXEVoiceList";
 import { Title, Text, Stack, TextInput, Group } from "@mantine/core";
 import { DXEVoiceDetails } from "./DXEVoiceDetails";
+import { DXEBankDetails } from "./DXEBankDetails";
 import { VoiceData } from "../midi/VoiceData";
 import { buildOneVoiceBulkSysex } from "../midi/DX7";
-import { db } from "../midi/database";
+import { db, getVoiceBankById } from "../midi/database";
+import type { VoiceBank } from "../midi/VoiceBank";
 
 export function DXELibrarian(props: {
   midiChannel: number,
   sendMidiFunc?: (data: Uint8Array) => void,
   onVoiceEdit?: (voiceData: VoiceData) => void,
   onVoiceDownload?: (voiceData: VoiceData) => void,
+  onBankSend?: (bankData: VoiceBank) => void,
+  onBankDownload?: (bankData: VoiceBank) => void
 })
 {
   const [searchPhrase, setSearchPhrase] = useState<string | undefined>(undefined);
   const [starredOnly, setStarredOnly] = useState<boolean>(false);
   const [selectedVoiceId, setSelectedVoiceId] = useState<number|null>(null);
+  const [selectedBankId, setSelectedBankId] = useState<number|null>(null);
   const [autoPlaySelected, setAutoPlaySelected] = useState<boolean>(false);
   const [groupByBank, setGroupByBank] = useState<boolean>(true);
 
@@ -27,6 +32,7 @@ export function DXELibrarian(props: {
   }
   function handleVoiceSelected(voiceId: number | null) {
     setSelectedVoiceId(voiceId);
+    setSelectedBankId(null);
     if (autoPlaySelected && voiceId !== null) {
       db.voices.get(voiceId).then((v) => {
         const rawVoiceData = v?.data;
@@ -57,7 +63,26 @@ export function DXELibrarian(props: {
       }
     });
   }
-
+  function handleBankSelected(bankId: number | null) {
+    setSelectedBankId(bankId);
+    setSelectedVoiceId(null);
+  }
+  function handleBankSend(bankId: number) {
+    getVoiceBankById(bankId).then((bank) => {
+      if (bank !== null) {
+        props.onBankSend?.(bank);
+      }
+      else console.log("bank is null");
+    });
+  }
+  function handleBankDownload(bankId: number) {
+    getVoiceBankById(bankId).then((bank) => {
+      if (bank !== null) {
+        props.onBankDownload?.(bank);
+      }
+      else console.log("bank is null");
+    });
+  }
 
   return (
     <div className="librarian">
@@ -65,7 +90,7 @@ export function DXELibrarian(props: {
       {/* TODO: Convert to use Mantine controls */}
 
       {/* Top controls */}
-      <Group align="top" gap="xl" mb="md">
+      <Group align="top" gap="xl" mb="md" className="librarianTopControls">
 
         {/* View / Settings */}
         <Stack mt="md">
@@ -102,12 +127,17 @@ export function DXELibrarian(props: {
           </Group>
         </Stack>
 
-        {/* Voice details */}
-        <DXEVoiceDetails voiceId={selectedVoiceId}
-          onVoiceEdit={handleVoiceEdit}
-          onVoiceDownload={handleVoiceDownload}
-          />
-
+        {/* Selected voice or bank details */}
+        {selectedVoiceId && (
+          <DXEVoiceDetails voiceId={selectedVoiceId}
+            onVoiceEdit={handleVoiceEdit}
+            onVoiceDownload={handleVoiceDownload}/>
+        )}
+        {selectedBankId && (
+          <DXEBankDetails bankId={selectedBankId}
+            onBankSend={handleBankSend}
+            onBankDownload={handleBankDownload} />
+        )}
       </Group>
 
       <Title mb="md" order={2}>On Device/Browser</Title>
@@ -115,7 +145,10 @@ export function DXELibrarian(props: {
         searchPhrase={searchPhrase}
         starredOnly={starredOnly}
         groupByBank={groupByBank}
+        selectedVoiceId={selectedVoiceId}
+        selectedBankId={selectedBankId}
         onVoiceSelected={handleVoiceSelected}
+        onBankSelected={handleBankSelected}
         />
     </div>
   );

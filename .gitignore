@@ -3,3 +3,4 @@ dist/
 node_modules/
 README_orig.md
 .vitest/
+.vscode/

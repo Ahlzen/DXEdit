@@ -42,10 +42,10 @@
 - [x] Librarian: Download voice sysex file
 - [x] Librarian: Star voices
 - [ ] Librarian: Upload full bank to DX7
-- [ ] Librarian: Download bank as sysex file
+- [x] Librarian: Download bank as sysex file
 - [ ] Librarian: Receive voice/bank sysex from DX7
 - [ ] Librarian: Find duplicate voices/banks
-- [ ] Librarian: Group by bank on/off
+- [x] Librarian: Group by bank on/off
 - [ ] Librarian: Copy/remix/rename voices/banks
 - [ ] Librarian: Share voices/banks (cloud)
 - [ ] Librarian: More metadata, e.g. comments, image, etc

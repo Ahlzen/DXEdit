@@ -42,3 +42,12 @@ body {
   cursor: pointer;
   color: gold;
 }
+
+.librarianTopControls {
+  min-height: 10.5rem;
+}
+.voiceDetails .inlineTitle {
+  font-style: italic;
+  color: #999;
+  margin-right: 0.5rem;
+}

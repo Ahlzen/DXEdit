@@ -155,7 +155,6 @@ export default function App()
   }
 
   function handleVoiceDownload(voiceData: VoiceData) {
-    console.log("App: handleVoiceDownload()");
     const sysexData: number[] = voiceData.toSysexData(midiChannel);
     const blob = new Blob([new Uint8Array(sysexData)], { type: 'application/octet-stream' });
     const url = URL.createObjectURL(blob);
@@ -166,6 +165,24 @@ export default function App()
     a.click();
     document.body.removeChild(a);
   }
+
+  function handleBankSend(bankData: VoiceBank) {
+    const sysexData: number[] = bankData.toSysexData(midiChannel);
+    handleSendMidi(new Uint8Array(sysexData));
+  }
+
+  function handleBankDownload(bankData: VoiceBank) {
+    const sysexData: number[] = bankData.toSysexData(midiChannel);
+    const blob = new Blob([new Uint8Array(sysexData)], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${bankData.name || 'bank'}.syx`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
 
   ///// MIDI event handlers
 
@@ -278,6 +295,8 @@ export default function App()
           sendMidiFunc={handleSendMidi}
           onVoiceEdit={handleVoiceEdit}
           onVoiceDownload={handleVoiceDownload}
+          onBankSend={handleBankSend}
+          onBankDownload={handleBankDownload} 
          />
       </Tabs.Panel>
 

@@ -96,3 +96,14 @@ export function addFactoryBanks() {
     addBankItem(item);
   }
 }
+
+export async function getVoiceBankById(bankId: number)
+  : Promise<VoiceBank | null>
+{
+  const bank = await db.banks.get(bankId);
+  if (!bank) return null;
+  const voices = await db.voices.where("bankId").equals(bankId).toArray();
+  if (voices.length !== 32) return null;
+  const voiceDatas = voices.map(v => new VoiceData(v.data));
+  return new VoiceBank(voiceDatas, bank.name);
+}

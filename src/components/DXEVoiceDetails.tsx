@@ -1,5 +1,6 @@
 import { useLiveQuery } from "dexie-react-hooks";
-import { Text, Stack, Group, Title, Button, Space } from "@mantine/core";
+import { FileArrowDownIcon, FadersHorizontalIcon } from '@phosphor-icons/react';
+import { Text, Stack, Group, Title, Button } from "@mantine/core";
 import { db, starVoiceItem } from "../midi/database";
 import './DXEVoiceList.css';
 
@@ -29,23 +30,29 @@ export function DXEVoiceDetails(props: {
     [voice?.bankId]);
 
   return (
-    <div className="voice-details">
+    <div className="voiceDetails">
       {voice && (
         <Stack mt="md">
-          <Title order={2}>Voice details</Title>
-          <Title order={3}>
+          <Title order={2}>Voice Details</Title>
+          <Title order={3} mt="xs">
             <span
                 className="starred"
                 onClick={() => starVoiceItem(voice.id, !voice.starred)}>
                 {voice.starred ? "★" : "☆"}
             </span>
+            &nbsp;
             {voice.name}
           </Title>
-          <Text size="sm">Bank: {bank?.name ?? `Bank ${voice.bankId}`}</Text>
-          <Group>
-            <Button onClick={handleEditButtonClick}>Edit</Button>
-            <Space w="xs" />
-            <Button onClick={handleDownloadButtonClick}>Download</Button>
+          <Text size="sm"><span className="inlineTitle">Bank:</span>
+           {bank?.name ?? `Bank ${voice.bankId}`}</Text>
+          <Group mt="md">
+            <Button onClick={handleEditButtonClick} leftSection={<FadersHorizontalIcon />}>
+              Edit
+            </Button>
+            {/* <Space w="xs" /> */}
+            <Button onClick={handleDownloadButtonClick} leftSection={<FileArrowDownIcon />}>
+              Download
+            </Button>
           </Group>
         </Stack>
       )}
