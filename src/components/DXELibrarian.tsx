@@ -10,17 +10,19 @@ import type { VoiceBank } from "../midi/VoiceBank";
 
 export function DXELibrarian(props: {
   midiChannel: number,
+  selectedVoiceId: number | null,
+  selectedBankId: number | null,
   sendMidiFunc?: (data: Uint8Array) => void,
+  onVoiceSelected?: (voiceId: number | null) => void,
   onVoiceEdit?: (voiceData: VoiceData) => void,
   onVoiceDownload?: (voiceData: VoiceData) => void,
+  onBankSelected?: (bankId: number | null) => void,
   onBankSend?: (bankData: VoiceBank) => void,
-  onBankDownload?: (bankData: VoiceBank) => void
+  onBankDownload?: (bankData: VoiceBank) => void,
 })
 {
   const [searchPhrase, setSearchPhrase] = useState<string | undefined>(undefined);
   const [starredOnly, setStarredOnly] = useState<boolean>(false);
-  const [selectedVoiceId, setSelectedVoiceId] = useState<number|null>(null);
-  const [selectedBankId, setSelectedBankId] = useState<number|null>(null);
   const [autoPlaySelected, setAutoPlaySelected] = useState<boolean>(false);
   const [groupByBank, setGroupByBank] = useState<boolean>(true);
 
@@ -31,8 +33,8 @@ export function DXELibrarian(props: {
     setStarredOnly(event.target.checked);
   }
   function handleVoiceSelected(voiceId: number | null) {
-    setSelectedVoiceId(voiceId);
-    setSelectedBankId(null);
+    props.onBankSelected?.(null);
+    props.onVoiceSelected?.(voiceId);
     if (autoPlaySelected && voiceId !== null) {
       db.voices.get(voiceId).then((v) => {
         const rawVoiceData = v?.data;
@@ -64,8 +66,8 @@ export function DXELibrarian(props: {
     });
   }
   function handleBankSelected(bankId: number | null) {
-    setSelectedBankId(bankId);
-    setSelectedVoiceId(null);
+    props.onVoiceSelected?.(null);
+    props.onBankSelected?.(bankId);
   }
   function handleBankSend(bankId: number) {
     getVoiceBankById(bankId).then((bank) => {
@@ -128,13 +130,13 @@ export function DXELibrarian(props: {
         </Stack>
 
         {/* Selected voice or bank details */}
-        {selectedVoiceId && (
-          <DXEVoiceDetails voiceId={selectedVoiceId}
+        {props.selectedVoiceId && (
+          <DXEVoiceDetails voiceId={props.selectedVoiceId}
             onVoiceEdit={handleVoiceEdit}
             onVoiceDownload={handleVoiceDownload}/>
         )}
-        {selectedBankId && (
-          <DXEBankDetails bankId={selectedBankId}
+        {props.selectedBankId && (
+          <DXEBankDetails bankId={props.selectedBankId}
             onBankSend={handleBankSend}
             onBankDownload={handleBankDownload} />
         )}
@@ -145,8 +147,8 @@ export function DXELibrarian(props: {
         searchPhrase={searchPhrase}
         starredOnly={starredOnly}
         groupByBank={groupByBank}
-        selectedVoiceId={selectedVoiceId}
-        selectedBankId={selectedBankId}
+        selectedVoiceId={props.selectedVoiceId}
+        selectedBankId={props.selectedBankId}
         onVoiceSelected={handleVoiceSelected}
         onBankSelected={handleBankSelected}
         />

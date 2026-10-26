@@ -45,7 +45,6 @@ export function DXEBankDetails(props: {
             <Button onClick={handleSendButtonClick} leftSection={<ArrowUpRightIcon />}>
               Send
             </Button>
-            {/* <Space w="xs"/> */}
             <Button onClick={handleDownloadButtonClick} leftSection={<FileArrowDownIcon />}>
               Download
             </Button>

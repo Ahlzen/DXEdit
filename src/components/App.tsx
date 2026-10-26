@@ -36,7 +36,10 @@ export default function App()
   const [controllerIn, setControllerIn] = useState<string|null>(null);
   const [midiChannel, setMidiChannel] = useState<number>(0);
 
-  // Editor state
+  // App state
+  const [activeTab, setActiveTab] = useState<string|null>('settings');
+
+  // Voice editor state
   const [isTimeEgMode, setIsTimeEgMode] = useState<boolean>(
     prefs.current.getPrefs('isTimeEgMode') || false);
   const [perfParams, setPerfParams] = useState<performanceValues>(
@@ -46,8 +49,11 @@ export default function App()
   const voiceEditor = useRef<VoiceEditor>(new VoiceEditor(
     0, undefined, handleSendMidi, handleNewVoiceData));
 
-  const [activeTab, setActiveTab] = useState<string|null>('settings');
+  // Librarian state
+  const [selectedVoiceId, setSelectedVoiceId] = useState<number|null>(null);
+  const [selectedBankId, setSelectedBankId] = useState<number|null>(null);
 
+  
   useEffect(() => {
     if (!midi.current.isInitialized) {
       midi.current.initialize(true,
@@ -141,7 +147,7 @@ export default function App()
   }
 
 
-  ///// Editor event handlers
+  ///// Editor and Librarian event handlers
 
   function handleNewVoiceData(rawData: Uint8Array) {
     console.log("App: handleNewVoiceData()");
@@ -183,6 +189,14 @@ export default function App()
     document.body.removeChild(a);
   }
 
+  function handleVoiceSelected(voiceId: number | null) {
+    setSelectedVoiceId(voiceId);
+  }
+
+  function handleBankSelected(bankId: number | null) {
+    setSelectedBankId(bankId);
+  }
+
 
   ///// MIDI event handlers
 
@@ -190,10 +204,23 @@ export default function App()
     midi.current.sendMessage(data);
   }
 
-  function handleReceiveMidi(data: Uint8Array) {
+  async function handleReceiveMidi(data: Uint8Array) {
     if (data.length === 0) return;
     if (isSysexMessage(data)) {
       console.log(`Received sysex: ${data.length} bytes.`);
+      if (isSingleVoiceSysexMessage(data)) {
+        console.log("Received single voice sysex message.");
+        const voiceData = VoiceData.fromSysexData(data);
+        setCurrentVoiceData(voiceData);
+        setActiveTab('edit');
+      }
+      else if (is32VoiceSysexMessage(data)) {
+        console.log("Received 32 voice sysex message.");
+        const voiceBank = VoiceBank.fromSysexData(data, "Received Bank");
+        const bankId = await addBankItem(voiceBank);
+        setActiveTab('librarian');
+        setSelectedBankId(bankId);
+      }
     }
   }
 
@@ -292,9 +319,13 @@ export default function App()
       <Tabs.Panel value="librarian">
         <DXELibrarian
           midiChannel={midiChannel}
+          selectedVoiceId={selectedVoiceId}
+          selectedBankId={selectedBankId}
           sendMidiFunc={handleSendMidi}
+          onVoiceSelected={handleVoiceSelected}
           onVoiceEdit={handleVoiceEdit}
           onVoiceDownload={handleVoiceDownload}
+          onBankSelected={handleBankSelected}
           onBankSend={handleBankSend}
           onBankDownload={handleBankDownload} 
          />

@@ -45,20 +45,27 @@ db.version(1).stores({
 
 export type LibraryItem = VoiceData | VoiceBank;
 
+/**
+ * @returns Promise of new voice id.
+ */
 export function addVoiceItem(voice: VoiceData) {
-  db.voices.add({
+  return db.voices.add({
     bankId: undefined,
     name: voice.getVoiceName(),
     data: voice.cloneRawData(),
     starred: false,
-  })
+  }).then((voiceId: number) => {
+    return voiceId;
+  });
 }
 
-export function addBankItem(bank: VoiceBank) {
+/**
+ * @returns Promise of new bank id.
+ */
+export function addBankItem(bank: VoiceBank) : Promise<number> {
   const result: PromiseExtended<number> = db.banks.add(
     { name: bank.name, starred: false });
-  // await add, since we need the id
-  result.then((bankId: number) => {
+  return result.then((bankId: number) => {
     for (let v = 0; v < 32; v++) {
       const voice = bank.getVoice(v);
       db.voices.add({
@@ -68,6 +75,7 @@ export function addBankItem(bank: VoiceBank) {
         starred: false,
       });
     }
+    return bankId;
   });
 }
 
