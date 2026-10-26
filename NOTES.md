@@ -41,9 +41,9 @@
 - [x] Librarian: Edit selected
 - [x] Librarian: Download voice sysex file
 - [x] Librarian: Star voices
-- [ ] Librarian: Upload full bank to DX7
+- [x] Librarian: Upload full bank to DX7
 - [x] Librarian: Download bank as sysex file
-- [ ] Librarian: Receive voice/bank sysex from DX7
+- [x] Librarian: Receive voice/bank sysex from DX7
 - [ ] Librarian: Find duplicate voices/banks
 - [x] Librarian: Group by bank on/off
 - [ ] Librarian: Copy/remix/rename voices/banks
