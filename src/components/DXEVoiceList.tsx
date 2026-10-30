@@ -15,9 +15,6 @@ export function DXEVoiceList(props: {
   onBankSelected: (bankId: number | null) => void
   })
 {
-
-  ///// Event handlers
-
   const searchPhrase = props.searchPhrase?.trim().toLowerCase();
 
   // Get voices

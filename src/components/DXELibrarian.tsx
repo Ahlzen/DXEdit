@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DXEVoiceList } from "./DXEVoiceList";
-import { Title, Text, Stack, TextInput, Group } from "@mantine/core";
+import { Title, Text, Stack, TextInput, Group, Checkbox } from "@mantine/core";
 import { DXEVoiceDetails } from "./DXEVoiceDetails";
 import { DXEBankDetails } from "./DXEBankDetails";
 import { VoiceData } from "../midi/VoiceData";
@@ -19,19 +19,12 @@ export function DXELibrarian(props: {
   onBankSelected?: (bankId: number | null) => void,
   onBankSend?: (bankData: VoiceBank) => void,
   onBankDownload?: (bankData: VoiceBank) => void,
-})
-{
+}) {
   const [searchPhrase, setSearchPhrase] = useState<string | undefined>(undefined);
   const [starredOnly, setStarredOnly] = useState<boolean>(false);
   const [autoPlaySelected, setAutoPlaySelected] = useState<boolean>(false);
   const [groupByBank, setGroupByBank] = useState<boolean>(true);
 
-  function handleSearchPhraseChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setSearchPhrase(event.target.value);
-  }
-  function handleStarredOnlyChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setStarredOnly(event.target.checked);
-  }
   function handleVoiceSelected(voiceId: number | null) {
     props.onBankSelected?.(null);
     props.onVoiceSelected?.(voiceId);
@@ -89,8 +82,6 @@ export function DXELibrarian(props: {
   return (
     <div className="librarian">
 
-      {/* TODO: Convert to use Mantine controls */}
-
       {/* Top controls */}
       <Group align="top" gap="xl" mb="md" className="librarianTopControls">
 
@@ -100,16 +91,17 @@ export function DXELibrarian(props: {
             View / Settings
           </Title>
           <Group>
-            <Text>Auto-play selected voice:</Text>
-            <input type="checkbox" checked={autoPlaySelected} onChange={(e) => setAutoPlaySelected(e.target.checked)} />
+            <Checkbox checked={autoPlaySelected}
+              label="Auto-play selected voice"
+              onChange={(e) => setAutoPlaySelected(e.target.checked)} />
           </Group>
           <Group>
-            <Text>Group by bank</Text>
-            <input type="checkbox" checked={groupByBank} onChange={(e) => setGroupByBank(e.target.checked)} />
+            <Checkbox checked={groupByBank}
+              label="Group by bank"
+              onChange={(e) => setGroupByBank(e.target.checked)} />
           </Group>
         </Stack>
       
-
         {/* Search/Filter */}
         <Stack mt="md">
           <Title order={2} mb="md">
@@ -120,12 +112,12 @@ export function DXELibrarian(props: {
             <TextInput
               placeholder="Search voices..."
               value={searchPhrase}
-              onChange={handleSearchPhraseChange} />
+              onChange={(e) => setSearchPhrase(e.target.value)} />
           </Group>
           <Group>
             <Text>Starred only:</Text>
             <input type="checkbox" checked={starredOnly}
-              onChange={handleStarredOnlyChange} />
+              onChange={(e) => setStarredOnly(e.target.checked)} />
           </Group>
         </Stack>
 
