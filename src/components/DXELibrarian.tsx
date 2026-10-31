@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DXEVoiceList } from "./DXEVoiceList";
-import { Title, Text, Stack, TextInput, Group, Checkbox } from "@mantine/core";
+import { Title, Stack, TextInput, Group, Checkbox, Space } from "@mantine/core";
 import { DXEVoiceDetails } from "./DXEVoiceDetails";
 import { DXEBankDetails } from "./DXEBankDetails";
 import { VoiceData } from "../midi/VoiceData";
@@ -95,6 +95,7 @@ export function DXELibrarian(props: {
               label="Auto-play selected voice"
               onChange={(e) => setAutoPlaySelected(e.target.checked)} />
           </Group>
+          <Space h="xs"/>
           <Group>
             <Checkbox checked={groupByBank}
               label="Group by bank"
@@ -108,15 +109,15 @@ export function DXELibrarian(props: {
             Search and Filter
           </Title>
           <Group>
-            <Text>Search:</Text>
             <TextInput
-              placeholder="Search voices..."
+              placeholder="search voice"
               value={searchPhrase}
               onChange={(e) => setSearchPhrase(e.target.value)} />
           </Group>
+          <Space h="xs"/>
           <Group>
-            <Text>Starred only:</Text>
-            <input type="checkbox" checked={starredOnly}
+            <Checkbox checked={starredOnly}
+              label="Starred only"
               onChange={(e) => setStarredOnly(e.target.checked)} />
           </Group>
         </Stack>

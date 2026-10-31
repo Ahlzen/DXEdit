@@ -332,9 +332,7 @@ export default function App()
       </Tabs.Panel>
 
     </Tabs>
-
     </div>
-
     </MantineProvider>
   );
 }
